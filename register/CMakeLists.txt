@@ -1,22 +1,23 @@
 set(PROTO_LIST
-    "${TOP_DIR}/inc/register/proto/tensorflow/attr_value.proto"
-    "${TOP_DIR}/inc/register/proto/tensorflow/function.proto"
-    "${TOP_DIR}/inc/register/proto/tensorflow/graph.proto"
-    "${TOP_DIR}/inc/register/proto/tensorflow/node_def.proto"
-    "${TOP_DIR}/inc/register/proto/tensorflow/op_def.proto"
-    "${TOP_DIR}/inc/register/proto/tensorflow/resource_handle.proto"
-    "${TOP_DIR}/inc/register/proto/tensorflow/tensor.proto"
-    "${TOP_DIR}/inc/register/proto/tensorflow/tensor_shape.proto"
-    "${TOP_DIR}/inc/register/proto/tensorflow/types.proto"
-    "${TOP_DIR}/inc/register/proto/tensorflow/versions.proto"
-    "${TOP_DIR}/inc/common/proto/task.proto"
-    "${TOP_DIR}/inc/common/proto/om.proto"
+    "${METADEF_DIR}/proto/tensorflow/attr_value.proto"
+    "${METADEF_DIR}/proto/tensorflow/function.proto"
+    "${METADEF_DIR}/proto/tensorflow/graph.proto"
+    "${METADEF_DIR}/proto/tensorflow/node_def.proto"
+    "${METADEF_DIR}/proto/tensorflow/op_def.proto"
+    "${METADEF_DIR}/proto/tensorflow/resource_handle.proto"
+    "${METADEF_DIR}/proto/tensorflow/tensor.proto"
+    "${METADEF_DIR}/proto/tensorflow/tensor_shape.proto"
+    "${METADEF_DIR}/proto/tensorflow/types.proto"
+    "${METADEF_DIR}/proto/tensorflow/versions.proto"
+    "${METADEF_DIR}/proto/task.proto"
+    "${METADEF_DIR}/proto/om.proto"
 )
 
 protobuf_generate(ge PROTO_SRCS PROTO_HDRS ${PROTO_LIST})
 
 set(SRC_LIST
     "register.cpp"
+    "ops_kernel_builder_registry.cc"
     "graph_optimizer/graph_fusion/graph_fusion_pass_base.cpp"
     "graph_optimizer/graph_fusion/fusion_pass_registry.cpp"
     "graph_optimizer/graph_fusion/fusion_pattern.cpp"
@@ -44,17 +45,33 @@ add_library(register SHARED ${SRC_LIST} ${PROTO_SRCS})
 
 target_include_directories(register PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}
-    ${TOP_DIR}
-    ${TOP_DIR}/inc
-    ${TOP_DIR}/inc/external
-    ${TOP_DIR}/inc/external/graph
-    ${TOP_DIR}/inc/graph
-    ${TOP_DIR}/inc/common
-    ${TOP_DIR}/inc/framework
-    ${TOP_DIR}/common
-    ${TOP_DIR}/common/graph
+    ${METADEF_DIR}
+    ${METADEF_DIR}/inc
+    ${METADEF_DIR}/inc/external
+    ${METADEF_DIR}/inc/external/graph
+    ${METADEF_DIR}/inc/graph
+    ${METADEF_DIR}/..
+    ${METADEF_DIR}/graph
     ${CMAKE_BINARY_DIR}
     ${CMAKE_BINARY_DIR}/proto/ge
+    #### yellow zone ####
+    ${METADEF_DIR}/../inc
+    #### blue zone ####
+    ${ASCEND_DIR}/driver/include
+    ${ASCEND_DIR}/fwkacllib/include
+    #### temp independent ####
+    ${METADEF_DIR}/../graphengine/inc
+    ${METADEF_DIR}/../graphengine/inc/framework
+    ${METADEF_DIR}/../graphengine/inc/external
+    #### temp in ge ####
+    ${METADEF_DIR}/../inc
+    ${METADEF_DIR}/../inc/framework
+    ${METADEF_DIR}/../inc/external
+    #### temp in parser ####
+    ${METADEF_DIR}/../../graphengine/inc
+    ${METADEF_DIR}/../../graphengine/inc/framework
+    ${METADEF_DIR}/../../graphengine/inc/external
+    ${METADEF_DIR}/../../inc
 )
 
 target_link_libraries(register PRIVATE
@@ -76,17 +93,33 @@ add_library(register_static STATIC ${SRC_LIST} ${PROTO_SRCS})
 
 target_include_directories(register_static PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}
-    ${TOP_DIR}
-    ${TOP_DIR}/inc
-    ${TOP_DIR}/inc/external
-    ${TOP_DIR}/inc/external/graph
-    ${TOP_DIR}/inc/graph
-    ${TOP_DIR}/inc/common
-    ${TOP_DIR}/inc/framework
-    ${TOP_DIR}/common
-    ${TOP_DIR}/common/graph
+    ${METADEF_DIR}
+    ${METADEF_DIR}/inc
+    ${METADEF_DIR}/inc/external
+    ${METADEF_DIR}/inc/external/graph
+    ${METADEF_DIR}/inc/graph
+    ${METADEF_DIR}/..
+    ${METADEF_DIR}/graph
     ${CMAKE_BINARY_DIR}
     ${CMAKE_BINARY_DIR}/proto/ge
+    #### yellow zone ####
+    ${METADEF_DIR}/../inc
+    #### blue zone ####
+    ${ASCEND_DIR}/driver/include
+    ${ASCEND_DIR}/fwkacllib/include
+    #### temp independent ####
+    ${METADEF_DIR}/../graphengine/inc
+    ${METADEF_DIR}/../graphengine/inc/framework
+    ${METADEF_DIR}/../graphengine/inc/external
+    #### temp in ge ####
+    ${METADEF_DIR}/../inc
+    ${METADEF_DIR}/../inc/framework
+    ${METADEF_DIR}/../inc/external
+    #### temp in parser ####
+    ${METADEF_DIR}/../../graphengine/inc
+    ${METADEF_DIR}/../../graphengine/inc/framework
+    ${METADEF_DIR}/../../graphengine/inc/external
+    ${METADEF_DIR}/../../inc
 )
 
 target_link_libraries(register_static PRIVATE
@@ -96,11 +129,6 @@ target_link_libraries(register_static PRIVATE
     $<BUILD_INTERFACE:intf_pub>
 )
 
-set_target_properties(register_static PROPERTIES
-    OUTPUT_NAME register
-)
-
-
 ############ libop_tiling_o2.a ############
 add_library(op_tiling_o2 STATIC
     "op_tiling.cpp"
@@ -108,15 +136,33 @@ add_library(op_tiling_o2 STATIC
 
 target_include_directories(op_tiling_o2 PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}
-    ${TOP_DIR}
-    ${TOP_DIR}/inc
-    ${TOP_DIR}/inc/external
-    ${TOP_DIR}/inc/external/graph
-    ${TOP_DIR}/inc/graph
-    ${TOP_DIR}/inc/common
-    ${TOP_DIR}/inc/framework
-    ${TOP_DIR}/common
-    ${TOP_DIR}/common/graph
+    ${METADEF_DIR}
+    ${METADEF_DIR}/inc
+    ${METADEF_DIR}/inc/external
+    ${METADEF_DIR}/inc/external/graph
+    ${METADEF_DIR}/inc/graph
+    ${METADEF_DIR}/..
+    ${METADEF_DIR}/graph
+    ${CMAKE_BINARY_DIR}
+    ${CMAKE_BINARY_DIR}/proto/ge
+    #### yellow zone ####
+    ${METADEF_DIR}/../inc
+    #### blue zone ####
+    ${ASCEND_DIR}/driver/include
+    ${ASCEND_DIR}/fwkacllib/include
+    #### temp independent ####
+    ${METADEF_DIR}/../graphengine/inc
+    ${METADEF_DIR}/../graphengine/inc/framework
+    ${METADEF_DIR}/../graphengine/inc/external
+    #### temp in ge ####
+    ${METADEF_DIR}/../inc
+    ${METADEF_DIR}/../inc/framework
+    ${METADEF_DIR}/../inc/external
+    #### temp in parser ####
+    ${METADEF_DIR}/../../graphengine/inc
+    ${METADEF_DIR}/../../graphengine/inc/framework
+    ${METADEF_DIR}/../../graphengine/inc/external
+    ${METADEF_DIR}/../../inc
 )
 
 target_compile_options(op_tiling_o2 PRIVATE
@@ -132,7 +178,6 @@ target_link_libraries(op_tiling_o2 PRIVATE
 set(INSTALL_BASE_DIR "")
 set(INSTALL_LIBRARY_DIR lib)
 
-install(TARGETS register register_static OPTIONAL
+install(TARGETS register OPTIONAL
     LIBRARY DESTINATION ${INSTALL_LIBRARY_DIR}
-    ARCHIVE DESTINATION ${INSTALL_LIBRARY_DIR}
 )
