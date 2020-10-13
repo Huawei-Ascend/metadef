@@ -40,7 +40,7 @@
 #include <vector>
 
 #include "proto/ge_ir.pb.h"
-#include "proto/onnx.pb.h"
+#include "proto_inner/onnx.pb.h"
 
 namespace ge {
 const int kOffsetToString = 2;

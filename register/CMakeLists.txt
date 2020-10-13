@@ -89,7 +89,7 @@ target_link_libraries(register PRIVATE
 )
 
 ############ libregister.a ############
-add_library(register_static STATIC ${SRC_LIST} ${PROTO_SRCS})
+add_library(register_static STATIC ${SRC_LIST} ${PROTO_SRCS} "op_tiling.cpp")
 
 target_include_directories(register_static PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}
