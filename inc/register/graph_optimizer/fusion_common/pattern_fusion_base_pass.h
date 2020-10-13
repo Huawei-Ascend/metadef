@@ -47,7 +47,6 @@ class PatternFusionBasePass : public GraphPass {
   using OpDesc = FusionPattern::OpDesc;
   using Mapping = map<const std::shared_ptr<OpDesc>, vector<ge::NodePtr>>;
   using Mappings = vector<Mapping>;
-  std::map<ge::InDataAnchorPtr, ge::OutDataAnchorPtr> origin_op_anchors_map_;
 
   PatternFusionBasePass();
   virtual ~PatternFusionBasePass();
@@ -79,6 +78,8 @@ class PatternFusionBasePass : public GraphPass {
   ge::NodePtr GetNodeFromMapping(const string &id, const Mapping &mapping);
 
   void RecordOutputAnchorMap(ge::NodePtr output_node);
+  void ClearOutputAnchorMap();
+
   Status SetDataDumpAttr(vector<ge::NodePtr> &original_nodes, vector<ge::NodePtr> &fus_nodes);
 
   bool CheckOpSupported(const ge::OpDescPtr &op_desc_ptr);
@@ -97,6 +98,8 @@ class PatternFusionBasePass : public GraphPass {
 
   /** Internal implement class ptr */
   std::shared_ptr<PatternFusionBasePassImpl> pattern_fusion_base_pass_impl_ptr_;
+
+  std::unordered_map<ge::NodePtr, std::map<ge::InDataAnchorPtr, ge::OutDataAnchorPtr>> origin_op_anchors_map_;
 };
 }  // namespace fe
 
