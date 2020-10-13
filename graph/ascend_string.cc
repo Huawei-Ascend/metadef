@@ -14,33 +14,20 @@
  * limitations under the License.
  */
 
-#ifndef INC_GRAPH_OPSPROTO_MANAGER_H_
-#define INC_GRAPH_OPSPROTO_MANAGER_H_
-
-#include <dirent.h>
-#include <dlfcn.h>
-#include <string.h>
-#include <map>
-#include <string>
-#include <vector>
-#include <mutex>
+#include "external/graph/ascend_string.h"
 
 namespace ge {
-class OpsProtoManager {
- public:
-  static OpsProtoManager *Instance();
+AscendString::AscendString(const char* name) {
+  if (name != nullptr) {
+    name_ = std::shared_ptr<std::string>(new (std::nothrow) std::string(name));
+  }
+}
 
-  bool Initialize(const std::map<std::string, std::string> &options);
-  void Finalize();
+const char* AscendString::GetString() const {
+  if (name_ == nullptr) {
+    return nullptr;
+  }
 
- private:
-  void LoadOpsProtoPluginSo(std::string &path);
-
-  std::string pluginPath_;
-  std::vector<void *> handles_;
-  bool is_init_ = false;
-  std::mutex mutex_;
-};
+  return (*name_).c_str();
+}
 }  // namespace ge
-
-#endif  // INC_GRAPH_OPSPROTO_MANAGER_H_

@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 Huawei Technologies Co., Ltd
+ * Copyright 2019-2020 Huawei Technologies Co., Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ class OpDef;
 class GraphDef;
 }  // namespace proto
 
-using ProtoAttrMap = ::google::protobuf::Map<::std::string, ::ge::proto::AttrDef>;  // lint !e1073
+using ProtoAttrMap = ::google::protobuf::Map<::std::string, ::ge::proto::AttrDef>;
 using ProtoMsgOwner = std::shared_ptr<::google::protobuf::Message>;
 
 template <class ProtoType>
@@ -147,7 +147,7 @@ class GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY AttrHolder {
  protected:
   graphStatus AddRequiredAttr(const std::string &name);
   const std::unordered_set<string> GetAllAttrNames() const;
-  const std::map<string, GeAttrValue> GetAllAttrs() const;  // lint !e1073
+  const std::map<string, GeAttrValue> GetAllAttrs() const;
 
   virtual ProtoAttrMapHelper MutableAttrMap() = 0;
   virtual ConstProtoAttrMapHelper GetAttrMap() const = 0;

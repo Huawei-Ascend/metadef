@@ -107,8 +107,8 @@ static graphStatus CalcElementCntByDims(const std::vector<int64_t> &dims, int64_
   for (int64_t dim : dims) {
     if (CheckMultiplyOverflowInt64(element_cnt, dim)) {
       ErrorManager::GetInstance().ATCReportErrMessage(
-        "E19013", {"function", "var1", "var2"},
-        {"CheckMultiplyOverflowInt64", std::to_string(element_cnt), std::to_string(dim)});
+          "E19013", {"function", "var1", "var2"},
+          {"CheckMultiplyOverflowInt64", std::to_string(element_cnt), std::to_string(dim)});
       GELOGE(GRAPH_FAILED, "CalcElementCntByDims failed, when multiplying %ld and %ld.", element_cnt, dim);
       return GRAPH_FAILED;
     }
@@ -129,7 +129,7 @@ static graphStatus CalcElementCntOfFixedDims(const std::vector<int64_t> &dims, F
                                              int64_t &element_cnt) {
   if (dims.size() != fixed_dim_size) {
     GELOGW("Format %d(%s) need dim size=%u but %zu, calc as ND.", format,
-           TypeUtils::FormatToSerialString(format).c_str(), fixed_dim_size, dims.size());
+            TypeUtils::FormatToSerialString(format).c_str(), fixed_dim_size, dims.size());
   }
   return CalcElementCntByDims(dims, element_cnt);
 }
@@ -159,7 +159,7 @@ static graphStatus CalcElementCntOfNc1hwc0(const std::vector<int64_t> &dims, Dat
     return CalcElementCntByDims(dims, element_cnt);
   } else if (dims.size() != kDimSize4d) {
     GELOGE(GRAPH_FAILED, "CalcElementCntOfNc1hwc0 failed as dims.size=%zu is not %u or %u.", dims.size(), kDimSize4d,
-           kNc1hwc0CalcByDimsSize);
+            kNc1hwc0CalcByDimsSize);
     return GRAPH_FAILED;
   }
 
@@ -198,8 +198,8 @@ static graphStatus CalcElementCntOfFractalZ(const std::vector<int64_t> &dims, Da
     int64_t r_count = 1;
     graphStatus graph_status = CalcElementCntByDims(r_count_vec, r_count);
     if (graph_status != GRAPH_SUCCESS) {
-      GELOGE(graph_status, "Calc [%ld, %ld, %ld, %ld] element count failed.", c1, dims[kNchwDimIdxH],
-             dims[kNchwDimIdxW], c0);
+      GELOGE(graph_status, "Calc [%ld, %ld, %ld, %ld] element count failed.",
+             c1, dims[kNchwDimIdxH], dims[kNchwDimIdxW], c0);
       return graph_status;
     }
 
@@ -300,12 +300,12 @@ static graphStatus CalcTensorElementCnt(const std::vector<int64_t> &dims, Format
   const string type_str = TypeUtils::DataTypeToSerialString(data_type);
   if (graph_status == GRAPH_SUCCESS) {
     GELOGD(
-      "CalcTensorElementCnt end, format=%d(%s),"
-      " data_type=%d(%s), element_cnt=%ld.",
-      format, format_str.c_str(), data_type, type_str.c_str(), element_cnt);
+        "CalcTensorElementCnt end, format=%d(%s),"
+        " data_type=%d(%s), element_cnt=%ld.",
+        format, format_str.c_str(), data_type, type_str.c_str(), element_cnt);
   } else {
-    GELOGE(GRAPH_FAILED, "CalcTensorElementCnt failed, format=%d(%s), data_type=%d(%s).", format, format_str.c_str(),
-           data_type, type_str.c_str());
+    GELOGE(GRAPH_FAILED, "CalcTensorElementCnt failed, format=%d(%s), data_type=%d(%s).",
+            format, format_str.c_str(), data_type, type_str.c_str());
   }
   return graph_status;
 }
@@ -335,17 +335,17 @@ GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY graphStatus TensorUtils::CalcTens
   int64_t element_cnt = 0;
   graphStatus status = CalcTensorElementCnt(dims, format, data_type, element_cnt);
   if (status != GRAPH_SUCCESS) {
-    GELOGE(status, "CalcTensorElementCnt failed, status=%u format=%d(%s) data_type=%d(%s).", status, format,
-           format_str.c_str(), data_type, type_str.c_str());
+    GELOGE(status, "CalcTensorElementCnt failed, status=%u format=%d(%s) data_type=%d(%s).",
+           status, format, format_str.c_str(), data_type, type_str.c_str());
     return status;
   }
   // Support unknown shape
   if (element_cnt < 0) {
     mem_size = kMemSizeUnknownShape;
     GELOGD(
-      "element_cnt is unknown. "
-      "format=%d(%s), data_type=%d(%s), mem_size=%ld",
-      format, format_str.c_str(), data_type, type_str.c_str(), mem_size);
+        "element_cnt is unknown. "
+        "format=%d(%s), data_type=%d(%s), mem_size=%ld",
+        format, format_str.c_str(), data_type, type_str.c_str(), mem_size);
     return GRAPH_SUCCESS;
   }
   auto type_size_int64 = static_cast<int64_t>(type_size);
@@ -357,9 +357,9 @@ GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY graphStatus TensorUtils::CalcTens
   mem_size = element_cnt * type_size_int64;
 
   GELOGD(
-    "CalcTensorMemSize end, "
-    "format=%d(%s), data_type=%d(%s), mem_size=%ld",
-    format, format_str.c_str(), data_type, type_str.c_str(), mem_size);
+      "CalcTensorMemSize end, "
+      "format=%d(%s), data_type=%d(%s), mem_size=%ld",
+      format, format_str.c_str(), data_type, type_str.c_str(), mem_size);
   return GRAPH_SUCCESS;
 }
 
@@ -371,7 +371,7 @@ TensorUtils::GetTensorMemorySizeInBytes(const GeTensorDesc &desc_temp, int64_t &
   }
   // 64-byte alignment, if size is 0, align to 32 bytes
   if (size_temp > (INT64_MAX - kNum2 * kDataMemAlignSize)) {
-    GELOGW("The updated mem size %ld is bigger than INT64_MAX", size_temp);
+    GELOGW("The updated mem size %ld is bigger than INT64_MAX",size_temp);
   } else {
     size_temp = ((size_temp + kNum2 * kDataMemAlignSize - 1) / kDataMemAlignSize) * kDataMemAlignSize;
   }

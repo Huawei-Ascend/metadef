@@ -65,5 +65,5 @@ GE_REGISTER_OPTYPE(NODE_NAME_NET_OUTPUT, "Node_Output");
 
 GE_REGISTER_OPTYPE(RECV, "Recv");
 GE_REGISTER_OPTYPE(SEND, "Send");
-};      // namespace ge
+};  // namespace ge
 #endif  // COMMON_GRAPH_DEBUG_GE_OP_TYPES_H_

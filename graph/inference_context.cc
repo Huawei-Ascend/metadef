@@ -78,7 +78,7 @@ InferenceContext::InferenceContext(std::unique_ptr<InferenceContextImpl> &impl) 
 
 std::unique_ptr<InferenceContext> InferenceContext::Create() {
   std::unique_ptr<InferenceContextImpl> impl =
-    std::unique_ptr<InferenceContextImpl>(new (std::nothrow) InferenceContextImpl());
+      std::unique_ptr<InferenceContextImpl>(new (std::nothrow) InferenceContextImpl());
   if (impl == nullptr) {
     return nullptr;
   }
