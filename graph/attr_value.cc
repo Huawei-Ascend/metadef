@@ -21,7 +21,9 @@
 #include "graph/ge_attr_value.h"
 
 namespace ge {
-GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY AttrValue::AttrValue() { impl = ComGraphMakeShared<AttrValueImpl>(); }
+GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY AttrValue::AttrValue() {
+  impl = ComGraphMakeShared<AttrValueImpl>();
+}
 
 #define ATTR_VALUE_SET_GET_IMP(type)                 \
   graphStatus AttrValue::GetValue(type &val) const { \

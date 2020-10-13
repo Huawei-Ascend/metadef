@@ -25,9 +25,11 @@ std::mutex RuntimeInferenceContext::ctx_mu_;
 
 graphStatus RuntimeInferenceContext::CreateContext(const std::string &context_id) {
   GELOGI("To create context. session id = %s", context_id.c_str());
-  auto ctx = std::unique_ptr<RuntimeInferenceContext>(new (std::nothrow) RuntimeInferenceContext());
+  auto ctx = std::unique_ptr<RuntimeInferenceContext>(new (std::nothrow)RuntimeInferenceContext());
   if (ctx == nullptr) {
-    GELOGE(GRAPH_FAILED, "Failed to create instance of RuntimeInferenceContext. context_id = %s", context_id.c_str());
+    GELOGE(GRAPH_FAILED,
+           "Failed to create instance of RuntimeInferenceContext. context_id = %s",
+           context_id.c_str());
     return GRAPH_FAILED;
   }
 
@@ -58,6 +60,7 @@ graphStatus RuntimeInferenceContext::GetContext(const std::string &context_id, R
   GELOGD("Runtime inference context not created. session id = %s", context_id.c_str());
   return GRAPH_FAILED;
 }
+
 
 graphStatus RuntimeInferenceContext::SetTensor(int64_t node_id, int output_id, Tensor &&tensor) {
   std::lock_guard<std::mutex> lk(mu_);
@@ -126,4 +129,4 @@ graphStatus RuntimeInferenceContext::GetTensor(int64_t node_id, int output_id, G
   tensor = output_tensors[output_id];
   return GRAPH_SUCCESS;
 }
-}  // namespace ge
+} // namespace ge

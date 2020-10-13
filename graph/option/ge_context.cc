@@ -25,11 +25,13 @@ namespace {
 const int64_t kMinTrainingTraceJobId = 256;
 const int kDecimal = 10;
 const char *kHostExecPlacement = "HOST";
-}  // namespace
+}
 GEContext &GetContext() {
   static GEContext ge_context{};
   return ge_context;
 }
+
+thread_local uint64_t GEContext::session_id_;
 
 graphStatus GEContext::GetOption(const std::string &key, std::string &option) {
   return GetThreadLocalContext().GetOption(key, option);
@@ -53,7 +55,7 @@ std::map<std::string, std::string> &GetMutableGlobalOptions() {
 void GEContext::Init() {
   string session_id;
   (void)GetOption("ge.exec.sessionId", session_id);
-  try {
+  try{
     session_id_ = static_cast<uint64_t>(std::stoi(session_id.c_str()));
   } catch (std::invalid_argument &) {
     GELOGW("%s transform to int failed.", session_id.c_str());
@@ -63,7 +65,7 @@ void GEContext::Init() {
 
   string device_id;
   (void)GetOption("ge.exec.deviceId", device_id);
-  try {
+  try{
     device_id_ = static_cast<uint32_t>(std::stoi(device_id.c_str()));
   } catch (std::invalid_argument &) {
     GELOGW("%s transform to int failed.", device_id.c_str());

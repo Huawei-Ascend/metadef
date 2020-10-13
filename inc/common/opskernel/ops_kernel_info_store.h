@@ -1,18 +1,18 @@
 /**
- * Copyright 2020 Huawei Technologies Co., Ltd
-
+ * Copyright 2019-2020 Huawei Technologies Co., Ltd
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
-
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 
 #ifndef INC_COMMON_OPSKERNEL_OPS_KERNEL_INFO_STORE_H_
 #define INC_COMMON_OPSKERNEL_OPS_KERNEL_INFO_STORE_H_
@@ -43,10 +43,10 @@ class OpsKernelInfoStore {
   virtual ~OpsKernelInfoStore() {}
 
   // initialize opsKernelInfoStore
-  virtual Status Initialize(const map<string, string> &options) = 0; /*lint -e148*/
+  virtual Status Initialize(const map<string, string> &options) = 0;
 
   // close opsKernelInfoStore
-  virtual Status Finalize() = 0; /*lint -e148*/
+  virtual Status Finalize() = 0;
 
   virtual Status CreateSession(const std::map<std::string, std::string> &session_options) { return SUCCESS; }
 
@@ -66,11 +66,11 @@ class OpsKernelInfoStore {
   virtual void opsFlagCheck(const ge::Node &node, std::string &opsFlag) {};
 
   // memory allocation requirement
-  virtual Status CalcOpRunningParam(Node &node) = 0; /*lint -e148*/
+  virtual Status CalcOpRunningParam(Node &node) = 0;
 
   // generate task for op。
   virtual Status GenerateTask(const Node &node, RunContext &context,
-                              std::vector<domi::TaskDef> &tasks) = 0; /*lint -e148*/
+                              std::vector<domi::TaskDef> &tasks) = 0;
 
   // only call fe engine interface to compile single op
   virtual Status CompileOp(vector<ge::NodePtr> &node_vec) { return SUCCESS; }

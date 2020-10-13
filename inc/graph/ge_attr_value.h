@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 Huawei Technologies Co., Ltd
+ * Copyright 2019-2020 Huawei Technologies Co., Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -311,7 +311,7 @@ class GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY GeAttrValue {
   VALUE_SET_GET_DEC(GeAttrValue::GRAPH)
   VALUE_SET_GET_DEC(BYTES)
   VALUE_SET_GET_DEC(NamedAttrs)
-  VALUE_SET_GET_DEC(ge::DataType)  // lint !e665
+  VALUE_SET_GET_DEC(ge::DataType)
   VALUE_SET_GET_DEC(vector<GeAttrValue::STR>)
   VALUE_SET_GET_DEC(vector<GeAttrValue::INT>)
   VALUE_SET_GET_DEC(vector<GeAttrValue::FLOAT>)
@@ -321,8 +321,8 @@ class GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY GeAttrValue {
   VALUE_SET_GET_DEC(vector<GeAttrValue::GRAPH>)
   VALUE_SET_GET_DEC(vector<GeAttrValue::BYTES>)
   VALUE_SET_GET_DEC(vector<NamedAttrs>)
-  VALUE_SET_GET_DEC(vector<vector<int64_t>>)  //lint !e665
-  VALUE_SET_GET_DEC(vector<ge::DataType>)     //lint !e665
+  VALUE_SET_GET_DEC(vector<vector<int64_t>>)
+  VALUE_SET_GET_DEC(vector<ge::DataType>)
 #undef VALUE_SET_GET_DEC
 
   GeIrProtoHelper<proto::AttrDef> value_;
