@@ -1,19 +1,3 @@
-/**
- * Copyright 2019-2020 Huawei Technologies Co., Ltd
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 #include <stdint.h>
 #include <functional>
 #include <vector>
@@ -38,7 +22,7 @@ BroadCastInfer(const function<vector<int64_t>()>& get_in1_shape, const function<
   }
   if (x2_shape.empty()) {
     y_shape = x1_shape;
-    set_out_shape(y_shape);
+    set_out_shape(y_shape);0
     return GRAPH_SUCCESS;
   }
 
@@ -50,7 +34,7 @@ BroadCastInfer(const function<vector<int64_t>()>& get_in1_shape, const function<
     int x2_shape_size = static_cast<int>(x2_shape.size());
     for (int i = 0; i < x2_shape_size; i++) {
       bool shapeFlag =
-        ((x1_shape[i + len_diff] != x2_shape[i]) && (std::min(x1_shape[i + len_diff], x2_shape[i]) != 1));
+          ((x1_shape[i + len_diff] != x2_shape[i]) && (std::min(x1_shape[i + len_diff], x2_shape[i]) != 1));
       if (shapeFlag) {
         GE_LOGE("operands could not be broadcast together");
         return GRAPH_FAILED;
@@ -64,7 +48,7 @@ BroadCastInfer(const function<vector<int64_t>()>& get_in1_shape, const function<
     int x1_shape_size = static_cast<int>(x1_shape.size());
     for (int i = 0; i < x1_shape_size; i++) {
       bool shapeFlag =
-        ((x1_shape[i] != x2_shape[i - len_diff]) && (std::min(x1_shape[i], x2_shape[i - len_diff]) != 1));
+          ((x1_shape[i] != x2_shape[i - len_diff]) && (std::min(x1_shape[i], x2_shape[i - len_diff]) != 1));
       if (shapeFlag) {
         GE_LOGE("operands could not be broadcast together");
         return GRAPH_FAILED;

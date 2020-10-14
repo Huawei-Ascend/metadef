@@ -81,9 +81,6 @@ class PatternFusionBasePassImpl {
 
   OpsKernelInfoStorePtr ops_kernel_info_store_ptr_;
 
-  /** pass output node's succeed node vs pass output node anchor map */
-  std::map<ge::NodePtr, std::map<ge::AnchorPtr, ge::AnchorPtr>> origin_op_anchors_map_;
-
   bool MatchFromOutput(vector<ge::NodePtr> &candidate_nodes, vector<std::shared_ptr<OpDesc>> &candidate_op_descs,
                        Mapping &mapping);
 

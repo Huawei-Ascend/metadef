@@ -40,7 +40,7 @@
 #include <vector>
 
 #include "proto/ge_ir.pb.h"
-#include "proto/onnx.pb.h"
+#include "proto_inner/onnx.pb.h"
 
 namespace ge {
 const int kOffsetToString = 2;
@@ -131,9 +131,11 @@ class OnnxUtils {
 
   static void AddAttrProtoForOpInAndOutDesc(onnx::NodeProto *node_proto, const OpDescPtr &op_desc);
 
-  static void AddAttrProtoForAttrsFromAttrMap(const ::google::protobuf::Map<std::string, ge::proto::AttrDef> &attr_map,
-                                              onnx::NodeProto *node_proto, const std::string &prefix = "",
-                                              const std::string &suffix = "");
+  static void AddAttrProtoForAttrsFromAttrMap(const ::google::protobuf::Map<std::string,
+                                                                            ge::proto::AttrDef> &attr_map,
+                                              onnx::NodeProto *node_proto,
+                                              const std::string& prefix = "",
+                                              const std::string& suffix = "");
 
   static void AddAttrProtoForAttrsFromOpDef(const ge::proto::OpDef *op_def, onnx::NodeProto *node_proto);
 

@@ -40,7 +40,6 @@ using std::string;
 using std::pair;
 using std::vector;
 
-/*lint -e148*/
 namespace ge {
 class Operator;
 class TensorDesc;
@@ -166,5 +165,4 @@ namespace ge {
 using OpRegistrationData = domi::OpRegistrationData;
 using OpReceiver = domi::OpReceiver;
 } // namespace ge
-/*lint +e148*/
 #endif  // INC_EXTERNAL_REGISTER_REGISTER_H_

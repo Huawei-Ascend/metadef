@@ -125,6 +125,5 @@ class GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY GNode {
    friend class NodeAdapter;
 };
 }  // namespace ge
-/*lint +e148*/
 
 #endif  // INC_EXTERNAL_GRAPH_NODE_H_
