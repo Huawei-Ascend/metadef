@@ -80,8 +80,8 @@ target_include_directories(graph PRIVATE
     #### blue zone ####
     ${ASCEND_DIR}/driver/include
     ${ASCEND_DIR}/fwkacllib/include
-    ${METADEF_DIR}/../third_party/fwkacllib/in/ops/
-    ${METADEF_DIR}/../third_party/fwkacllib/in
+    ${METADEF_DIR}/../third_party/fwkacllib/inc/ops/
+    ${METADEF_DIR}/../third_party/fwkacllib/inc
     #### temp independent ####
     ${METADEF_DIR}/../graphengine/inc
     ${METADEF_DIR}/../graphengine/inc/framework
@@ -140,8 +140,8 @@ target_include_directories(graph_static PRIVATE
     #### blue zone ####
     ${ASCEND_DIR}/driver/include
     ${ASCEND_DIR}/fwkacllib/include
-    ${METADEF_DIR}/../third_party/fwkacllib/in/ops/
-    ${METADEF_DIR}/../third_party/fwkacllib/in
+    ${METADEF_DIR}/../third_party/fwkacllib/inc
+    ${METADEF_DIR}/../third_party/fwkacllib/inc/ops/
     #### temp independent ####
     ${METADEF_DIR}/../graphengine/inc
     ${METADEF_DIR}/../graphengine/inc/framework
