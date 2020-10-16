@@ -22,7 +22,7 @@ BroadCastInfer(const function<vector<int64_t>()>& get_in1_shape, const function<
   }
   if (x2_shape.empty()) {
     y_shape = x1_shape;
-    set_out_shape(y_shape);0
+    set_out_shape(y_shape);
     return GRAPH_SUCCESS;
   }
 
