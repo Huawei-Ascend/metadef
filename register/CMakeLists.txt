@@ -59,6 +59,7 @@ target_include_directories(register PRIVATE
     #### blue zone ####
     ${ASCEND_DIR}/driver/include
     ${ASCEND_DIR}/fwkacllib/include
+    ${METADEF_DIR}/../third_party/fwkacllib/inc
     #### temp independent ####
     ${METADEF_DIR}/../graphengine/inc
     ${METADEF_DIR}/../graphengine/inc/framework
@@ -107,6 +108,7 @@ target_include_directories(register_static PRIVATE
     #### blue zone ####
     ${ASCEND_DIR}/driver/include
     ${ASCEND_DIR}/fwkacllib/include
+    ${METADEF_DIR}/../third_party/fwkacllib/inc
     #### temp independent ####
     ${METADEF_DIR}/../graphengine/inc
     ${METADEF_DIR}/../graphengine/inc/framework
