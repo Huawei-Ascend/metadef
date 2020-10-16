@@ -18,16 +18,16 @@ protobuf_generate(ge PROTO_SRCS PROTO_HDRS ${PROTO_LIST})
 set(SRC_LIST
     "register.cpp"
     "ops_kernel_builder_registry.cc"
-    "graph_optimizer/graph_fusion/graph_fusion_pass_base.cpp"
-    "graph_optimizer/graph_fusion/fusion_pass_registry.cpp"
-    "graph_optimizer/graph_fusion/fusion_pattern.cpp"
-    "graph_optimizer/graph_fusion/pattern_fusion_base_pass.cpp"
-    "graph_optimizer/graph_fusion/pattern_fusion_base_pass_impl.cpp"
+    "graph_optimizer/graph_fusion/graph_fusion_pass_base.cc"
+    "graph_optimizer/graph_fusion/fusion_pass_registry.cc"
+    "graph_optimizer/graph_fusion/fusion_pattern.cc"
+    "graph_optimizer/graph_fusion/pattern_fusion_base_pass.cc"
+    "graph_optimizer/graph_fusion/pattern_fusion_base_pass_impl.cc"
     "graph_optimizer/graph_fusion/pattern_fusion_base_pass_impl.h"
-    "graph_optimizer/buffer_fusion/buffer_fusion_pass_registry.cpp"
-    "graph_optimizer/buffer_fusion/buffer_fusion_pass_base.cpp"
-    "graph_optimizer/buffer_fusion/buffer_fusion_pattern.cpp"
-    "graph_optimizer/fusion_statistic/fusion_statistic_recorder.cpp"
+    "graph_optimizer/buffer_fusion/buffer_fusion_pass_registry.cc"
+    "graph_optimizer/buffer_fusion/buffer_fusion_pass_base.cc"
+    "graph_optimizer/buffer_fusion/buffer_fusion_pattern.cc"
+    "graph_optimizer/fusion_statistic/fusion_statistic_recorder.cc"
     "register_format_transfer.cc"
     "op_kernel_registry.cpp"
     "auto_mapping_util.cpp"
@@ -152,6 +152,7 @@ target_include_directories(op_tiling_o2 PRIVATE
     #### blue zone ####
     ${ASCEND_DIR}/driver/include
     ${ASCEND_DIR}/fwkacllib/include
+    ${METADEF_DIR}/../third_party/fwkacllib/inc
     #### temp independent ####
     ${METADEF_DIR}/../graphengine/inc
     ${METADEF_DIR}/../graphengine/inc/framework
