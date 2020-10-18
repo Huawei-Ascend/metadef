@@ -29,7 +29,7 @@ usage()
   echo "    -h Print usage"
   echo "    -u Only compile ut, not execute"
   echo "    -s Build st"
-  echo "    -j[n] Set the number of threads used for building GraphEngine, default is 8"
+  echo "    -j[n] Set the number of threads used for building Metadef, default is 8"
   echo "    -t Build and execute ut"
   echo "    -c Build ut with coverage tag"
   echo "    -v Display build command"
@@ -93,13 +93,13 @@ mk_dir() {
     echo "created ${create_dir}"
 }
 
-# GraphEngine build start
-echo "---------------- GraphEngine build start ----------------"
+# Meatdef build start
+echo "---------------- Metadef build start ----------------"
 
 # create build path
 build_metadef()
 {
-  echo "create build directory and build GraphEngine";
+  echo "create build directory and build Metadef";
   mk_dir "${BUILD_PATH}/metadef"
   cd "${BUILD_PATH}/metadef"
   CMAKE_ARGS="-DBUILD_PATH=$BUILD_PATH -DGE_ONLY=$GE_ONLY"
@@ -121,11 +121,11 @@ build_metadef()
   echo "${CMAKE_ARGS}"
   cmake ${CMAKE_ARGS} ../..
   make ${VERBOSE} -j${THREAD_NUM}
-  echo "GraphEngine build success!"
+  echo "Metadef build success!"
 }
 g++ -v
 build_metadef
-echo "---------------- GraphEngine build finished ----------------"
+echo "---------------- Metadef build finished ----------------"
 mk_dir ${OUTPUT_PATH}
 cp -rf "${BUILD_PATH}/metadef/"*.so "${OUTPUT_PATH}"
 rm -rf "${OUTPUT_PATH}/"libproto*
@@ -136,43 +136,31 @@ rm -f ${OUTPUT_PATH}/lib*_stub.so
 chmod -R 750 ${OUTPUT_PATH}
 find ${OUTPUT_PATH} -name "*.so*" -print0 | xargs -0 chmod 500
 
-echo "---------------- GraphEngine output generated ----------------"
+echo "---------------- Metadef output generated ----------------"
 
 # generate output package in tar form, including ut/st libraries/executables
 generate_package()
 {
   cd "${BASEPATH}"
 
+  METADEF_PATH="metadef/lib64"
+
   METADEF_LIB=("libregister.so" "libgraph.so")
 
-  rm -rf ${OUTPUT_PATH:?}/${FWK_PATH}/
-  rm -rf ${OUTPUT_PATH:?}/${ATC_PATH}/
+  rm -rf ${OUTPUT_PATH:?}/${METADEF_PATH}/
 
-  find output/ -name graphengine_lib.tar -exec rm {} \;
-  cp ge/engine_manager/engine_conf.json ${OUTPUT_PATH}/${FWK_PATH}/${NNENGINE_PATH}
-  cp ge/engine_manager/engine_conf.json ${OUTPUT_PATH}/${ATC_PATH}/${NNENGINE_PATH}
-
-  find output/ -maxdepth 1 -name libengine.so -exec cp -f {} ${OUTPUT_PATH}/${FWK_PATH}/${NNENGINE_PATH}/../ \;
-  find output/ -maxdepth 1 -name libengine.so -exec cp -f {} ${OUTPUT_PATH}/${ATC_PATH}/${NNENGINE_PATH}/../ \;
-
-  find output/ -maxdepth 1 -name libge_local_engine.so -exec cp -f {} ${OUTPUT_PATH}/${FWK_PATH}/${OPSKERNEL_PATH} \;
-  find output/ -maxdepth 1 -name libge_local_engine.so -exec cp -f {} ${OUTPUT_PATH}/${ATC_PATH}/${OPSKERNEL_PATH} \;
+  find output/ -name metadef_lib.tar -exec rm {} \;
 
   cd "${OUTPUT_PATH}"
-  for lib in "${ATC_LIB[@]}";
+  for lib in "${METADEF_LIB[@]}";
   do
-    cp "$lib" "${OUTPUT_PATH}/${ATC_PATH}"
+    find output/ -name "$lib" -exec cp -f {} ${OUTPUT_PATH}/${METADEF_PATH}/ \;
   done
 
-  for lib in "${FWK_LIB[@]}";
-  do
-    cp "$lib" "${OUTPUT_PATH}/${FWK_PATH}"
-  done
-
-  tar -cf graphengine_lib.tar fwkacllib/ atc/
+  tar -cf metadef_lib.tar metadef
 }
 
 if [[ "X$ENABLE_GE_UT" = "Xoff" ]]; then
   generate_package
 fi
-echo "---------------- GraphEngine package archive generated ----------------"
+echo "---------------- Metadef package archive generated ----------------"
