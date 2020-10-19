@@ -100,8 +100,8 @@ echo "---------------- Metadef build start ----------------"
 build_metadef()
 {
   echo "create build directory and build Metadef";
-  mk_dir "${BUILD_PATH}/metadef"
-  cd "${BUILD_PATH}/metadef"
+  mk_dir "${BUILD_PATH}"
+  cd "${BUILD_PATH}"
   CMAKE_ARGS="-DBUILD_PATH=$BUILD_PATH -DGE_ONLY=$GE_ONLY"
 
   if [[ "X$ENABLE_GE_COV" = "Xon" ]]; then
@@ -117,18 +117,17 @@ build_metadef()
     CMAKE_ARGS="${CMAKE_ARGS} -DENABLE_GE_ST=ON"
   fi
 
-  CMAKE_ARGS="${CMAKE_ARGS} -DENABLE_OPEN_SRC=True"
+  CMAKE_ARGS="${CMAKE_ARGS} -DENABLE_OPEN_SRC=True -DCMAKE_INSTALL_PREFIX=${OUTPUT_PATH}"
   echo "${CMAKE_ARGS}"
-  cmake ${CMAKE_ARGS} ../..
-  make ${VERBOSE} -j${THREAD_NUM}
+  cmake ${CMAKE_ARGS} ..
+  make ${VERBOSE} -j${THREAD_NUM} && make install
   echo "Metadef build success!"
 }
+
 g++ -v
+mk_dir ${OUTPUT_PATH}
 build_metadef
 echo "---------------- Metadef build finished ----------------"
-mk_dir ${OUTPUT_PATH}
-find "${BUILD_PATH}/metadef" -name "*.so*" -exec cp -f {} "${OUTPUT_PATH}"
-rm -rf "${OUTPUT_PATH}/"libproto*
 rm -f ${OUTPUT_PATH}/libgmock*.so
 rm -f ${OUTPUT_PATH}/libgtest*.so
 rm -f ${OUTPUT_PATH}/lib*_stub.so
@@ -143,23 +142,13 @@ generate_package()
 {
   cd "${BASEPATH}"
 
-  METADEF_PATH="metadef/lib64"
-
-  METADEF_LIB=("libregister.so" "libgraph.so")
-
-  rm -rf ${OUTPUT_PATH:?}/${METADEF_PATH}/
+  METADEF_LIB_PATH="lib"
 
   find output/ -name metadef_lib.tar -exec rm {} \;
 
-  mk_dir "${OUTPUT_PATH}/${METADEF_PATH}/
-
   cd "${OUTPUT_PATH}"
-  for lib in "${METADEF_LIB[@]}";
-  do
-    find output/ -name "$lib" -exec cp -f {} ${OUTPUT_PATH}/${METADEF_PATH}/ \;
-  done
 
-  tar -cf metadef_lib.tar metadef
+  tar -cf metadef_lib.tar "${METADEF_LIB_PATH}"
 }
 
 if [[ "X$ENABLE_GE_UT" = "Xoff" ]]; then
