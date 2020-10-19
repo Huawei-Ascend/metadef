@@ -127,7 +127,7 @@ g++ -v
 build_metadef
 echo "---------------- Metadef build finished ----------------"
 mk_dir ${OUTPUT_PATH}
-cp -rf "${BUILD_PATH}/metadef/"*.so "${OUTPUT_PATH}"
+find "${BUILD_PATH}/metadef" -name "*.so*" -exec cp -f {} "${OUTPUT_PATH}"
 rm -rf "${OUTPUT_PATH}/"libproto*
 rm -f ${OUTPUT_PATH}/libgmock*.so
 rm -f ${OUTPUT_PATH}/libgtest*.so
@@ -150,6 +150,8 @@ generate_package()
   rm -rf ${OUTPUT_PATH:?}/${METADEF_PATH}/
 
   find output/ -name metadef_lib.tar -exec rm {} \;
+
+  mk_dir "${OUTPUT_PATH}/${METADEF_PATH}/
 
   cd "${OUTPUT_PATH}"
   for lib in "${METADEF_LIB[@]}";
