@@ -58,4 +58,5 @@ target_link_libraries(c_sec_static INTERFACE c_sec_static_lib)
 
 add_dependencies(c_sec_static c_sec_build)
 
-set(HAVE_C_SEC TRUE CACHE BOOL "c_sec build add")
+#set(HAVE_C_SEC TRUE CACHE BOOL "c_sec build add")
+set(HAVE_C_SEC TRUE)
