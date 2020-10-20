@@ -61,6 +61,7 @@ target_include_directories(register PRIVATE
     ${ASCEND_DIR}/fwkacllib/include
     ${METADEF_DIR}/../third_party/fwkacllib/inc
     #### independent compile #####
+    ${METADEF_DIR}/third_party/graphengine/inc
     ${METADEF_DIR}/third_party/graphengine/ge/inc
     ${METADEF_DIR}/third_party/graphengine/inc/framework
     ${METADEF_DIR}/third_party/graphengine/inc/external
