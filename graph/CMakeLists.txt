@@ -82,8 +82,10 @@ target_include_directories(graph PRIVATE
     ${ASCEND_DIR}/fwkacllib/include
     ${METADEF_DIR}/../third_party/fwkacllib/inc/ops
     ${METADEF_DIR}/../third_party/fwkacllib/inc
-    ${METADEF_DIR}/third_party/ge/inc
-    ${METADEF_DIR}/third_party/ge/inc/external
+    #### independent compile #####
+    ${METADEF_DIR}/third_party/graphengine/inc
+    ${METADEF_DIR}/third_party/graphengine/ge/inc
+    ${METADEF_DIR}/third_party/graphengine/inc/external
     ${METADEF_DIR}/third_party/fwkacllib/inc
     ${METADEF_DIR}/third_party/fwkacllib/inc/ops
     #### temp independent ####
@@ -146,8 +148,10 @@ target_include_directories(graph_static PRIVATE
     ${ASCEND_DIR}/fwkacllib/include
     ${METADEF_DIR}/../third_party/fwkacllib/inc
     ${METADEF_DIR}/../third_party/fwkacllib/inc/ops
-    ${METADEF_DIR}/third_party/ge/inc
-    ${METADEF_DIR}/third_party/ge/inc/external
+    #### independent compile #####
+    ${METADEF_DIR}/third_party/graphengine/inc
+    ${METADEF_DIR}/third_party/graphengine/ge/inc
+    ${METADEF_DIR}/third_party/graphengine/inc/external
     ${METADEF_DIR}/third_party/fwkacllib/inc
     ${METADEF_DIR}/third_party/fwkacllib/inc/ops
     #### temp independent ####
