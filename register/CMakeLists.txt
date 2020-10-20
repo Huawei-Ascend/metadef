@@ -60,6 +60,10 @@ target_include_directories(register PRIVATE
     ${ASCEND_DIR}/driver/include
     ${ASCEND_DIR}/fwkacllib/include
     ${METADEF_DIR}/../third_party/fwkacllib/inc
+    ${METADEF_DIR}/third_party/ge/inc
+    ${METADEF_DIR}/third_party/ge/inc/framework
+    ${METADEF_DIR}/third_party/ge/inc/external
+    ${METADEF_DIR}/third_party/fwkacllib/inc
     #### temp independent ####
     ${METADEF_DIR}/../graphengine/inc
     ${METADEF_DIR}/../graphengine/inc/framework
@@ -108,7 +112,11 @@ target_include_directories(register_static PRIVATE
     #### blue zone ####
     ${ASCEND_DIR}/driver/include
     ${ASCEND_DIR}/fwkacllib/include
-    ${METADEF_DIR}/../third_party/fwkacllib/inc
+    ${METADEF_DIR}/../third_party/fwkacllib/inc 
+    ${METADEF_DIR}/third_party/ge/inc
+    ${METADEF_DIR}/third_party/ge/inc/framework
+    ${METADEF_DIR}/third_party/ge/inc/external
+    ${METADEF_DIR}/third_party/fwkacllib/inc
     #### temp independent ####
     ${METADEF_DIR}/../graphengine/inc
     ${METADEF_DIR}/../graphengine/inc/framework
@@ -153,6 +161,10 @@ target_include_directories(op_tiling_o2 PRIVATE
     ${ASCEND_DIR}/driver/include
     ${ASCEND_DIR}/fwkacllib/include
     ${METADEF_DIR}/../third_party/fwkacllib/inc
+    #### independent compile ####
+    ${METADEF_DIR}/third_party/ge/inc
+    ${METADEF_DIR}/third_party/ge/inc/external
+    ${METADEF_DIR}/third_party/fwkacllib/inc
     #### temp independent ####
     ${METADEF_DIR}/../graphengine/inc
     ${METADEF_DIR}/../graphengine/inc/framework
