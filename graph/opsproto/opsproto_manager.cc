@@ -1,5 +1,5 @@
 /**
- * Copyright 2019-2020 Huawei Technologies Co., Ltd
+ * Copyright 2020 Huawei Technologies Co., Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,9 @@ bool OpsProtoManager::Initialize(const std::map<std::string, std::string> &optio
     return true;
   }
 
+  /*lint -e1561*/
   auto proto_iter = options.find("ge.opsProtoLibPath");
+  /*lint +e1561*/
   if (proto_iter == options.end()) {
     GELOGW("ge.opsProtoLibPath option not set, return.");
     return false;

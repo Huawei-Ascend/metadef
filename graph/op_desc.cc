@@ -1,5 +1,5 @@
 /**
- * Copyright 2019-2020 Huawei Technologies Co., Ltd
+ * Copyright 2020 Huawei Technologies Co., Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ using std::shared_ptr;
 using std::string;
 using std::vector;
 
+/*lint -save -e521 -e681 -e732 -e737*/
 namespace ge {
 const std::string ATTR_NAME_ID = "id";
 

@@ -326,10 +326,12 @@ FMK_FUNC_HOST_VISIBILITY FMK_FUNC_DEV_VISIBILITY Status AutoMappingFnDynamic(
     if (flag == "in") {
       bool is_pushback = (in_pos == -1);
       (void)op_desc->AddDynamicInputDesc(dynamic_name, static_cast<uint32_t>(dynamic_tensor_num), is_pushback);
+      ge::AttrUtils::SetInt(op_desc, DYNAMIC_INPUT_TD_NUM(dynamic_name), dynamic_tensor_num);
       GELOGI("In NodeDef %s add dynamic input[%d]", node->name().c_str(), dynamic_tensor_num);
     } else if (flag == "out") {
       bool is_pushback = (out_pos == -1);
       (void)op_desc->AddDynamicOutputDesc(dynamic_name, static_cast<uint32_t>(dynamic_tensor_num), is_pushback);
+      ge::AttrUtils::SetInt(op_desc, DYNAMIC_OUTPUT_TD_NUM(dynamic_name), dynamic_tensor_num);
       GELOGI("In NodeDef %s add dynamic output[%d]", node->name().c_str(), dynamic_tensor_num);
     }
   }
