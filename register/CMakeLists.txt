@@ -96,7 +96,9 @@ target_link_libraries(register PRIVATE
 )
 
 ############ libregister.a ############
-add_library(register_static STATIC ${SRC_LIST} ${PROTO_SRCS} "op_tiling.cpp")
+add_library(register_static STATIC ${SRC_LIST} ${PROTO_SRCS}
+    "op_tiling.cpp"
+)
 
 target_include_directories(register_static PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}
@@ -140,6 +142,10 @@ target_link_libraries(register_static PRIVATE
     c_sec
     json
     $<BUILD_INTERFACE:intf_pub>
+)
+
+set_target_properties(register_static PROPERTIES
+    OUTPUT_NAME register
 )
 
 ############ libop_tiling_o2.a ############
@@ -196,6 +202,7 @@ target_link_libraries(op_tiling_o2 PRIVATE
 set(INSTALL_BASE_DIR "")
 set(INSTALL_LIBRARY_DIR lib)
 
-install(TARGETS register OPTIONAL
+install(TARGETS register register_static OPTIONAL
     LIBRARY DESTINATION ${INSTALL_LIBRARY_DIR}
+    ARCHIVE DESTINATION ${INSTALL_LIBRARY_DIR}
 )
