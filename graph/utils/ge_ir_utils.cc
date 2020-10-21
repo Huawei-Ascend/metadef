@@ -413,7 +413,7 @@ void OnnxUtils::AddAttrProtoForAttrsFromAttrMap(const ::google::protobuf::Map<st
       auto layout = tensor_desc.layout();
       AddAttrProto(node_proto, onnx::AttributeProto_AttributeType_STRING, prefix + attr_name + "_desc_layout" + suffix, &layout);
       auto device_type = tensor_desc.device_type();
-      AddAttrProto(node_proto, onnx::AttributeProto_AttributeType_STRING, prefix + attr_name + "_desc_device_type" + suffix,
+      AddAttrProto(node_proto, ge::onnx::AttributeProto_AttributeType_STRING, prefix + attr_name + "_desc_device_type" + suffix,
                    &device_type);
       if (kDumpLevel == DUMP_ALL) {
         auto data = tensor_def.data();
@@ -854,8 +854,8 @@ bool OnnxUtils::DecodeNodeLink(const std::vector<onnx::NodeProto> &node_proto_ve
   return true;
 }
 
-void OnnxUtils::DecodeAttribute(const onnx::AttributeProto &attr_proto, std::vector<std::string> &strings) {
-  if (attr_proto.type() != onnx::AttributeProto_AttributeType_STRINGS) {
+void OnnxUtils::DecodeAttribute(const ge::onnx::AttributeProto &attr_proto, std::vector<std::string> &strings) {
+  if (attr_proto.type() != ge::onnx::AttributeProto_AttributeType_STRINGS) {
     GELOGE(GRAPH_FAILED, "Attribute %s call wrong decode attribute function", attr_proto.name().c_str());
     return;
   }
@@ -864,16 +864,16 @@ void OnnxUtils::DecodeAttribute(const onnx::AttributeProto &attr_proto, std::vec
   }
 }
 
-void OnnxUtils::DecodeAttribute(const onnx::AttributeProto &attr_proto, std::string &value) {
-  if (attr_proto.type() != onnx::AttributeProto_AttributeType_STRING) {
+void OnnxUtils::DecodeAttribute(const ge::onnx::AttributeProto &attr_proto, std::string &value) {
+  if (attr_proto.type() != ge::onnx::AttributeProto_AttributeType_STRING) {
     GELOGE(GRAPH_FAILED, "Attribute %s call wrong decode attribute function", attr_proto.name().c_str());
     return;
   }
   value = attr_proto.s();
 }
 
-void OnnxUtils::DecodeAttribute(const onnx::AttributeProto &attr_proto, std::vector<int64_t> &ints) {
-  if (attr_proto.type() != onnx::AttributeProto_AttributeType_INTS) {
+void OnnxUtils::DecodeAttribute(const ge::onnx::AttributeProto &attr_proto, std::vector<int64_t> &ints) {
+  if (attr_proto.type() != ge::onnx::AttributeProto_AttributeType_INTS) {
     GELOGE(GRAPH_FAILED, "Attribute %s call wrong decode attribute function", attr_proto.name().c_str());
     return;
   }
@@ -882,8 +882,8 @@ void OnnxUtils::DecodeAttribute(const onnx::AttributeProto &attr_proto, std::vec
   }
 }
 
-void OnnxUtils::DecodeAttribute(const onnx::AttributeProto &attr_proto, int64_t &value) {
-  if (attr_proto.type() != onnx::AttributeProto_AttributeType_INT) {
+void OnnxUtils::DecodeAttribute(const ge::onnx::AttributeProto &attr_proto, int64_t &value) {
+  if (attr_proto.type() != ge::onnx::AttributeProto_AttributeType_INT) {
     GELOGE(GRAPH_FAILED, "Attribute %s call wrong decode attribute function", attr_proto.name().c_str());
     return;
   }

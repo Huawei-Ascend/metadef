@@ -1,5 +1,5 @@
 /**
- * Copyright 2019-2020 Huawei Technologies Co., Ltd
+ * Copyright 2020 Huawei Technologies Co., Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -84,6 +84,7 @@ class ComputeGraph : public std::enable_shared_from_this<ComputeGraph>, public A
 
   NodePtr FindNode(const std::string &name) const;
   NodePtr FindFirstNodeMatchType(const std::string &name) const;
+  /*lint -e504*/
   // AddNode with NodePtr
   NodePtr AddNode(NodePtr node);
   NodePtr AddNode(OpDescPtr op);
@@ -151,6 +152,7 @@ class ComputeGraph : public std::enable_shared_from_this<ComputeGraph>, public A
   graphStatus InsertEventNodes();
   bool operator==(const ComputeGraph &r_compute_graph) const;
 
+  /*lint +e504*/
   const std::map<std::vector<std::string>, std::vector<std::string>> &GetShareParamLayer() const {
     return params_share_map_;
   }

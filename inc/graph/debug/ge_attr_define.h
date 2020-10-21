@@ -1,5 +1,5 @@
 /**
- * Copyright 2019-2020 Huawei Technologies Co., Ltd
+ * Copyright 2020 Huawei Technologies Co., Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+/*lint -e618*/
 #ifndef INC_GRAPH_DEBUG_GE_ATTR_DEFINE_H_
 #define INC_GRAPH_DEBUG_GE_ATTR_DEFINE_H_
 
@@ -1143,3 +1144,4 @@ GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY extern const std::string ATTR_ZER
 }  // namespace ge
 
 #endif  // INC_GRAPH_DEBUG_GE_ATTR_DEFINE_H_
+/*lint +e618*/
