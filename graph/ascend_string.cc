@@ -1,5 +1,5 @@
 /**
- * Copyright 2019-2020 Huawei Technologies Co., Ltd
+ * Copyright 2020 Huawei Technologies Co., Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@
 namespace ge {
 AscendString::AscendString(const char* name) {
   if (name != nullptr) {
-    name_ = std::shared_ptr<std::string>(new (std::nothrow) std::string(name));
+    name_ = std::shared_ptr<std::string>(new (std::nothrow) std::string(name)); //lint !e1524
   }
 }
 

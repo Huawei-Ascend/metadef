@@ -1,5 +1,5 @@
 /**
- * Copyright 2019-2020 Huawei Technologies Co., Ltd
+ * Copyright 2020 Huawei Technologies Co., Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -103,57 +103,57 @@ class OnnxUtils {
  public:
   enum DumpLevel { NO_DUMP = 0, DUMP_ALL = 1, DUMP_WITH_OUT_DATA = 2, DUMP_WITH_OUT_DESC = 3, DUMP_LEVEL_END };
 
-  static bool ConvertGeModelToModelProto(const ge::Model &model, onnx::ModelProto &model_proto);
+  static bool ConvertGeModelToModelProto(const ge::Model &model, ge::onnx::ModelProto &model_proto);
 
-  static bool ConvertModelProtoToGeModel(const onnx::ModelProto &model_proto, ge::Model &model);
+  static bool ConvertModelProtoToGeModel(const ge::onnx::ModelProto &model_proto, ge::Model &model);
 
  private:
   // Part 1: from IR convert to ONNX Protobuf
-  static void AddAttrProto(onnx::NodeProto *node_proto, onnx::AttributeProto_AttributeType type,
+  static void AddAttrProto(ge::onnx::NodeProto *node_proto, ge::onnx::AttributeProto_AttributeType type,
                            const std::string &name, void *data);
 
-  static void AddAttrProto(onnx::NodeProto *node_proto, onnx::AttributeProto_AttributeType type,
+  static void AddAttrProto(ge::onnx::NodeProto *node_proto, ge::onnx::AttributeProto_AttributeType type,
                            const std::string &name, ::google::protobuf::RepeatedField<::google::protobuf::int64> data);
 
-  static void AddAttrProto(onnx::NodeProto *node_proto, onnx::AttributeProto_AttributeType type,
+  static void AddAttrProto(ge::onnx::NodeProto *node_proto, ge::onnx::AttributeProto_AttributeType type,
                            const std::string &name, ::google::protobuf::RepeatedField<bool> data);
 
-  static void AddAttrProto(onnx::NodeProto *node_proto, onnx::AttributeProto_AttributeType type,
+  static void AddAttrProto(ge::onnx::NodeProto *node_proto, ge::onnx::AttributeProto_AttributeType type,
                            const std::string &name, ::google::protobuf::RepeatedField<float> data);
 
-  static void AddAttrProto(onnx::NodeProto *node_proto, onnx::AttributeProto_AttributeType type,
+  static void AddAttrProto(ge::onnx::NodeProto *node_proto, ge::onnx::AttributeProto_AttributeType type,
                            const std::string &name, ::google::protobuf::RepeatedPtrField<::std::string> data);
 
-  static void AddAttrProtoFromNodeMembers(const NodePtr &node, onnx::NodeProto *node_proto);
+  static void AddAttrProtoFromNodeMembers(const NodePtr &node, ge::onnx::NodeProto *node_proto);
 
   static void AddAttrProtoFromAttribute(const std::pair<const std::string, ge::GeAttrValue> &string_attr_value,
-                                        onnx::NodeProto *node_proto);
+                                        ge::onnx::NodeProto *node_proto);
 
-  static void AddAttrProtoForOpInAndOutDesc(onnx::NodeProto *node_proto, const OpDescPtr &op_desc);
+  static void AddAttrProtoForOpInAndOutDesc(ge::onnx::NodeProto *node_proto, const OpDescPtr &op_desc);
 
   static void AddAttrProtoForAttrsFromAttrMap(const ::google::protobuf::Map<std::string,
                                                                             ge::proto::AttrDef> &attr_map,
-                                              onnx::NodeProto *node_proto,
+                                              ge::onnx::NodeProto *node_proto,
                                               const std::string& prefix = "",
                                               const std::string& suffix = "");
 
-  static void AddAttrProtoForAttrsFromOpDef(const ge::proto::OpDef *op_def, onnx::NodeProto *node_proto);
+  static void AddAttrProtoForAttrsFromOpDef(const ge::proto::OpDef *op_def, ge::onnx::NodeProto *node_proto);
 
-  static onnx::TensorProto_DataType EncodeDataType(ge::DataType data_type);
+  static ge::onnx::TensorProto_DataType EncodeDataType(ge::DataType data_type);
 
-  static void EncodeNodeLinkForNetronVisual(const NodePtr &node, onnx::NodeProto *node_proto);
+  static void EncodeNodeLinkForNetronVisual(const NodePtr &node, ge::onnx::NodeProto *node_proto);
 
-  static bool EncodeNodeLink(const NodePtr &node, onnx::NodeProto *node_proto);
+  static bool EncodeNodeLink(const NodePtr &node, ge::onnx::NodeProto *node_proto);
 
-  static bool EncodeNodeDesc(const NodePtr &node, onnx::NodeProto *node_proto);
+  static bool EncodeNodeDesc(const NodePtr &node, ge::onnx::NodeProto *node_proto);
 
-  static bool EncodeNode(const NodePtr &node, onnx::NodeProto *node_proto);
+  static bool EncodeNode(const NodePtr &node, ge::onnx::NodeProto *node_proto);
 
-  static void EncodeTypeProtoTensorType(const NodePtr &node, onnx::TypeProto_Tensor *tensor_type);
+  static void EncodeTypeProtoTensorType(const NodePtr &node, ge::onnx::TypeProto_Tensor *tensor_type);
 
-  static void EncodeValueInfo(const NodePtr &n, onnx::ValueInfoProto *v);
+  static void EncodeValueInfo(const NodePtr &n, ge::onnx::ValueInfoProto *v);
 
-  static bool EncodeGraph(const ConstComputeGraphPtr &graph, onnx::GraphProto *graph_proto);
+  static bool EncodeGraph(const ConstComputeGraphPtr &graph, ge::onnx::GraphProto *graph_proto);
 
   /// Part 2: from ONNX Protobuf convert to IR
   /// Describes node's link relationships
@@ -168,40 +168,40 @@ class OnnxUtils {
   // Parse node name and index
   static bool ParseNameIndex(const std::string &node_name_index, std::string &node_name, int32_t &index);
 
-  static ge::DataType DecodeDataType(onnx::TensorProto_DataType data_type);
+  static ge::DataType DecodeDataType(ge::onnx::TensorProto_DataType data_type);
 
-  static void DecodeAttribute(const onnx::AttributeProto &attr_proto, std::vector<std::string> &strings);
+  static void DecodeAttribute(const ge::onnx::AttributeProto &attr_proto, std::vector<std::string> &strings);
 
-  static void DecodeAttribute(const onnx::AttributeProto &attr_proto, std::vector<int64_t> &ints);
+  static void DecodeAttribute(const ge::onnx::AttributeProto &attr_proto, std::vector<int64_t> &ints);
 
-  static void DecodeAttribute(const onnx::AttributeProto &attr_proto, int64_t &value);
+  static void DecodeAttribute(const ge::onnx::AttributeProto &attr_proto, int64_t &value);
 
-  static void DecodeAttribute(const onnx::AttributeProto &attr_proto, std::string &value);
+  static void DecodeAttribute(const ge::onnx::AttributeProto &attr_proto, std::string &value);
 
-  static void DecodeNodeAttributeForOpOutDesc(const onnx::AttributeProto &attr_proto,
+  static void DecodeNodeAttributeForOpOutDesc(const ge::onnx::AttributeProto &attr_proto,
                                               const std::string &attr_name_for_output_desc, int32_t index,
                                               OpDescPtr &op_desc);
 
-  static void DecodeNodeAttributeForOpInDesc(const onnx::AttributeProto &attr_proto,
+  static void DecodeNodeAttributeForOpInDesc(const ge::onnx::AttributeProto &attr_proto,
                                              const std::string &attr_name_for_input_desc, int32_t index,
                                              OpDescPtr &op_desc);
 
-  static void DecodeNodeAttributeForOpInAndOutDesc(const onnx::AttributeProto &attr_proto,
+  static void DecodeNodeAttributeForOpInAndOutDesc(const ge::onnx::AttributeProto &attr_proto,
                                                    const std::string &attr_name_for_input_output_desc, int32_t index,
                                                    OpDescPtr &op_desc);
 
-  static void DecodeNodeAttributeForOpDef(const onnx::AttributeProto &attr_proto, ge::proto::OpDef &op_def);
+  static void DecodeNodeAttributeForOpDef(const ge::onnx::AttributeProto &attr_proto, ge::proto::OpDef &op_def);
 
-  static void DecodeNodeAttributeForOpDesc(const onnx::AttributeProto &attr_proto, OpDescPtr &op_desc);
+  static void DecodeNodeAttributeForOpDesc(const ge::onnx::AttributeProto &attr_proto, OpDescPtr &op_desc);
 
   static bool DecodeNodeLinkImp(const NodeLinkInfo &item, NodePtr &node_ptr);
 
-  static bool DecodeNodeLink(const std::vector<onnx::NodeProto> &node_proto_vector,
+  static bool DecodeNodeLink(const std::vector<ge::onnx::NodeProto> &node_proto_vector,
                              const std::map<std::string, NodePtr> &node_map);
 
-  static bool DecodeNodeDesc(const onnx::NodeProto *node_proto, OpDescPtr &node);
+  static bool DecodeNodeDesc(const ge::onnx::NodeProto *node_proto, OpDescPtr &node);
 
-  static bool DecodeGraph(int recursion_depth, const onnx::GraphProto &graph_proto, ComputeGraphPtr &graph);
+  static bool DecodeGraph(int recursion_depth, const ge::onnx::GraphProto &graph_proto, ComputeGraphPtr &graph);
 };
 }  // namespace ge
 

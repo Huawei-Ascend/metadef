@@ -1,5 +1,5 @@
 /**
- * Copyright 2019-2020 Huawei Technologies Co., Ltd
+ * Copyright 2020 Huawei Technologies Co., Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -179,17 +179,17 @@ int64_t Shape::GetShapeSize() const {
 }
 
 TensorDesc::TensorDesc() {
-  impl = ComGraphMakeShared<TensorDescImpl>();
+  impl = ComGraphMakeShared<TensorDescImpl>();  // lint !e665
 }
 
 TensorDesc::TensorDesc(Shape shape, Format format, DataType dt) {
-  impl = ComGraphMakeShared<TensorDescImpl>(shape, format, dt);
+  impl = ComGraphMakeShared<TensorDescImpl>(shape, format, dt);  // lint !e665
   SetRealDimCnt(shape.GetDimNum());
 }
 
 TensorDesc::TensorDesc(const TensorDesc &desc) {
   // Copy
-  impl = ComGraphMakeShared<TensorDescImpl>();
+  impl = ComGraphMakeShared<TensorDescImpl>();  // lint !e665
   if (desc.impl != nullptr && impl != nullptr) {
     *impl = *desc.impl;
   }
@@ -361,7 +361,7 @@ void TensorDesc::SetName(const std::string &name) {
 Tensor::Tensor() { impl = ComGraphMakeShared<TensorImpl>(); }
 
 Tensor::Tensor(const TensorDesc &tensor_desc) {
-  impl = ComGraphMakeShared<TensorImpl>(tensor_desc);
+  impl = ComGraphMakeShared<TensorImpl>(tensor_desc);  // lint !e665
 }
 
 Tensor::Tensor(const TensorDesc &tensor_desc, const std::vector<uint8_t> &data) {
@@ -384,7 +384,7 @@ Tensor::Tensor(const TensorDesc &tensor_desc, const std::vector<uint8_t> &data) 
       }
     }
   }
-  impl = ComGraphMakeShared<TensorImpl>(tensor_desc, data);
+  impl = ComGraphMakeShared<TensorImpl>(tensor_desc, data);  // lint !e665
 }
 
 Tensor::Tensor(const TensorDesc &tensor_desc, const uint8_t *data, size_t size) {
@@ -406,7 +406,7 @@ Tensor::Tensor(const TensorDesc &tensor_desc, const uint8_t *data, size_t size) 
     }
   }
 
-  impl = ComGraphMakeShared<TensorImpl>(tensor_desc, data, size);
+  impl = ComGraphMakeShared<TensorImpl>(tensor_desc, data, size);  // lint !e665
 }
 
 Tensor::Tensor(TensorDesc &&tensor_desc, std::vector<uint8_t> &&data) {
@@ -429,7 +429,7 @@ Tensor::Tensor(TensorDesc &&tensor_desc, std::vector<uint8_t> &&data) {
       }
     }
   }
-  impl = ComGraphMakeShared<TensorImpl>(std::move(tensor_desc), std::move(data));
+  impl = ComGraphMakeShared<TensorImpl>(std::move(tensor_desc), std::move(data));  // lint !e665
 }
 
 TensorDesc Tensor::GetTensorDesc() const {
@@ -643,7 +643,7 @@ TensorDesc TensorAdapter::GeTensorDesc2TensorDesc(const GeTensorDesc &ge_tensor_
 GeTensorPtr TensorAdapter::Tensor2GeTensor(const Tensor &tensor) {
   GeTensorPtr ge_tensor;
   if (tensor.impl != nullptr) {
-    ge_tensor = ComGraphMakeShared<GeTensor>(tensor.impl->ge_tensor.Clone());
+    ge_tensor = ComGraphMakeShared<GeTensor>(tensor.impl->ge_tensor.Clone());  // lint !e665
   }
   return ge_tensor;
 }
@@ -659,7 +659,7 @@ Tensor TensorAdapter::GeTensor2Tensor(const ConstGeTensorPtr &ge_tensor) {
 ConstGeTensorPtr TensorAdapter::AsGeTensorPtr(const Tensor &tensor) {
   GeTensorPtr ge_tensor;
   if (tensor.impl != nullptr) {
-    ge_tensor = ComGraphMakeShared<GeTensor>(tensor.impl->ge_tensor);
+    ge_tensor = ComGraphMakeShared<GeTensor>(tensor.impl->ge_tensor);  // lint !e665
   }
   return ge_tensor;
 }
@@ -667,7 +667,7 @@ ConstGeTensorPtr TensorAdapter::AsGeTensorPtr(const Tensor &tensor) {
 GeTensorPtr TensorAdapter::AsGeTensorPtr(Tensor &tensor) {
   GeTensorPtr ge_tensor;
   if (tensor.impl != nullptr) {
-    ge_tensor = ComGraphMakeShared<GeTensor>(tensor.impl->ge_tensor);
+    ge_tensor = ComGraphMakeShared<GeTensor>(tensor.impl->ge_tensor);  // lint !e665
   }
   return ge_tensor;
 }

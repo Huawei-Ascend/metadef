@@ -45,7 +45,7 @@ set(SRC_LIST
     "tensor.cc"
     "debug/graph_debug.cc"
     "opsproto/opsproto_manager.cc"
-    "../ops/op_imp.cc"
+    "../ops/op_imp.cpp"
     "option/ge_context.cc"
     "option/ge_local_context.cc"
     "runtime_inference_context.cc"
