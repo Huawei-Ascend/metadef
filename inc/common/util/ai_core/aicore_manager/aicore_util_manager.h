@@ -40,7 +40,7 @@ class AICoreUtilManager {
   Status Finalize();
 
  private:
-  AICoreUtilManager());
+  AICoreUtilManager();
   ~AICoreUtilManager();
   bool is_init_;
 };
