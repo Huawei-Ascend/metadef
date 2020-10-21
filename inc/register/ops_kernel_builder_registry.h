@@ -30,6 +30,8 @@ class FMK_FUNC_HOST_VISIBILITY FMK_FUNC_DEV_VISIBILITY OpsKernelBuilderRegistry 
 
   void Register(const std::string &lib_name, const OpsKernelBuilderPtr &instance);
 
+  void Unregister(const std::string &lib_name);
+
   void UnregisterAll();
 
   const std::map<std::string, OpsKernelBuilderPtr> &GetAll() const;
@@ -42,7 +44,10 @@ class FMK_FUNC_HOST_VISIBILITY FMK_FUNC_DEV_VISIBILITY OpsKernelBuilderRegistrar
  public:
   using CreateFn = OpsKernelBuilder *(*)();
   OpsKernelBuilderRegistrar(const std::string &kernel_lib_name, CreateFn fn);
-  ~OpsKernelBuilderRegistrar() = default;
+  ~OpsKernelBuilderRegistrar();
+
+private:
+  std::string kernel_lib_name_;
 };
 
 #define REGISTER_OPS_KERNEL_BUILDER(kernel_lib_name, builder) \

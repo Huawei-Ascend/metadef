@@ -15,14 +15,26 @@
 */
 
 #include "register/ops_kernel_builder_registry.h"
+#include "graph/debug/ge_log.h"
 
 namespace ge {
 void OpsKernelBuilderRegistry::Register(const string &lib_name, const OpsKernelBuilderPtr &instance) {
-  kernel_builders_.emplace(lib_name, instance);
+  auto it = kernel_builders_.emplace(lib_name, instance);
+  if (it.second) {
+    GELOGI("Done registering OpsKernelBuilder successfully, kernel lib name = %s", lib_name.c_str());
+  } else {
+    GELOGW("OpsKernelBuilder already registered. kernel lib name = %s", lib_name.c_str());
+  }
 }
 
 void OpsKernelBuilderRegistry::UnregisterAll() {
   kernel_builders_.clear();
+  GELOGI("All builders are unregistered");
+}
+
+void OpsKernelBuilderRegistry::Unregister(const string &lib_name) {
+  kernel_builders_.erase(lib_name);
+  GELOGI("OpsKernelBuilder of %s is unregistered", lib_name.c_str());
 }
 
 const std::map<std::string, OpsKernelBuilderPtr> &OpsKernelBuilderRegistry::GetAll() const {
@@ -34,8 +46,25 @@ OpsKernelBuilderRegistry &OpsKernelBuilderRegistry::GetInstance() {
 }
 
 OpsKernelBuilderRegistrar::OpsKernelBuilderRegistrar(const string &kernel_lib_name,
-                                                     OpsKernelBuilderRegistrar::CreateFn fn) {
-  auto instance = std::shared_ptr<OpsKernelBuilder>(fn());
-  OpsKernelBuilderRegistry::GetInstance().Register(kernel_lib_name, instance);
+                                                     OpsKernelBuilderRegistrar::CreateFn fn)
+    : kernel_lib_name_(kernel_lib_name) {
+  GELOGI("To register OpsKernelBuilder, kernel lib name = %s", kernel_lib_name.c_str());
+  std::shared_ptr<OpsKernelBuilder> builder;
+  if (fn != nullptr) {
+    builder.reset(fn());
+    if (builder == nullptr) {
+      GELOGE(INTERNAL_ERROR, "Failed to create OpsKernelBuilder, kernel lib name = %s", kernel_lib_name.c_str());
+    }
+  } else {
+    GELOGE(INTERNAL_ERROR, "Creator is nullptr. kernel lib name = %s", kernel_lib_name.c_str());
+  }
+
+  // May add empty ptr, so that error can be found afterward
+  OpsKernelBuilderRegistry::GetInstance().Register(kernel_lib_name, builder);
+}
+
+OpsKernelBuilderRegistrar::~OpsKernelBuilderRegistrar() {
+  GELOGI("OpsKernelBuilderRegistrar destroyed. KernelLibName = %s", kernel_lib_name_.c_str());
+  OpsKernelBuilderRegistry::GetInstance().Unregister(kernel_lib_name_);
 }
 }  // namespace ge
