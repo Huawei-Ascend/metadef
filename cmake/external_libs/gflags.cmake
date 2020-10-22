@@ -3,7 +3,6 @@ if (HAVE_GFLAGS)
 endif()
 
 include(ExternalProject)
-#set(CMAKE_INSTALL_PREFIX ${METADEF_DIR}/output)
 
 if ((${CMAKE_INSTALL_PREFIX} STREQUAL /usr/local) OR
     (${CMAKE_INSTALL_PREFIX} STREQUAL "C:/Program Files (x86)/ascend"))
