@@ -58,8 +58,10 @@ namespace{
 const int32_t kBaseOfIntegerValue = 10;
 #ifdef FMK_SUPPORT_DUMP
 const char *const kDumpGeGraph = "DUMP_GE_GRAPH";
-const int kDumpGraphIndexWidth = 5;
+const int kDumpGraphIndexWidth = 8;
 #endif
+
+const char *const kDumpGraphPath = "DUMP_GRAPH_PATH";
 const char *const kDumpGraphLevel = "DUMP_GRAPH_LEVEL";
 const char *const kDumpStrBuild = "Build";
 const char *const kDumpStrPartition = "partition";
@@ -586,6 +588,11 @@ GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY void GraphUtils::DumpGEGraph(cons
   }
 
   std::stringstream stream_file_name;
+  char *dump_graph_path = std::getenv(kDumpGraphPath);
+  if (dump_graph_path != nullptr) {
+    std::string dump_graph_path_str(dump_graph_path);
+    stream_file_name << (dump_graph_path_str.empty() ? "" : dump_graph_path_str + "/");
+  }
   stream_file_name << "ge_proto_" << std::setw(kDumpGraphIndexWidth) << std::setfill('0') << file_index;
   stream_file_name << "_" << suffix << ".txt";
   std::string proto_file = user_graph_name.empty() ? stream_file_name.str() : user_graph_name;
@@ -836,6 +843,11 @@ GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY void GraphUtils::DumpGEGraphToOnn
   }
 
   std::stringstream stream_file_name;
+  char *dump_graph_path = std::getenv(kDumpGraphPath);
+  if (dump_graph_path != nullptr) {
+    std::string dump_graph_path_str(dump_graph_path);
+    stream_file_name << (dump_graph_path_str.empty() ? "" : dump_graph_path_str + "/");
+  }
   stream_file_name << "ge_onnx_" << std::setw(kDumpGraphIndexWidth) << std::setfill('0') << file_index;
   stream_file_name << "_graph_" << compute_graph.GetGraphID();
   stream_file_name << "_" << suffix << ".pbtxt";
