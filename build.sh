@@ -153,12 +153,32 @@ generate_package()
   cd "${BASEPATH}"
 
   METADEF_LIB_PATH="lib"
+  FWK_PATH="fwkacllib/lib64"
+  ATC_PATH="atc/lib64"
+
+  COMMON_LIB=("libgraph.so" "libregister.so")
+
+  rm -rf ${OUTPUT_PATH:?}/${FWK_PATH}/
+  rm -rf ${OUTPUT_PATH:?}/${ATC_PATH}/
+
+  mk_dir "${OUTPUT_PATH}/${FWK_PATH}"
+  mk_dir "${OUTPUT_PATH}/${ATC_PATH}"
+ 
+  cd "${OUTPUT_PATH}"
 
   find output/ -name metadef_lib.tar -exec rm {} \;
 
   cd "${OUTPUT_PATH}"
 
-  tar -cf metadef_lib.tar "${METADEF_LIB_PATH}"
+  for lib in "${COMMON_LIB[@]}";
+  do
+    find ${OUTPUT_PATH}/${METADEF_LIB_PATH} -maxdepth 1 -name "$lib" -exec cp -f {} ${OUTPUT_PATH}/${FWK_PATH} \;
+    find ${OUTPUT_PATH}/${METADEF_LIB_PATH} -maxdepth 1 -name "$lib" -exec cp -f {} ${OUTPUT_PATH}/${ATC_LIB} \;
+  done
+
+  find ${OUTPUT_PATH}/${METADEF_LIB_PATH} -maxdepth 1 -name "libc_sec.so" -exec cp -f {} ${OUTPUT_PATH}/${ATC_LIB} \;
+
+  tar -cf metadef_lib.tar fwkacllib atc
 }
 
 if [[ "X$ENABLE_GE_UT" = "Xoff" ]]; then
