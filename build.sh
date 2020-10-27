@@ -153,16 +153,19 @@ generate_package()
   cd "${BASEPATH}"
 
   METADEF_LIB_PATH="lib"
+  ACL_PATH="acllib/lib64"
   FWK_PATH="fwkacllib/lib64"
   ATC_PATH="atc/lib64"
 
   COMMON_LIB=("libgraph.so" "libregister.so")
 
   rm -rf ${OUTPUT_PATH:?}/${FWK_PATH}/
+  rm -rf ${OUTPUT_PATH:?}/${ACL_PATH}/
   rm -rf ${OUTPUT_PATH:?}/${ATC_PATH}/
   
   mk_dir "${OUTPUT_PATH}/${FWK_PATH}"
   mk_dir "${OUTPUT_PATH}/${ATC_PATH}"
+  mk_dir "${OUTPUT_PATH}/${ACL_PATH}"
 
   find output/ -name metadef_lib.tar -exec rm {} \;
 
@@ -175,6 +178,8 @@ generate_package()
   done
 
   find ${OUTPUT_PATH}/${METADEF_LIB_PATH} -maxdepth 1 -name "libc_sec.so" -exec cp -f {} ${OUTPUT_PATH}/${ATC_PATH} \;
+
+  find ${OUTPUT_PATH}/${METADEF_LIB_PATH} -maxdepth 1 -name "libregister.a" -exec cp -f {} ${OUTPUT_PATH}/${ACL_PATH} \;
 
   tar -cf metadef_lib.tar fwkacllib atc
 }
