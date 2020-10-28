@@ -18,6 +18,14 @@
 #include "graph/debug/ge_log.h"
 
 namespace ge {
+OpsKernelBuilderRegistry::~OpsKernelBuilderRegistry() {
+  for (auto &it : kernel_builders_) {
+    GELOGW("%s was not unregistered", it.first.c_str());
+    // to avoid coredump when unregister is not called when so was close
+    // this is called only when app is shutting down, so no release would be leaked
+    new (std::nothrow) std::shared_ptr<OpsKernelBuilder>(it.second);
+  }
+}
 void OpsKernelBuilderRegistry::Register(const string &lib_name, const OpsKernelBuilderPtr &instance) {
   auto it = kernel_builders_.emplace(lib_name, instance);
   if (it.second) {
