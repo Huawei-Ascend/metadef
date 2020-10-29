@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 Huawei Technologies Co., Ltd
+ * Copyright 2019-2020 Huawei Technologies Co., Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,9 +32,9 @@
     GELOGW(__VA_ARGS__);           \
   }
 
-#define GE_LOGE_IF(condition, ...)          \
-  if ((condition)) {                        \
-    GELOGE(ge::FAILED, __VA_ARGS__);        \
+#define GE_LOGE_IF(condition, ...)   \
+  if ((condition)) {                 \
+    GELOGE(ge::FAILED, __VA_ARGS__); \
   }
 
 #define GE_CHK_STATUS_RET_NOLOG(expr)       \
@@ -107,42 +107,41 @@
   } while (0)
 
 // If expr is not true, the log is printed and a custom statement is executed
-#define GE_CHK_BOOL_EXEC(expr, exec_expr, ...)           \
-  {                                                      \
-    bool b = (expr);                                     \
-    if (!b) {                                            \
-      GELOGE(ge::FAILED, __VA_ARGS__);                   \
-      exec_expr;                                         \
-    }                                                    \
+#define GE_CHK_BOOL_EXEC(expr, exec_expr, ...) \
+  {                                            \
+    bool b = (expr);                           \
+    if (!b) {                                  \
+      GELOGE(ge::FAILED, __VA_ARGS__);         \
+      exec_expr;                               \
+    }                                          \
   }
 
 // If expr is not true, the log is printed and a custom statement is executed
-#define GE_CHK_BOOL_EXEC_INFO(expr, exec_expr, ...)     \
-  {                                                     \
-    bool b = (expr);                                    \
-    if (!b) {                                           \
-      GELOGI(__VA_ARGS__);                              \
-      exec_expr;                                        \
-    }                                                   \
+#define GE_CHK_BOOL_EXEC_INFO(expr, exec_expr, ...) \
+  {                                                 \
+    bool b = (expr);                                \
+    if (!b) {                                       \
+      GELOGI(__VA_ARGS__);                          \
+      exec_expr;                                    \
+    }                                               \
   }
 
 // If expr is not GRAPH_SUCCESS, print the log and return the same value
-#define GE_CHK_STATUS_RET(expr, ...)                          \
-  do {                                                        \
-    const ge::graphStatus _status = (expr);                   \
-    if (ge::SUCCESS != _status) {                             \
-      GELOGE(ge::FAILED, __VA_ARGS__);                        \
-      return _status;                                         \
-    }                                                         \
+#define GE_CHK_STATUS_RET(expr, ...)        \
+  do {                                      \
+    const ge::graphStatus _status = (expr); \
+    if (ge::SUCCESS != _status) {           \
+      GELOGE(ge::FAILED, __VA_ARGS__);      \
+      return _status;                       \
+    }                                       \
   } while (0)
 
-#define GE_MAKE_SHARED(exec_expr0, exec_expr1)                \
-  try {                                                       \
-    exec_expr0;                                               \
-  } catch (...) {                                             \
-    GELOGE(ge::FAILED, "Make shared failed");                 \
-    exec_expr1;                                               \
+#define GE_MAKE_SHARED(exec_expr0, exec_expr1) \
+  try {                                        \
+    exec_expr0;                                \
+  } catch (...) {                              \
+    GELOGE(ge::FAILED, "Make shared failed");  \
+    exec_expr1;                                \
   }
 
 #endif  // COMMON_GRAPH_DEBUG_GE_LOG_H_
-

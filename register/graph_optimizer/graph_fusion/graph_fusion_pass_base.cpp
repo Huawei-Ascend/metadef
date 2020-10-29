@@ -26,7 +26,7 @@
 
 namespace fe {
 GraphFusionPassBase::GraphFusionPassBase() {
-  pattern_fusion_base_pass_impl_ptr_ = std::make_shared<PatternFusionBasePassImpl>();
+  patternFusionBasePassImplPtr_ = std::make_shared<PatternFusionBasePassImpl>();
 }
 
 GraphFusionPassBase::~GraphFusionPassBase() {}
@@ -40,7 +40,7 @@ Status GraphFusionPassBase::Run(ge::ComputeGraph &graph) {
   bool is_patterns_ok = true;
   // build Pattern
   vector<FusionPattern *> patterns;
-  pattern_fusion_base_pass_impl_ptr_->GetPatterns(patterns);
+  patternFusionBasePassImplPtr_->GetPatterns(patterns);
   if (patterns.empty()) {
     patterns = DefinePatterns();
     for (FusionPattern *pattern : patterns) {
@@ -54,19 +54,19 @@ Status GraphFusionPassBase::Run(ge::ComputeGraph &graph) {
       }
     }
 
-    pattern_fusion_base_pass_impl_ptr_->SetPatterns(patterns);
+    patternFusionBasePassImplPtr_->SetPatterns(patterns);
   }
   if (!is_patterns_ok) {
     GELOGE(FAILED, "Patterns invalid.");
     return FAILED;
   }
 
-  NodeMapInfoPtr node_map_info = nullptr;
-  if (GraphPassUtil::GetOpTypeMapToGraph(node_map_info, graph) == SUCCESS) {
-    node_map_info->run_count++;
+  NodeMapInfoPtr nodeMapInfo = nullptr;
+  if (GraphPassUtil::GetOpTypeMapToGraph(nodeMapInfo, graph) == SUCCESS) {
+    nodeMapInfo->runCount++;
   }
   // do matching and fusion for each pattern
-  bool final_changed = false;
+  bool finalChanged = false;
   for (const FusionPattern *pattern : patterns) {
     if (pattern != nullptr) {
       bool changed = false;
@@ -75,10 +75,10 @@ Status GraphFusionPassBase::Run(ge::ComputeGraph &graph) {
         GELOGW("run pattern %s not success, graph is not changed by it.", pattern->GetName().c_str());
         return ret;
       }
-      final_changed = final_changed || changed;
+      finalChanged = finalChanged || changed;
     }
   }
-  return final_changed ? SUCCESS : NOT_CHANGED;
+  return finalChanged ? SUCCESS : NOT_CHANGED;
 }
 
 /**
@@ -88,47 +88,50 @@ Status GraphFusionPassBase::Run(ge::ComputeGraph &graph) {
 Status GraphFusionPassBase::RunOnePattern(ge::ComputeGraph &graph, const FusionPattern &pattern, bool &changed) {
   changed = false;
   Mappings mappings;
-  int32_t effect_times = 0;
-  uint32_t graph_id = graph.GetGraphID();
-  FusionInfo fusion_info(graph.GetSessionID(), to_string(graph_id), GetName(), static_cast<int32_t>(mappings.size()),
-                         effect_times);
+  int32_t effectTimes = 0;
+  uint32_t graphId = graph.GetGraphID();
+  FusionInfo fusionInfo(graph.GetSessionID(), to_string(graphId), GetName(), static_cast<int32_t>(mappings.size()),
+                        effectTimes);
   // match all patterns in graph, and save them to mappings
   if (!MatchAll(graph, pattern, mappings)) {
-    GELOGD("GraphFusionPass[%s]: pattern=%s, matched_times=%zu, effected_times=%d.", GetName().c_str(),
-           pattern.GetName().c_str(), mappings.size(), effect_times);
+    GELOGD("GraphFusionPass[%s]: pattern=%s, matchedTimes=%zu, effectedTimes=%d.", GetName().c_str(),
+           pattern.GetName().c_str(), mappings.size(), effectTimes);
     return SUCCESS;
   }
 
-  GELOGD("This graph has been matched with pattern[%s]. The mappings are as follows.", pattern.GetName().c_str());
+  GELOGD(
+      "This graph has been matched with pattern[%s]."
+      "The mappings are as follows.",
+      pattern.GetName().c_str());
 
   // print the results of matching
-  pattern_fusion_base_pass_impl_ptr_->DumpMappings(pattern, mappings);
-  NodeMapInfoPtr node_map_info = nullptr;
+  patternFusionBasePassImplPtr_->DumpMappings(pattern, mappings);
+  NodeMapInfoPtr nodeMapInfo = nullptr;
   // get nodes by type from node
-  (void)GraphPassUtil::GetOpTypeMapToGraph(node_map_info, graph);
+  (void)GraphPassUtil::GetOpTypeMapToGraph(nodeMapInfo, graph);
   // do fusion for each mapping
   for (Mapping &mapping : mappings) {
-    vector<ge::NodePtr> fus_nodes;
-    ge::NodePtr first_node = nullptr;
+    vector<ge::NodePtr> fusNodes;
+    ge::NodePtr firstNode = nullptr;
     for (auto &item : mapping) {
       if (!item.second.empty()) {
-        first_node = item.second[0];
+        firstNode = item.second[0];
         break;
       }
     }
 
-    Status status = Fusion(graph, mapping, fus_nodes);
+    Status status = Fusion(graph, mapping, fusNodes);
     if (status != SUCCESS && status != NOT_CHANGED) {
       GELOGE(status, "Fail to fuse the graph with pattern[%s].", pattern.GetName().c_str());
       return status;
     }
 
     if (status == SUCCESS) {
-      effect_times++;
-      if (!fus_nodes.empty()) {
+      effectTimes++;
+      if (!fusNodes.empty()) {
         // add fusednode to node map info
-        for (ge::NodePtr &node : fus_nodes) {
-          GraphPassUtil::AddNodeFromOpTypeMap(node_map_info, node);
+        for (ge::NodePtr &node : fusNodes) {
+          GraphPassUtil::AddNodeFromOpTypeMap(nodeMapInfo, node);
         }
       }
     }
@@ -136,13 +139,13 @@ Status GraphFusionPassBase::RunOnePattern(ge::ComputeGraph &graph, const FusionP
   }
 
   // get match times and effect times
-  FusionStatisticRecorder &fusion_statistic_inst = FusionStatisticRecorder::Instance();
-  fusion_info.SetMatchTimes(static_cast<int32_t>(mappings.size()));
-  fusion_info.SetEffectTimes(effect_times);
-  fusion_statistic_inst.UpdateGraphFusionMatchTimes(fusion_info);
-  fusion_statistic_inst.UpdateGraphFusionEffectTimes(fusion_info);
-  GELOGD("GraphId[%d], GraphFusionPass[%s]: pattern=%s, matched_times=%d, effected_times=%d.", graph_id,
-         GetName().c_str(), pattern.GetName().c_str(), static_cast<int32_t>(mappings.size()), effect_times);
+  FusionStatisticRecorder &fusionStatisticInst = FusionStatisticRecorder::Instance();
+  fusionInfo.SetMatchTimes(static_cast<int32_t>(mappings.size()));
+  fusionInfo.SetEffectTimes(effectTimes);
+  fusionStatisticInst.UpdateGraphFusionMatchTimes(fusionInfo);
+  fusionStatisticInst.UpdateGraphFusionEffectTimes(fusionInfo);
+  GELOGD("GraphId[%d], GraphFusionPass[%s]: pattern=%s, matchedTimes=%d, effectedTimes=%d.", graphId, GetName().c_str(),
+         pattern.GetName().c_str(), static_cast<int32_t>(mappings.size()), effectTimes);
   return SUCCESS;
 }
 
@@ -165,22 +168,22 @@ Status GraphFusionPassBase::RunOnePattern(ge::ComputeGraph &graph, const FusionP
 // 5. if all the Ops in pattern are matched successfully, return the mapping of
 //    PatternOp and GraphNode
 bool GraphFusionPassBase::MatchAll(ge::ComputeGraph &graph, const FusionPattern &pattern, Mappings &mappings) {
-  vector<ge::NodePtr> matched_output_nodes;
+  vector<ge::NodePtr> matchedOutputNodes;
 
   // find all the output nodes of pattern in the graph based on Op type
-  std::shared_ptr<FusionPattern::OpDesc> output_op_desc = pattern.GetOutput();
-  if (output_op_desc == nullptr) {
+  std::shared_ptr<FusionPattern::OpDesc> outputOpDesc = pattern.GetOutput();
+  if (outputOpDesc == nullptr) {
     return false;
   }
 
-  if (!pattern_fusion_base_pass_impl_ptr_->GetMatchOutputNodes(graph, pattern, matched_output_nodes)) {
+  if (!patternFusionBasePassImplPtr_->GetMatchOutputNodes(graph, pattern, matchedOutputNodes)) {
     return false;
   }
 
   // begin matching from every output node
-  for (ge::NodePtr &output_node : matched_output_nodes) {
+  for (ge::NodePtr &outputNode : matchedOutputNodes) {
     Mapping mapping;
-    if (pattern_fusion_base_pass_impl_ptr_->MatchFromOutput(output_node, output_op_desc, mapping)) {
+    if (patternFusionBasePassImplPtr_->MatchFromOutput(outputNode, outputOpDesc, mapping)) {
       mappings.push_back(mapping);
     }
   }
@@ -194,8 +197,8 @@ bool GraphFusionPassBase::MatchAll(ge::ComputeGraph &graph, const FusionPattern 
  */
 ge::NodePtr GraphFusionPassBase::GetNodeFromMapping(const string &id, const Mapping &mapping) {
   for (auto &item : mapping) {
-    std::shared_ptr<OpDesc> op_desc = item.first;
-    if (op_desc != nullptr && op_desc->id == id) {
+    std::shared_ptr<OpDesc> opDesc = item.first;
+    if (opDesc != nullptr && opDesc->id == id) {
       if (item.second.empty()) {
         return nullptr;
       } else {

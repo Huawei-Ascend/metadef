@@ -63,26 +63,25 @@ class PatternFusionBasePass : public GraphPass {
   /** execute pass
    *
    * @param [in] graph, the graph waiting for pass level optimization
-   * @param [ops_kernel_info_store_ptr, OP info kernel instance
+   * @param [opsKernelInfoStorePtr, OP info kernel instance
    * @return SUCCESS, successfully optimized the graph by the pass
    * @return NOT_CHANGED, the graph did not change
    * @return FAILED, fail to modify graph
    */
-  virtual Status Run(ge::ComputeGraph &graph, OpsKernelInfoStorePtr ops_kernel_info_store_ptr);
+  virtual Status Run(ge::ComputeGraph &graph, OpsKernelInfoStorePtr opsKernelInfoStorePtr);
 
  protected:
   virtual vector<FusionPattern *> DefinePatterns() = 0;
-  virtual Status Fusion(ge::ComputeGraph &graph, Mapping &mapping, vector<ge::NodePtr> &new_nodes) = 0;
+  virtual Status Fusion(ge::ComputeGraph &graph, Mapping &mapping, vector<ge::NodePtr> &newNodes) = 0;
 
   std::vector<ge::NodePtr> GetNodesFromMapping(const Mapping &mapping);
   ge::NodePtr GetNodeFromMapping(const string &id, const Mapping &mapping);
 
-  void RecordOutputAnchorMap(ge::NodePtr output_node);
+  void RecordOutputAnchorMap(ge::NodePtr outputNode);
   void ClearOutputAnchorMap();
+  Status SetDataDumpAttr(vector<ge::NodePtr> &originalNodes, vector<ge::NodePtr> &fusNodes);
 
-  Status SetDataDumpAttr(vector<ge::NodePtr> &original_nodes, vector<ge::NodePtr> &fus_nodes);
-
-  bool CheckOpSupported(const ge::OpDescPtr &op_desc_ptr);
+  bool CheckOpSupported(const ge::OpDescPtr &opDescPtr);
 
  private:
   /** match all nodes in graph according to pattern
@@ -97,9 +96,8 @@ class PatternFusionBasePass : public GraphPass {
   Status RunOnePattern(ge::ComputeGraph &graph, const FusionPattern &pattern, bool &changed);  // lint !e148
 
   /** Internal implement class ptr */
-  std::shared_ptr<PatternFusionBasePassImpl> pattern_fusion_base_pass_impl_ptr_;
-
-  std::unordered_map<ge::NodePtr, std::map<ge::InDataAnchorPtr, ge::OutDataAnchorPtr>> origin_op_anchors_map_;
+  std::shared_ptr<PatternFusionBasePassImpl> patternFusionBasePassImplPtr_;
+  std::unordered_map<ge::NodePtr, std::map<ge::InDataAnchorPtr, ge::OutDataAnchorPtr>> originOpAnchorsMap_;
 };
 }  // namespace fe
 

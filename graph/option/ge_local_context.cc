@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 Huawei Technologies Co., Ltd
+ * Copyright 2019-2020 Huawei Technologies Co., Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,25 +56,5 @@ void GEThreadLocalContext::SetSessionOption(map<string, string> options_map) {
 void GEThreadLocalContext::SetGraphOption(map<std::string, string> options_map) {
   graph_options_.clear();
   graph_options_ = std::move(options_map);
-}
-
-map<string, string> GEThreadLocalContext::GetAllGraphOptions() const {
-  return graph_options_;
-}
-
-map<string, string> GEThreadLocalContext::GetAllSessionOptions() const {
-  return session_options_;
-}
-
-map<string, string> GEThreadLocalContext::GetAllGlobalOptions() const {
-  return global_options_;
-}
-
-map<string, string> GEThreadLocalContext::GetAllOptions() const {
-  map<string, string> options_all;
-  options_all.insert(graph_options_.begin(), graph_options_.end());
-  options_all.insert(session_options_.begin(), session_options_.end());
-  options_all.insert(global_options_.begin(), global_options_.end());
-  return options_all;
 }
 }  // namespace ge

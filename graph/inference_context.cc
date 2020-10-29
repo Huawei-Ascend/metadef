@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 Huawei Technologies Co., Ltd
+ * Copyright 2019-2020 Huawei Technologies Co., Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -78,7 +78,7 @@ InferenceContext::InferenceContext(std::unique_ptr<InferenceContextImpl> &impl) 
 
 std::unique_ptr<InferenceContext> InferenceContext::Create() {
   std::unique_ptr<InferenceContextImpl> impl =
-      std::unique_ptr<InferenceContextImpl>(new (std::nothrow) InferenceContextImpl());
+    std::unique_ptr<InferenceContextImpl>(new (std::nothrow) InferenceContextImpl());
   if (impl == nullptr) {
     return nullptr;
   }

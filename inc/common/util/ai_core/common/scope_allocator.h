@@ -27,11 +27,11 @@ class ScopeAllocator {
   int64_t GetCurrentScopeId();
   int64_t AllocateScopeId(void);
   bool HasScopeAttr(ge::ConstOpDescPtr opdef);
-  bool GetScopeAttr(ge::ConstOpDescPtr opdef, int64_t &scope_id);
-  bool SetScopeAttr(ge::OpDescPtr opdef, int64_t scope_id);
-  bool ResetScopeId(int64_t scope_id);
+  bool GetScopeAttr(ge::ConstOpDescPtr opdef, int64_t &scopeId);
+  bool SetScopeAttr(ge::OpDescPtr opdef, int64_t scopeId);
+  bool ResetScopeId(int64_t scopeId);
  private:
-    int64_t scope_id;
+    int64_t scopeId;
 };
 }  // namespace fe
 #endif

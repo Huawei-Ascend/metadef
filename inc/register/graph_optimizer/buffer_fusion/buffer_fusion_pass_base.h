@@ -39,10 +39,10 @@ class BufferFusionPassBase {
   explicit BufferFusionPassBase();
   virtual ~BufferFusionPassBase();
   virtual std::vector<BufferFusionPattern *> DefinePatterns() = 0;
-  virtual Status GetFusionNodes(const BufferFusionMapping &mapping, vector<ge::NodePtr> &fusion_nodes);
+  virtual Status GetFusionNodes(const BufferFusionMapping &mapping, vector<ge::NodePtr> &fusionNodes);
   std::vector<ge::NodePtr> GetMatchedNodes(const BufferFusionMapping &mapping);
-  std::vector<ge::NodePtr> GetMatchedNodesByDescName(const std::string &desc_name, const BufferFusionMapping &mapping);
-  ge::NodePtr GetMatchedHeadNode(const std::vector<ge::NodePtr> &matched_nodes);
+  std::vector<ge::NodePtr> GetMatchedNodesByDescName(const std::string &descName, const BufferFusionMapping &mapping);
+  ge::NodePtr GetMatchedHeadNode(const std::vector<ge::NodePtr> &matchedNodes);
 
   void SetName(const string &name) { name_ = name; }
 

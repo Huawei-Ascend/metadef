@@ -22,7 +22,6 @@
 #include "graph/ge_attr_value.h"
 #include "proto/ge_ir.pb.h"
 
-
 namespace ge {
 using std::map;
 using std::unordered_set;

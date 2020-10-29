@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 Huawei Technologies Co., Ltd
+ * Copyright 2019-2020 Huawei Technologies Co., Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 
 #include "external/graph/graph.h"
-#include <cstring>
 #include "debug/ge_util.h"
 #include "framework/common/debug/ge_log.h"
 #include "graph/debug/ge_attr_define.h"
@@ -23,7 +22,6 @@
 #include "graph/model.h"
 #include "graph/utils/graph_utils.h"
 #include "graph/utils/op_desc_utils.h"
-#include "graph/utils/node_adapter.h"
 
 using std::map;
 using std::pair;
@@ -122,8 +120,8 @@ class GraphImpl {
 
     // Del last ";"
     if (!output_name_.empty()) {
-        output_name_ = output_name_.substr(0, output_name_.length() - 1);
-      }
+      output_name_ = output_name_.substr(0, output_name_.length() - 1);
+    }
     compute_graph_->SetUserDefOutput(output_name_);
     compute_graph_->SetOutputSize(static_cast<uint32_t>(output_indexs.size()));
     compute_graph_->SetGraphOutNodesInfo(output_nodes);
@@ -242,13 +240,7 @@ class GraphImpl {
     compute_graph_->SetNeedIteration(need_iteration);
   }
 
-  const std::string &GetName() const {
-    return name_;
-  }
-
-  ComputeGraphPtr GetComputeGraph() const {
-    return compute_graph_;
-  }
+  const std::string &GetName() const { return name_; }
 
  private:
   std::string name_;
@@ -269,7 +261,7 @@ graphStatus Graph::AddOp(const ge::Operator &op) {
   return impl_->AddOp(op);
 }
 
-graphStatus Graph::GetAllOpName(std::vector<std::string> &op_name) const {
+graphStatus Graph::GetAllOpName(std::vector<string> &op_name) const {
   GE_CHK_BOOL_EXEC(impl_ != nullptr, return GRAPH_FAILED,
                    "GetAllOpName failed: graph can not be used, impl is nullptr.");
   return impl_->GetAllOpName(op_name);
@@ -343,236 +335,6 @@ void Graph::SetNeedIteration(bool need_iteration) {
   impl_->SetNeedIteration(need_iteration);
 }
 
-std::vector<GNode> Graph::GetAllNodes() const {
-  std::vector<GNode> graph_nodes;
-  if (impl_ == nullptr) {
-    GELOGE(GRAPH_FAILED, "GetAllNodes: graph can not be used, impl is nullptr.");
-    return graph_nodes;
-  }
-
-  ComputeGraphPtr compute_graph_ptr = impl_->GetComputeGraph();
-  if (compute_graph_ptr == nullptr) {
-    GELOGE(GRAPH_FAILED, "GetAllNodes: compute graph ptr is nullptr.");
-    return graph_nodes;
-  }
-
-  for (auto &node : compute_graph_ptr->GetAllNodes()) {
-    GNode gnode = NodeAdapter::Node2GNode(node);
-    graph_nodes.emplace_back(gnode);
-  }
-
-  return graph_nodes;
-}
-
-std::vector<GNode> Graph::GetDirectNode() const {
-  std::vector<GNode> graph_nodes;
-  if (impl_ == nullptr) {
-    GELOGE(GRAPH_FAILED, "GetDirectNode: graph can not be used, impl is nullptr.");
-    return graph_nodes;
-  }
-  ComputeGraphPtr compute_graph_ptr = impl_->GetComputeGraph();
-  if (compute_graph_ptr == nullptr) {
-    GELOGE(GRAPH_FAILED, "GetDirectNode: compute graph ptr is nullptr.");
-    return graph_nodes;
-  }
-
-  for (auto &node : compute_graph_ptr->GetDirectNode()) {
-    GNode gnode = NodeAdapter::Node2GNode(node);
-    graph_nodes.emplace_back(gnode);
-  }
-
-  return graph_nodes;
-}
-
-graphStatus Graph::RemoveNode(GNode &node) {
-  if (impl_ == nullptr) {
-    GELOGE(GRAPH_FAILED, "RemoveNode: graph can not be used, impl is nullptr.");
-    return GRAPH_FAILED;
-  }
-
-  NodePtr node_ptr = NodeAdapter::GNode2Node(node);
-  if (node_ptr == nullptr) {
-    GELOGE(GRAPH_FAILED, "RemoveNode: gnode to  node failed.");
-    return GRAPH_FAILED;
-  }
-
-  ComputeGraphPtr compute_graph_ptr = impl_->GetComputeGraph();
-  if (compute_graph_ptr == nullptr) {
-    GELOGE(GRAPH_FAILED, "RemoveNde: compute graph ptr is nullptr.");
-    return GRAPH_FAILED;
-  }
-
-  if (compute_graph_ptr->RemoveNode(node_ptr) != GRAPH_SUCCESS)
-  {
-    GELOGE(GRAPH_FAILED, "RemoveNde: remove node failed.");
-    return GRAPH_FAILED;
-  }
-
-  return GRAPH_SUCCESS;
-}
-
-graphStatus Graph::RemoveEdge(GNode &src_node, const int32_t src_port_index,
-                              GNode &dst_node, const int32_t dst_port_index) {
-  if (impl_ == nullptr) {
-    GELOGE(GRAPH_FAILED, "RemoveEdge: graph can not be used, impl is nullptr.");
-    return GRAPH_FAILED;
-  }
-
-  if ((src_port_index == -1) && (dst_port_index != -1)) {
-    GELOGE(GRAPH_FAILED, "RemoveEdge:src control anchor link to dst data anchor not exists.");
-    return GRAPH_FAILED;
-  }
-
-  NodePtr src_node_ptr = NodeAdapter::GNode2Node(src_node);
-  if (src_node_ptr == nullptr) {
-    GELOGE(GRAPH_FAILED, "RemoveEdge: src gnode to node failed.");
-    return GRAPH_FAILED;
-  }
-
-  NodePtr dst_node_ptr = NodeAdapter::GNode2Node(dst_node);
-  if (dst_node_ptr == nullptr) {
-    GELOGE(GRAPH_FAILED, "RemoveEdge: dst gnode to node failed.");
-    return GRAPH_FAILED;
-  }
-
-  graphStatus res = GRAPH_FAILED;
-  if ((src_port_index == -1) && (dst_port_index == -1)) {
-    res = GraphUtils::RemoveEdge(src_node_ptr->GetOutControlAnchor(), dst_node_ptr->GetInControlAnchor());
-    if (res != GRAPH_SUCCESS) {
-      GELOGE(GRAPH_FAILED, "RemoveEdge: remove control edge failed.");
-      return GRAPH_FAILED;
-    }
-    return GRAPH_SUCCESS;
-  }
-
-  if (src_port_index != -1 && dst_port_index == -1) {
-    res = GraphUtils::RemoveEdge(src_node_ptr->GetOutDataAnchor(src_port_index), dst_node_ptr->GetInControlAnchor());
-    if (res != GRAPH_SUCCESS) {
-      GELOGE(GRAPH_FAILED, "RemoveEdge: remove data-control edge failed.");
-      return GRAPH_FAILED;
-    }
-    return GRAPH_SUCCESS;
-  }
-
-  res = GraphUtils::RemoveEdge(src_node_ptr->GetOutDataAnchor(src_port_index),
-                               dst_node_ptr->GetInDataAnchor(dst_port_index));
-  if (res != GRAPH_SUCCESS) {
-    GELOGE(GRAPH_FAILED, "RemoveEdge: remove data edge failed.");
-    return GRAPH_FAILED;
-  }
-  return GRAPH_SUCCESS;
-}
-
-GNode Graph::AddNodeByOp(const Operator &op) {
-  if (impl_ == nullptr) {
-    GELOGE(GRAPH_FAILED, "AddNodeByOp: graph can not be used, impl is nullptr.");
-    return GNode();
-  }
-
-  std::shared_ptr<ge::OpDesc> op_desc = ge::OpDescUtils::GetOpDescFromOperator(op);
-  if (op_desc == nullptr) {
-    GELOGE(GRAPH_FAILED, "AddNodeByOp: get op desc from op[%s] failed.",  op.GetName().c_str());
-    return  GNode();
-  }
-
-  ComputeGraphPtr compute_graph_ptr = impl_->GetComputeGraph();
-  if (compute_graph_ptr == nullptr) {
-    GELOGE(GRAPH_FAILED, "AddNodeByOp: compute graph ptr is nullptr.");
-    return GNode();
-  }
-
-  NodePtr node_ptr = compute_graph_ptr->AddNode(op_desc);
-  GNode gnode = NodeAdapter::Node2GNode(node_ptr);
-
-  return gnode;
-}
-
-graphStatus Graph::AddDataEdge(GNode &src_node, const int32_t src_port_index,
-                               GNode &dst_node, const int32_t dst_port_index) {
-  if (impl_ == nullptr) {
-    GELOGE(GRAPH_FAILED, "AddDataEdge: graph can not be used, impl is nullptr.");
-    return GRAPH_FAILED;
-  }
-
-  NodePtr src_node_ptr = NodeAdapter::GNode2Node(src_node);
-  if (src_node_ptr == nullptr) {
-    GELOGE(GRAPH_FAILED, "AddDataEdge: src gnode to node failed.");
-    return GRAPH_FAILED;
-  }
-
-  NodePtr dst_node_ptr = NodeAdapter::GNode2Node(dst_node);
-  if (dst_node_ptr == nullptr) {
-    GELOGE(GRAPH_FAILED, "AddDataEdge: dst gnode to node failed.");
-    return GRAPH_FAILED;
-  }
-
-  graphStatus res = GraphUtils::AddEdge(src_node_ptr->GetOutDataAnchor(src_port_index),
-                                        dst_node_ptr->GetInDataAnchor(dst_port_index));
-  if (res != GRAPH_SUCCESS) {
-    GELOGE(GRAPH_FAILED, "AddDataEdge: Add data edge failed.");
-    return GRAPH_FAILED;
-  }
-
-  return GRAPH_SUCCESS;
-}
-
-graphStatus Graph::AddControlEdge (GNode &src_node, GNode &dst_node) {
-  if (impl_ == nullptr) {
-    GELOGE(GRAPH_FAILED, "AddControlEdge: graph can not be used, impl is nullptr.");
-    return GRAPH_FAILED;
-  }
-
-  NodePtr src_node_ptr = NodeAdapter::GNode2Node(src_node);
-  if (src_node_ptr == nullptr) {
-    GELOGE(GRAPH_FAILED, "AddControlEdge: src gnode to node failed.");
-    return GRAPH_FAILED;
-  }
-
-  NodePtr dst_node_ptr = NodeAdapter::GNode2Node(dst_node);
-  if (dst_node_ptr == nullptr) {
-    GELOGE(GRAPH_FAILED, "AddControlEdge: dst gnode to node failed.");
-    return GRAPH_FAILED;
-  }
-
-  graphStatus res = GraphUtils::AddEdge(src_node_ptr->GetOutControlAnchor(), dst_node_ptr->GetInControlAnchor());
-  if (res != GRAPH_SUCCESS) {
-    GELOGE(GRAPH_FAILED, "AddControlEdge: Add control edge failed.");
-    return GRAPH_FAILED;
-  }
-
-  return SUCCESS;
-}
-
-GraphPtr Graph::ConstructFromInputs(const std::vector<Operator> &inputs, const ge::AscendString &name) {
-  const char* ascend_name = name.GetString();
-  if (ascend_name == nullptr) {
-    GELOGE(GRAPH_PARAM_INVALID, "ConstructFromInputs: ascend string error.");
-    return nullptr;
-  }
-
-  if (inputs.empty()) {
-    GELOGE(GRAPH_FAILED, "ConstructFromInputs: inputs size can not be 0.");
-    return nullptr;
-  }
-
-  std::string graph_name = ascend_name;
-  ComputeGraphPtr compute_graph = GraphUtils::CreateGraphFromOperator(graph_name, inputs);
-  if (compute_graph == nullptr) {
-    GELOGE(GRAPH_FAILED, "ConstructFromInputs: create compute graph failed.");
-    return nullptr;
-  }
-
-  compute_graph->SetInputSize(static_cast<uint32_t>(inputs.size()));
-  Graph graph = GraphUtils::CreateGraphFromComputeGraph(compute_graph);
-  GraphPtr graph_ptr = std::make_shared<Graph>(graph);
-  if (graph_ptr == nullptr) {
-    GELOGE(GRAPH_FAILED, "ConstructFromInputs: graph make shared failed.");
-    return nullptr;
-  }
-
-  return graph_ptr;
-}
-
 GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY ComputeGraphPtr GraphUtils::GetComputeGraph(const ge::Graph &graph) {
   GE_CHK_BOOL_EXEC_NOLOG(graph.IsValid(), return nullptr);
   return graph.impl_->compute_graph_;
@@ -594,10 +356,7 @@ graphStatus Graph::LoadFromFile(const string &file_name) {
   return GRAPH_SUCCESS;
 }
 
-GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY
-const std::string &Graph::GetName() const {
-  return impl_->GetName();
-}
+GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY const std::string &Graph::GetName() const { return impl_->GetName(); }
 
 GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY Graph
 GraphUtils::CreateGraphFromComputeGraph(const ge::ComputeGraphPtr compute_graph) {
@@ -612,8 +371,7 @@ GraphUtils::CreateGraphFromComputeGraph(const ge::ComputeGraphPtr compute_graph)
   return graph;
 }
 
-GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY
-graphStatus GraphUtils::RecoverGraphOperators(const Graph &graph) {
+GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY graphStatus GraphUtils::RecoverGraphOperators(const Graph &graph) {
   GE_CHECK_NOTNULL(graph.impl_);
   GE_CHECK_NOTNULL(graph.impl_->compute_graph_);
 

@@ -31,14 +31,20 @@ class BufferFusionPassRegistry::BufferFusionPassRegistryImpl {
     auto iter = create_fns_.find(pass_type);
     if (iter != create_fns_.end()) {
       create_fns_[pass_type][pass_name] = create_fn;
-      GELOGI("UbFusionPass[type=%d,name=%s]: the pass type already exists.", pass_type, pass_name.c_str());
+      GELOGI(
+          "UbFusionPass[type=%d,name=%s]: the pass type already exists, "
+          "register the ub fusion pass.",
+          pass_type, pass_name.c_str());
       return;
     }
 
     std::map<std::string, BufferFusionPassRegistry::CreateFn> create_fn_map;
     create_fn_map[pass_name] = create_fn;
     create_fns_[pass_type] = create_fn_map;
-    GELOGI("UbFusionPass[type=%d,name=%s]: the pass type does not exists.", pass_type, pass_name.c_str());
+    GELOGI(
+        "UbFusionPass[type=%d,name=%s]: the pass type does not exists, "
+        "register the ub fusion pass.",
+        pass_type, pass_name.c_str());
   }
 
   std::map<std::string, BufferFusionPassRegistry::CreateFn> GetCreateFn(const BufferFusionPassType &pass_type) {
@@ -70,8 +76,11 @@ BufferFusionPassRegistry &BufferFusionPassRegistry::GetInstance() {
 void BufferFusionPassRegistry::RegisterPass(const BufferFusionPassType &pass_type, const std::string &pass_name,
                                             CreateFn create_fn) {
   if (impl_ == nullptr) {
-    GELOGE(ge::MEMALLOC_FAILED, "UbFusionPass[type=%d,name=%s]: failed to register the ub fusion pass", pass_type,
-           pass_name.c_str());
+    GELOGE(ge::MEMALLOC_FAILED,
+           "UbFusionPass[type=%d,name=%s]: failed to register the ub "
+           "fusion pass, "
+           "BufferFusionPassRegistry is not properly initialized.",
+           pass_type, pass_name.c_str());
     return;
   }
   impl_->RegisterPass(pass_type, pass_name, create_fn);
@@ -80,7 +89,10 @@ void BufferFusionPassRegistry::RegisterPass(const BufferFusionPassType &pass_typ
 std::map<std::string, BufferFusionPassRegistry::CreateFn> BufferFusionPassRegistry::GetCreateFnByType(
     const BufferFusionPassType &pass_type) {
   if (impl_ == nullptr) {
-    GELOGE(ge::MEMALLOC_FAILED, "UbFusionPass[type=%d]: failed to create the ub fusion pass", pass_type);
+    GELOGE(ge::MEMALLOC_FAILED,
+           "UbFusionPass[type=%d]: failed to create the ub fusion pass, "
+           "BufferFusionPassRegistry is not properly initialized.",
+           pass_type);
     return std::map<std::string, CreateFn>{};
   }
   return impl_->GetCreateFn(pass_type);

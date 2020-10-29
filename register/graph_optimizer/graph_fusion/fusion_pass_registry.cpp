@@ -32,14 +32,20 @@ class FusionPassRegistry::FusionPassRegistryImpl {
     auto iter = create_fns_.find(pass_type);
     if (iter != create_fns_.end()) {
       create_fns_[pass_type][pass_name] = create_fn;
-      GELOGD("GraphFusionPass[type=%d,name=%s]: the pass type already exists.", pass_type, pass_name.c_str());
+      GELOGD(
+          "GraphFusionPass[type=%d,name=%s]: the pass type already exists, "
+          "register the graph fusion pass.",
+          pass_type, pass_name.c_str());
       return;
     }
 
     std::map<std::string, FusionPassRegistry::CreateFn> create_fn_map;
     create_fn_map[pass_name] = create_fn;
     create_fns_[pass_type] = create_fn_map;
-    GELOGD("GraphFusionPass[type=%d,name=%s]: the pass type does not exist.", pass_type, pass_name.c_str());
+    GELOGD(
+        "GraphFusionPass[type=%d,name=%s]: the pass type does not exist, "
+        "register the graph fusion pass.",
+        pass_type, pass_name.c_str());
   }
 
   std::map<std::string, FusionPassRegistry::CreateFn> GetCreateFn(const GraphFusionPassType &pass_type) {
@@ -70,7 +76,10 @@ FusionPassRegistry &FusionPassRegistry::GetInstance() {
 void FusionPassRegistry::RegisterPass(const GraphFusionPassType &pass_type, const std::string &pass_name,
                                       CreateFn create_fn) {
   if (impl_ == nullptr) {
-    GELOGE(ge::MEMALLOC_FAILED, "GraphFusionPass[type=%d,name=%s]: failed to register the graph fusion pass.",
+    GELOGE(ge::MEMALLOC_FAILED,
+           "GraphFusionPass[type=%d,name=%s]: failed to register the graph "
+           "fusion pass, "
+           "FusionPassRegistry is not properly initialized.",
            pass_type, pass_name.c_str());
     return;
   }
@@ -80,7 +89,10 @@ void FusionPassRegistry::RegisterPass(const GraphFusionPassType &pass_type, cons
 std::map<std::string, FusionPassRegistry::CreateFn> FusionPassRegistry::GetCreateFnByType(
     const GraphFusionPassType &pass_type) {
   if (impl_ == nullptr) {
-    GELOGE(ge::MEMALLOC_FAILED, "GraphFusionPass[type=%d]: failed to create the graph fusion pass.", pass_type);
+    GELOGE(ge::MEMALLOC_FAILED,
+           "GraphFusionPass[type=%d]: failed to create the graph fusion pass, "
+           "FusionPassRegistry is not properly initialized.",
+           pass_type);
     return std::map<std::string, CreateFn>{};
   }
   return impl_->GetCreateFn(pass_type);
