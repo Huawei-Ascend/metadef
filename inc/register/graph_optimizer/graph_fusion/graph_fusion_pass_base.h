@@ -40,8 +40,7 @@ enum GraphFusionPassType {
   CUSTOM_AI_CORE_GRAPH_PASS,
   CUSTOM_VECTOR_CORE_GRAPH_PASS,
   SECOND_ROUND_BUILT_IN_GRAPH_PASS,
-  BUILT_IN_BEFORE_TRANSNODE_INSERTION_GRAPH_PASS,
-  GRAPH_FUSION_PASS_TYPE_RESERVED
+  GRAPH_FUSION_PASS_TYPE_RESERVED,
 };
 class PatternFusionBasePassImpl;
 using PatternFusionBasePassImplPtr = std::shared_ptr<PatternFusionBasePassImpl>;
@@ -78,12 +77,12 @@ class GraphFusionPassBase : public GraphPass {
   /** do fusion according to nodes matched
    *
    * @param graph the graph waiting for pass level optimization
-   * @param new_nodes fusion result node(s)
+   * @param newNodes fusion result node(s)
    * @return SUCCESS, successfully optimized the graph by the pass
    * @return NOT_CHANGED, the graph did not change
    * @return FAILED, fail to modify graph
    */
-  virtual Status Fusion(ge::ComputeGraph &graph, Mapping &mapping, vector<ge::NodePtr> &new_nodes) = 0;  // lint !e148
+  virtual Status Fusion(ge::ComputeGraph &graph, Mapping &mapping, vector<ge::NodePtr> &newNodes) = 0;  // lint !e148
 
   /** get nodes from matched result
    *
@@ -105,7 +104,7 @@ class GraphFusionPassBase : public GraphPass {
   Status RunOnePattern(ge::ComputeGraph &graph, const FusionPattern &pattern, bool &changed);  // lint !e148
 
   /** Internal implement class ptr */
-  std::shared_ptr<PatternFusionBasePassImpl> pattern_fusion_base_pass_impl_ptr_;
+  std::shared_ptr<PatternFusionBasePassImpl> patternFusionBasePassImplPtr_;
 };
 
 }  // namespace fe

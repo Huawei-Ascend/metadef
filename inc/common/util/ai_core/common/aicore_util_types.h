@@ -37,61 +37,47 @@ struct FusionDataFlow {
   std::pair<std::string, ge::AnchorPtr> node_dataindex_pair;
 };
 
-typedef struct tag_l2_fusion_data {
+typedef struct tagL2FusionData {
   uint32_t l2Index;
   uint64_t l2Addr;
   uint64_t l2PageNum;
 } L2FusionData_t;
 typedef std::map<uint64_t, L2FusionData_t> L2FusionDataMap_t;
 
-typedef struct tag_fe_sm_desc {
+typedef struct tagFeSmDesc {
   rtL2Ctrl_t l2ctrl;
-  std::string node_name[8];
-  uint8_t output_index[8];
-} fe_sm_desc_t;
+  std::string nodeName[8];
+  uint8_t outputIndex[8];
+} feSmDesc_t;
 
 typedef struct TagTaskL2FusionInfo {
-  std::string node_name;
-  fe_sm_desc_t l2_info;
+  std::string nodeName;
+  feSmDesc_t l2Info;
   L2FusionDataMap_t input;
   L2FusionDataMap_t output;
-  uint32_t is_used;
+  uint32_t isUsed;
 } TaskL2FusionInfo_t;
 
 using L2FusionInfoPtr = std::shared_ptr<TaskL2FusionInfo_t>;
 
 typedef struct ToOpStruct {
-  int64_t op_l1_space = 0;
-  std::vector<int64_t> op_l1_fusion_type;
-  int64_t op_l1_workspace_flag = 0; // for workspace flag
-  int64_t op_l1_workspace_size = 0;
-  std::vector<std::vector<int64_t>> valid_input_shape;
-  std::vector<std::vector<int64_t>> valid_output_shape;
+  int64_t opL1Space = 0;
+  std::vector<int64_t> opL1FusionType;
+  int64_t opL1WorkspaceFlag = 0; // for workspace flag
+  int64_t opL1WorkspaceSize = 0;
+  std::vector<std::vector<int64_t>> validInputShape;
+  std::vector<std::vector<int64_t>> validOutputShape;
   std::vector<std::vector<int64_t>>
-      slice_input_offset; // conv & pooling & ReadSelect
-  std::vector<std::vector<int64_t>> slice_output_offset; // WriteSelect
-  std::vector<uint32_t> total_shape;
-  uint32_t split_index = 0;
+      sliceInputOffset; // conv & pooling & ReadSelect
+  std::vector<std::vector<int64_t>> sliceOutputOffset; // WriteSelect
+  std::vector<uint32_t> totalShape;
+  uint32_t splitIndex = 0;
   ToOpStruct() {
     // set invalid value for essential variable
-    op_l1_space = -1;
-    op_l1_workspace_size = -1;
+    opL1Space = -1;
+    opL1WorkspaceSize = -1;
   }
 } ToOpStruct_t;
-
-enum SlicePattern {
-  ELEMENT_WISE = 0,
-  ELEMENT_WISE_BROADCAST,
-  BROADCAST,
-  SLIDING_WINDOW,
-  SLIDING_WINDOW_DECONV,
-  CUBE_MATMUL,
-  SLICE_PATTERN_REDUCE,
-  SLICE_PATTERN_RESIZE,
-  SLICE_PATTERN_SCATTER,
-  SLICE_PATTERN_SEGMENT,
-  PATTERN_RESERVED
-};
 
 enum OpImplType {
   EN_IMPL_CUSTOM_CONSTANT_CCE = 0,   // custom constant op
@@ -109,10 +95,6 @@ enum OpImplType {
   EN_RESERVED                        // reserved value
 };
 
-// Dont change the order, only add new mode in the end
-enum L2Mode { EN_L2_CLOSE = 0, EN_L2_BUFFER_OPTIMIZE, EN_L2_CACHE_NORMAL, EN_L2_CACHE_RC };
-enum BufferFusionMode { EN_OPTIMIZE_DISABLE = 0, EN_L2_BUFFER, EN_L2_FUSION};
-
 static const std::map<ge::DataType, uint32_t> DATATYPE_SIZE_MAP{
     {ge::DT_FLOAT, sizeof(float)},
     {ge::DT_FLOAT16, sizeof(int16_t)},
@@ -128,15 +110,6 @@ static const std::map<ge::DataType, uint32_t> DATATYPE_SIZE_MAP{
     {ge::DT_BOOL, sizeof(bool)},
     {ge::DT_DUAL, sizeof(float) + sizeof(int8_t)},
     {ge::DT_DUAL_SUB_UINT8, sizeof(int8_t)},
-    {ge::DT_DUAL_SUB_INT8, sizeof(int8_t)}
-};
-
-enum OpReduceType {
-  REDUCE_MEAN = 0,
-  REDUCE_ADD,
-  REDUCE_MAX,
-  REDUCE_MIN,
-};
-
+    {ge::DT_DUAL_SUB_INT8, sizeof(int8_t)}};
 }
 #endif

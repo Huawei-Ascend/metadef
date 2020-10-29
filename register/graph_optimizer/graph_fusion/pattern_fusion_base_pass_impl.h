@@ -55,33 +55,36 @@ class PatternFusionBasePassImpl {
 
   void SetPatterns(vector<FusionPattern *> &patterns);
 
-  void SetOpsKernelInfoStore(OpsKernelInfoStorePtr ops_kernel_info_store_ptr);
+  void SetOpsKernelInfoStore(OpsKernelInfoStorePtr opsKernelInfoStorePtr);
 
   PatternFusionBasePassImpl &operator=(const PatternFusionBasePassImpl &) = delete;
 
-  bool CheckOpSupported(const ge::OpDescPtr &op_desc_ptr);
+  bool CheckOpSupported(const ge::OpDescPtr &opDescPtr);
 
-  bool IsNodesExist(ge::NodePtr current_node, std::vector<ge::NodePtr> &nodes);
+  bool IsNodesExist(ge::NodePtr currentNode, std::vector<ge::NodePtr> &nodes);
 
-  bool IsMatched(std::shared_ptr<OpDesc> op_desc, const ge::NodePtr node, const Mapping &mapping);
+  bool IsMatched(std::shared_ptr<OpDesc> opDesc, const ge::NodePtr node, const Mapping &mapping);
 
   void DumpMappings(const FusionPattern &pattern, const Mappings &mappings);
 
   bool IsOpTypeExist(const string &type, const vector<string> &types);
 
-  bool MatchFromOutput(ge::NodePtr output_node, std::shared_ptr<OpDesc> output_op_desc, Mapping &mapping);
+  bool MatchFromOutput(ge::NodePtr outputNode, std::shared_ptr<OpDesc> outputOpDesc, Mapping &mapping);
 
   std::string GetNodeType(ge::NodePtr node);
 
   bool GetMatchOutputNodes(ge::ComputeGraph &graph, const FusionPattern &pattern,
-                           vector<ge::NodePtr> &matched_output_nodes);
+                           vector<ge::NodePtr> &matchedOutputNodes);
 
  private:
   vector<FusionPattern *> patterns_;
 
-  OpsKernelInfoStorePtr ops_kernel_info_store_ptr_;
+  OpsKernelInfoStorePtr opsKernelInfoStorePtr_;
 
-  bool MatchFromOutput(vector<ge::NodePtr> &candidate_nodes, vector<std::shared_ptr<OpDesc>> &candidate_op_descs,
+  /** pass output node's succeed node vs pass output node anchor map */
+  std::map<ge::NodePtr, std::map<ge::AnchorPtr, ge::AnchorPtr>> originOpAnchorsMap_;
+
+  bool MatchFromOutput(vector<ge::NodePtr> &candidateNodes, vector<std::shared_ptr<OpDesc>> &candidateOpDescs,
                        Mapping &mapping);
 
   bool MatchAllEdges(const size_t &input_size, const std::unique_ptr<bool[]> &usage_flags);

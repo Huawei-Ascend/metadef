@@ -81,25 +81,25 @@ FusionPattern &FusionPattern::AddOpDesc(const string &id, const vector<string> &
  * @ingroup fe
  * @brief set input Ops with unknown number of args
  */
-FusionPattern &FusionPattern::SetInputs(const string &id, const initializer_list<string> &input_ids) {
-  return SetInputs(id, vector<string>(input_ids));
+FusionPattern &FusionPattern::SetInputs(const string &id, const initializer_list<string> &inputIds) {
+  return SetInputs(id, vector<string>(inputIds));
 }
 
 /**
  * @ingroup fe
  * @brief set input Ops with vector
  */
-FusionPattern &FusionPattern::SetInputs(const string &id, const vector<string> &input_ids) {
+FusionPattern &FusionPattern::SetInputs(const string &id, const vector<string> &inputIds) {
   FE_PATTERN_ERROR_RETURN_IF(id.empty(), "Id cannot be empty.");
-  std::shared_ptr<FusionPattern::OpDesc> op_desc = GetOpDesc(id);
-  FE_PATTERN_ERROR_RETURN_IF(op_desc == nullptr, "Id does not exist. (id:%s)", id.c_str());
+  std::shared_ptr<FusionPattern::OpDesc> opDesc = GetOpDesc(id);
+  FE_PATTERN_ERROR_RETURN_IF(opDesc == nullptr, "Id does not exist. (id:%s)", id.c_str());
 
-  op_desc->inputs.clear();
+  opDesc->inputs.clear();
 
-  for (const string &input_id : input_ids) {
-    std::shared_ptr<FusionPattern::OpDesc> input_op_desc = GetOpDesc(input_id);
-    FE_PATTERN_ERROR_RETURN_IF(input_op_desc == nullptr, "Id does not exist. (id:%s)", input_id.c_str());
-    op_desc->inputs.push_back(input_op_desc);
+  for (const string &inputId : inputIds) {
+    std::shared_ptr<FusionPattern::OpDesc> input_opDesc = GetOpDesc(inputId);
+    FE_PATTERN_ERROR_RETURN_IF(input_opDesc == nullptr, "Id does not exist. (id:%s)", inputId.c_str());
+    opDesc->inputs.push_back(input_opDesc);
   }
 
   return *this;
@@ -111,10 +111,10 @@ FusionPattern &FusionPattern::SetInputs(const string &id, const vector<string> &
  */
 FusionPattern &FusionPattern::SetOutput(const string &id) {
   FE_PATTERN_ERROR_RETURN_IF(id.empty(), "Id cannot be empty.");
-  std::shared_ptr<FusionPattern::OpDesc> op_desc = GetOpDesc(id);
-  FE_PATTERN_ERROR_RETURN_IF(op_desc == nullptr, "Id does not exist. (id:%s)", id.c_str());
+  std::shared_ptr<FusionPattern::OpDesc> opDesc = GetOpDesc(id);
+  FE_PATTERN_ERROR_RETURN_IF(opDesc == nullptr, "Id does not exist. (id:%s)", id.c_str());
 
-  op_desc->is_output = true;
+  opDesc->is_output = true;
 
   return *this;
 }
@@ -158,11 +158,11 @@ const string &FusionPattern::GetName() const { return name_; }
  * @brief get the OpDesc of input Ops (const)
  */
 const vector<std::shared_ptr<FusionPattern::OpDesc>> *FusionPattern::GetInputs(
-    const std::shared_ptr<FusionPattern::OpDesc> op_desc) {
-  if (op_desc == nullptr) {
+    const std::shared_ptr<FusionPattern::OpDesc> opDesc) {
+  if (opDesc == nullptr) {
     return nullptr;
   }
-  return &(op_desc->inputs);
+  return &(opDesc->inputs);
 }
 
 /**
@@ -178,13 +178,13 @@ const std::shared_ptr<FusionPattern::OpDesc> FusionPattern::GetOutput() const { 
 void FusionPattern::Dump() const {
   std::ostringstream oss;
   oss << std::endl << "Pattern (" << name_ << "):" << std::endl;
-  for (const auto &op : ops_) {
+  for (const auto op : ops_) {
     oss << "  " << op->id << ": {";
     for (const string &type : op->types) {
       oss << type << ", ";
     }
     oss << "} {";
-    for (const auto &input : op->inputs) {
+    for (auto input : op->inputs) {
       oss << input->id << ", ";
     }
     oss << "}";

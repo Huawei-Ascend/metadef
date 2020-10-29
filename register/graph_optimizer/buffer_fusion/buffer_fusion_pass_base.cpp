@@ -24,9 +24,8 @@ BufferFusionPassBase::BufferFusionPassBase() {}
 
 BufferFusionPassBase::~BufferFusionPassBase() {}
 
-Status BufferFusionPassBase::GetFusionNodes(const BufferFusionMapping &mapping,
-                                            std::vector<ge::NodePtr> &fusion_nodes) {
-  fusion_nodes = GetMatchedNodes(mapping);
+Status BufferFusionPassBase::GetFusionNodes(const BufferFusionMapping &mapping, std::vector<ge::NodePtr> &fusionNodes) {
+  fusionNodes = GetMatchedNodes(mapping);
   return SUCCESS;
 }
 
@@ -40,12 +39,12 @@ std::vector<ge::NodePtr> BufferFusionPassBase::GetMatchedNodes(const BufferFusio
   return nodes;
 }
 
-std::vector<ge::NodePtr> BufferFusionPassBase::GetMatchedNodesByDescName(const std::string &desc_name,
+std::vector<ge::NodePtr> BufferFusionPassBase::GetMatchedNodesByDescName(const std::string &descName,
                                                                          const BufferFusionMapping &mapping) {
   std::vector<ge::NodePtr> nodes;
   for (const auto &item : mapping) {
-    const BufferFusionOpDesc *op_desc = item.first;
-    if (op_desc != nullptr && op_desc->desc_name == desc_name) {
+    const BufferFusionOpDesc *opDesc = item.first;
+    if (opDesc != nullptr && opDesc->descName == descName) {
       for (const auto &node : item.second) {
         nodes.push_back(node);
       }
@@ -54,18 +53,18 @@ std::vector<ge::NodePtr> BufferFusionPassBase::GetMatchedNodesByDescName(const s
   return nodes;
 }
 
-ge::NodePtr BufferFusionPassBase::GetMatchedHeadNode(const std::vector<ge::NodePtr> &matched_nodes) {
-  for (const auto &node : matched_nodes) {
-    auto input_nodes = node->GetInDataNodes();
-    bool find_flag = false;
-    for (const auto &in_node : input_nodes) {
+ge::NodePtr BufferFusionPassBase::GetMatchedHeadNode(const std::vector<ge::NodePtr> &matchedNodes) {
+  for (auto node : matchedNodes) {
+    auto inputNodes = node->GetInDataNodes();
+    bool findFlag = false;
+    for (const auto &inNode : inputNodes) {
       // find the node from fuison sub graph
-      if (std::find(matched_nodes.begin(), matched_nodes.end(), in_node) != matched_nodes.end()) {
-        find_flag = true;
+      if (std::find(matchedNodes.begin(), matchedNodes.end(), inNode) != matchedNodes.end()) {
+        findFlag = true;
         break;
       }
     }
-    if (find_flag == false) {
+    if (findFlag == false) {
       return node;
     }
   }

@@ -33,8 +33,8 @@ namespace fe {
 using NodeTypeMap = std::unordered_map<string, std::unordered_set<ge::NodePtr>>;
 using NodeTypeMapPtr = std::shared_ptr<NodeTypeMap>;
 struct NodeMapInfo {
-  int64_t run_count;
-  NodeTypeMapPtr node_type_map;
+  int64_t runCount;
+  NodeTypeMapPtr nodeTypeMap;
 };
 using NodeMapInfoPtr = std::shared_ptr<NodeMapInfo>;
 
@@ -44,167 +44,167 @@ class GraphPassUtil {
  public:
   /** set outputdesc attr for data dump
    *
-   * @param origin_index,usually is origin node output index
+   * @param originIndex,usually is origin node output index
    *
-   * @param fusion_index,usually is fusion node output index
+   * @param fusionIndex,usually is fusion node output index
    *
-   * @param origin_node, usually is origin node
+   * @param originNode, usually is origin node
    *
-   * @param fusion_node, usually is fusion node
+   * @param fusionNode, usually is fusion node
    */
-  static void SetOutputDescAttr(uint32_t origin_index, uint32_t fusion_index, ge::NodePtr origin_node,
-                                ge::NodePtr fusion_node) {
-    if (fusion_node->GetOpDesc() == nullptr) {
+  static void SetOutputDescAttr(uint32_t originIndex, uint32_t fusionIndex, ge::NodePtr originNode,
+                                ge::NodePtr fusionNode) {
+    if (fusionNode->GetOpDesc() == nullptr) {
       return;
     }
 
-    auto fusion_node_output_desc = fusion_node->GetOpDesc()->MutableOutputDesc(fusion_index);
-    if (fusion_node_output_desc == nullptr) {
+    auto fusionNodeOutputDesc = fusionNode->GetOpDesc()->MutableOutputDesc(fusionIndex);
+    if (fusionNodeOutputDesc == nullptr) {
       return;
     }
-    if (origin_node->GetOpDesc() == nullptr) {
+    if (originNode->GetOpDesc() == nullptr) {
       return;
     }
-    auto origin_node_output_desc = origin_node->GetOpDesc()->MutableOutputDesc(origin_index);
-    if (origin_node_output_desc == nullptr) {
+    auto originNodeOutputDesc = originNode->GetOpDesc()->MutableOutputDesc(originIndex);
+    if (originNodeOutputDesc == nullptr) {
       return;
     }
 
-    std::vector<std::string> original_names;
-    if (ge::AttrUtils::GetListStr(origin_node->GetOpDesc(), ge::ATTR_NAME_DATA_DUMP_ORIGIN_OP_NAMES, original_names) &&
-        original_names.size() > 0) {
-      std::string original_name;
-      if (ge::AttrUtils::GetStr(origin_node_output_desc, ge::ATTR_NAME_DATA_DUMP_ORIGIN_NAME, original_name)) {
-        (void)ge::AttrUtils::SetStr(fusion_node_output_desc, ge::ATTR_NAME_DATA_DUMP_ORIGIN_NAME, original_name);
+    std::vector<std::string> originalNames;
+    if (ge::AttrUtils::GetListStr(originNode->GetOpDesc(), ge::ATTR_NAME_DATA_DUMP_ORIGIN_OP_NAMES, originalNames) &&
+        originalNames.size() > 0) {
+      std::string originalName;
+      if (ge::AttrUtils::GetStr(originNodeOutputDesc, ge::ATTR_NAME_DATA_DUMP_ORIGIN_NAME, originalName)) {
+        (void)ge::AttrUtils::SetStr(fusionNodeOutputDesc, ge::ATTR_NAME_DATA_DUMP_ORIGIN_NAME, originalName);
 
-        std::int64_t origin_output_index = 0;
-        if (ge::AttrUtils::GetInt(origin_node_output_desc, ge::ATTR_NAME_DATA_DUMP_ORIGIN_OUTPUT_INDEX,
-                                  origin_output_index)) {
-          (void)ge::AttrUtils::SetInt(fusion_node_output_desc, ge::ATTR_NAME_DATA_DUMP_ORIGIN_OUTPUT_INDEX,
-                                      origin_output_index);
+        std::int64_t originOutputIndex = 0;
+        if (ge::AttrUtils::GetInt(originNodeOutputDesc, ge::ATTR_NAME_DATA_DUMP_ORIGIN_OUTPUT_INDEX,
+                                  originOutputIndex)) {
+          (void)ge::AttrUtils::SetInt(fusionNodeOutputDesc, ge::ATTR_NAME_DATA_DUMP_ORIGIN_OUTPUT_INDEX,
+                                      originOutputIndex);
         }
 
-        ge::DataType origin_data_type = GetDataDumpOriginDataType(origin_node_output_desc);
-        if (origin_data_type != ge::DT_UNDEFINED) {
-          SetDataDumpOriginDataType(origin_data_type, fusion_node_output_desc);
+        ge::DataType originDataType = GetDataDumpOriginDataType(originNodeOutputDesc);
+        if (originDataType != ge::DT_UNDEFINED) {
+          SetDataDumpOriginDataType(originDataType, fusionNodeOutputDesc);
         }
-        ge::Format origin_format = GetDataDumpOriginFormat(origin_node_output_desc);
-        if (origin_format != ge::FORMAT_RESERVED) {
-          SetDataDumpOriginFormat(origin_format, fusion_node_output_desc);
+        ge::Format originFormat = GetDataDumpOriginFormat(originNodeOutputDesc);
+        if (originFormat != ge::FORMAT_RESERVED) {
+          SetDataDumpOriginFormat(originFormat, fusionNodeOutputDesc);
         }
       }
     } else {
-      (void)ge::AttrUtils::SetStr(fusion_node_output_desc, ge::ATTR_NAME_DATA_DUMP_ORIGIN_NAME, origin_node->GetName());
-      (void)ge::AttrUtils::SetInt(fusion_node_output_desc, ge::ATTR_NAME_DATA_DUMP_ORIGIN_OUTPUT_INDEX, origin_index);
-      SetDataDumpOriginDataType(origin_node_output_desc->GetOriginDataType(), fusion_node_output_desc);
-      SetDataDumpOriginFormat(origin_node_output_desc->GetOriginFormat(), fusion_node_output_desc);
+      (void)ge::AttrUtils::SetStr(fusionNodeOutputDesc, ge::ATTR_NAME_DATA_DUMP_ORIGIN_NAME, originNode->GetName());
+      (void)ge::AttrUtils::SetInt(fusionNodeOutputDesc, ge::ATTR_NAME_DATA_DUMP_ORIGIN_OUTPUT_INDEX, originIndex);
+      SetDataDumpOriginDataType(originNodeOutputDesc->GetOriginDataType(), fusionNodeOutputDesc);
+      SetDataDumpOriginFormat(originNodeOutputDesc->GetOriginFormat(), fusionNodeOutputDesc);
     }
   }
 
   /** get origin format for data dump
    *
-   * @param tensor_desc,usually is output_desc
+   * @param tensorDesc,usually is outputDesc
    *
-   * @return format of this tensor_desc
+   * @return format of this tensorDesc
    */
-  static ge::Format GetDataDumpOriginFormat(ge::GeTensorDescPtr tensor_desc) {
-    std::string origin_format_str;
-    if (!ge::AttrUtils::GetStr(tensor_desc, ge::ATTR_NAME_DATA_DUMP_ORIGIN_FORMAT, origin_format_str)) {
+  static ge::Format GetDataDumpOriginFormat(ge::GeTensorDescPtr tensorDesc) {
+    std::string originFormatStr;
+    if (!ge::AttrUtils::GetStr(tensorDesc, ge::ATTR_NAME_DATA_DUMP_ORIGIN_FORMAT, originFormatStr)) {
       // Can not get the certificate and it's not set,return directly
       return ge::FORMAT_RESERVED;
     }
-    if (origin_format_str == "RESERVED") {
+    if (originFormatStr == "RESERVED") {
       return ge::FORMAT_RESERVED;
     }
-    return ge::TypeUtils::SerialStringToFormat(origin_format_str);
+    return ge::TypeUtils::SerialStringToFormat(originFormatStr);
   }
 
   /** set origin format for data dump
    *
    * @param origin format
    *
-   * @param tensor_desc,usually is output_desc
+   * @param tensorDesc,usually is outputDesc
    */
-  static void SetDataDumpOriginFormat(ge::Format origin_format, ge::GeTensorDescPtr tensor_desc) {
-    std::string origin_format_str = "RESERVED";
-    if (origin_format != ge::FORMAT_RESERVED) {
-      origin_format_str = ge::TypeUtils::FormatToSerialString(origin_format);
+  static void SetDataDumpOriginFormat(ge::Format originFormat, ge::GeTensorDescPtr tensorDesc) {
+    std::string originFormatStr = "RESERVED";
+    if (originFormat != ge::FORMAT_RESERVED) {
+      originFormatStr = ge::TypeUtils::FormatToSerialString(originFormat);
     }
-    (void)ge::AttrUtils::SetStr(tensor_desc, ge::ATTR_NAME_DATA_DUMP_ORIGIN_FORMAT, origin_format_str);
+    (void)ge::AttrUtils::SetStr(tensorDesc, ge::ATTR_NAME_DATA_DUMP_ORIGIN_FORMAT, originFormatStr);
   }
 
   /** set origin datatype for data dump
    *
    * @param origin datatype
    *
-   * @param tensor_desc,usually is output_desc
+   * @param tensorDesc,usually is outputDesc
    */
-  static void SetDataDumpOriginDataType(ge::DataType origin_data_type, ge::GeTensorDescPtr tensor_desc) {
-    std::string origin_data_type_str = "RESERVED";
-    if (origin_data_type != ge::DT_UNDEFINED) {
-      origin_data_type_str = ge::TypeUtils::DataTypeToSerialString(origin_data_type);
+  static void SetDataDumpOriginDataType(ge::DataType originDataType, ge::GeTensorDescPtr tensorDesc) {
+    std::string originDataTypeStr = "RESERVED";
+    if (originDataType != ge::DT_UNDEFINED) {
+      originDataTypeStr = ge::TypeUtils::DataTypeToSerialString(originDataType);
     }
-    (void)ge::AttrUtils::SetStr(tensor_desc, ge::ATTR_NAME_DATA_DUMP_ORIGIN_DATA_TYPE, origin_data_type_str);
+    (void)ge::AttrUtils::SetStr(tensorDesc, ge::ATTR_NAME_DATA_DUMP_ORIGIN_DATA_TYPE, originDataTypeStr);
   }
 
   /** get origin datatype for data dump
    *
-   * @param tensor_desc,usually is output_desc
+   * @param tensorDesc,usually is outputDesc
    *
-   * @return format of this tensor_desc
+   * @return format of this tensorDesc
    */
-  static ge::DataType GetDataDumpOriginDataType(ge::GeTensorDescPtr tensor_desc) {
-    std::string origin_data_type_str;
-    if (!ge::AttrUtils::GetStr(tensor_desc, ge::ATTR_NAME_DATA_DUMP_ORIGIN_DATA_TYPE, origin_data_type_str)) {
+  static ge::DataType GetDataDumpOriginDataType(ge::GeTensorDescPtr tensorDesc) {
+    std::string originDataTypeStr;
+    if (!ge::AttrUtils::GetStr(tensorDesc, ge::ATTR_NAME_DATA_DUMP_ORIGIN_DATA_TYPE, originDataTypeStr)) {
       return ge::DT_UNDEFINED;
     }
-    if (origin_data_type_str == "RESERVED") {
+    if (originDataTypeStr == "RESERVED") {
       return ge::DT_UNDEFINED;
     }
-    return ge::TypeUtils::SerialStringToDataType(origin_data_type_str);
+    return ge::TypeUtils::SerialStringToDataType(originDataTypeStr);
   }
 
-  static void AddNodeFromOpTypeMap(NodeMapInfoPtr &node_map_info, ge::NodePtr &node_ptr) {
-    if (node_map_info == nullptr || node_ptr == nullptr) {
+  static void AddNodeFromOpTypeMap(NodeMapInfoPtr &nodeMapInfo, ge::NodePtr &nodePtr) {
+    if (nodeMapInfo == nullptr || nodePtr == nullptr) {
       return;
     }
-    NodeTypeMapPtr node_type_map = node_map_info->node_type_map;
-    string real_op_type = ge::NodeUtils::GetNodeType(*node_ptr);
-    auto iter = node_type_map->find(real_op_type);
-    if (iter != node_type_map->end()) {
-      iter->second.insert(node_ptr);
+    NodeTypeMapPtr nodeTypeMap = nodeMapInfo->nodeTypeMap;
+    string realOpType = ge::NodeUtils::GetNodeType(*nodePtr);
+    auto iter = nodeTypeMap->find(realOpType);
+    if (iter != nodeTypeMap->end()) {
+      iter->second.insert(nodePtr);
     } else {
-      node_type_map->emplace(std::make_pair(real_op_type, std::unordered_set<ge::NodePtr>{node_ptr}));
+      nodeTypeMap->emplace(std::make_pair(realOpType, std::unordered_set<ge::NodePtr>{nodePtr}));
     }
   }
 
-  static Status GetOpTypeMapToGraph(NodeMapInfoPtr &node_map_info, const ge::ComputeGraph &graph) {
-    node_map_info = graph.TryGetExtAttr("NodeMapInfo", node_map_info);
-    if (node_map_info == nullptr) {
+  static Status GetOpTypeMapToGraph(NodeMapInfoPtr &nodeMapInfo, const ge::ComputeGraph &graph) {
+    nodeMapInfo = graph.TryGetExtAttr("NodeMapInfo", nodeMapInfo);
+    if (nodeMapInfo == nullptr) {
       return FAILED;
     }
     return SUCCESS;
   }
 
-  static void RecordOriginalNames(std::vector<ge::NodePtr> original_nodes, ge::NodePtr node) {
-    // 1. get the original_names
-    std::vector<std::string> original_names;
-    for (ge::NodePtr original_node : original_nodes) {
-      if (original_node == nullptr || original_node->GetOpDesc() == nullptr) {
+  static void RecordOriginalNames(std::vector<ge::NodePtr> originalNodes, ge::NodePtr node) {
+    // 1. get the originalNames
+    std::vector<std::string> originalNames;
+    for (ge::NodePtr originalNode : originalNodes) {
+      if (originalNode == nullptr || originalNode->GetOpDesc() == nullptr) {
         return;
       }
 
-      ge::OpDescPtr origin_op_desc_ptr = original_node->GetOpDesc();
+      ge::OpDescPtr originOpDescPtr = originalNode->GetOpDesc();
       std::vector<std::string> names_tmp;
-      bool is_has_attr = ge::AttrUtils::GetListStr(origin_op_desc_ptr, ge::ATTR_NAME_DATA_DUMP_ORIGIN_OP_NAMES, names_tmp);
-      if (is_has_attr) {
+      bool isHasAttr = ge::AttrUtils::GetListStr(originOpDescPtr, ge::ATTR_NAME_DATA_DUMP_ORIGIN_OP_NAMES, names_tmp);
+      if (isHasAttr) {
         for (const auto &node_name : names_tmp) {
           if (!node_name.empty()) {
-            original_names.push_back(node_name);
+            originalNames.push_back(node_name);
           }
         }
       } else {
-        original_names.push_back(origin_op_desc_ptr->GetName());
+        originalNames.push_back(originOpDescPtr->GetName());
       }
     }
 
@@ -212,8 +212,8 @@ class GraphPassUtil {
     if (node == nullptr || node->GetOpDesc() == nullptr) {
       return;
     }
-    ge::OpDescPtr node_op_desc_ptr = node->GetOpDesc();
-    (void)ge::AttrUtils::SetListStr(node_op_desc_ptr, ge::ATTR_NAME_DATA_DUMP_ORIGIN_OP_NAMES, original_names);
+    ge::OpDescPtr nodeOpDescPtr = node->GetOpDesc();
+    (void)ge::AttrUtils::SetListStr(nodeOpDescPtr, ge::ATTR_NAME_DATA_DUMP_ORIGIN_OP_NAMES, originalNames);
   }
 };
 

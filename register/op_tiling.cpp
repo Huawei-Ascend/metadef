@@ -61,6 +61,7 @@ std::string GenUuid()
     for (size_t i = 0; i < sizeof(res) - 1; i++) {
         res[i] = v[dist(rng)];
     }
+
     return res;
 }
 

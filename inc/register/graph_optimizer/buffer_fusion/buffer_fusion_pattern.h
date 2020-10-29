@@ -36,61 +36,61 @@ static const int TBE_PATTERN_GROUPID_INVALID = -1;
 enum SkipStatus { DISABLED = 0, AVAILABLE = 1, SKIPPED = 2 };
 
 struct BufferFusionOpDesc {
-  std::string desc_name;                       // description name
+  std::string descName;                       // description name
   std::vector<std::string> types;             // description type
   std::vector<BufferFusionOpDesc *> inputs;   // all input op
   std::vector<BufferFusionOpDesc *> outputs;  // all output op
-  int64_t out_branch_type;                      // out desc type, 1:single, 2: multi
-  int64_t repeate_min;                         // opdesc min repeat num
-  int64_t repeate_max;                         // opdesc max repeat num
-  int64_t repeate_curr;                        // opdesc current repeat num
-  bool match_status;
-  int64_t group_id;  // record desc groupid, need one desc matched at least in
+  int64_t outBranchType;                      // out desc type, 1:single, 2: multi
+  int64_t repeateMin;                         // opdesc min repeat num
+  int64_t repeateMax;                         // opdesc max repeat num
+  int64_t repeateCurr;                        // opdesc current repeat num
+  bool matchStatus;
+  int64_t groupId;  // record desc groupid, need one desc matched at least in
                     // the same group
-  bool ignore_input_num;
-  bool ignore_output_num;
+  bool ignoreInputNum;
+  bool ignoreOutputNum;
   // used for two connected op, first opdesc has optional multiple nodes and
-  // ignore_output_num is true, second opdesc is same pattern type and
-  // out_branch_type is TBE_OUTPUT_BRANCH_MULTI
-  std::map<int64_t, SkipStatus> multi_output_skip_status;
+  // ignoreOutputNum is true, second opdesc is same pattern type and
+  // outBranchType is TBE_OUTPUT_BRANCH_MULTI
+  std::map<int64_t, SkipStatus> multiOutputSkipStatus;
 };
 using BufferFusionMapping = std::map<const BufferFusionOpDesc *, std::vector<ge::NodePtr>>;
 using BufferFusionMappings = std::vector<BufferFusionMapping>;
 
 class BufferFusionPattern {
  public:
-  explicit BufferFusionPattern(std::string name = "", int64_t op_max_count = TBE_FUSION_OP_NUM_MAX);
+  explicit BufferFusionPattern(std::string name = "", int64_t opMaxCount = TBE_FUSION_OP_NUM_MAX);
 
   virtual ~BufferFusionPattern();
 
-  BufferFusionPattern &AddOpDesc(const std::string &desc_name, const std::vector<std::string> &patterns,
-                                 int64_t repeat_min = TBE_PATTERN_NUM_DEFAULT,
-                                 int64_t repeat_max = TBE_PATTERN_NUM_DEFAULT,
-                                 int64_t group_id = TBE_PATTERN_GROUPID_INVALID);
+  BufferFusionPattern &AddOpDesc(const std::string &descName, const std::vector<std::string> &patterns,
+                                 int64_t repeatMin = TBE_PATTERN_NUM_DEFAULT,
+                                 int64_t repeatMax = TBE_PATTERN_NUM_DEFAULT,
+                                 int64_t groupId = TBE_PATTERN_GROUPID_INVALID);
 
-  BufferFusionPattern &SetOutputs(const std::string &desc_name, const std::vector<std::string> &patterns,
-                                  int64_t relation = TBE_OUTPUT_BRANCH_SINGLE, bool ignore_input_num = false,
-                                  bool ignore_output_num = false);
+  BufferFusionPattern &SetOutputs(const std::string &descName, const std::vector<std::string> &patterns,
+                                  int64_t relation = TBE_OUTPUT_BRANCH_SINGLE, bool ignoreInputNum = false,
+                                  bool ignoreOutputNum = false);
 
-  BufferFusionPattern &SetHead(const std::vector<std::string> &op_patterns);
+  BufferFusionPattern &SetHead(const std::vector<std::string> &opPatterns);
 
   std::string GetName();
   int64_t GetOpMaxCount();
   std::vector<BufferFusionOpDesc *> GetOpDescs();
-  bool GetOutputs(BufferFusionOpDesc *op_desc, std::vector<BufferFusionOpDesc *> &outputs, bool ignore_repeat = false);
+  bool GetOutputs(BufferFusionOpDesc *opDesc, std::vector<BufferFusionOpDesc *> &outputs, bool ignoreRepeat = false);
   std::vector<BufferFusionOpDesc *> GetHead();
   int64_t GetErrorCnt();
   void InitRepeatCurr(const BufferFusionPattern &pattern);
 
  private:
-  BufferFusionOpDesc *GetOpDesc(const std::string &desc_name);
-  void UpdateSkipStatus(BufferFusionOpDesc *op_desc);
+  BufferFusionOpDesc *GetOpDesc(const std::string &descName);
+  void UpdateSkipStatus(BufferFusionOpDesc *opDesc);
   std::string name_;
-  int64_t op_max_count_;
+  int64_t opMaxCount_;
   std::vector<BufferFusionOpDesc *> ops_;
-  std::map<std::string, BufferFusionOpDesc *> op_map_;
+  std::map<std::string, BufferFusionOpDesc *> opMap_;
   std::vector<BufferFusionOpDesc *> head_;
-  int64_t error_count_;
+  int64_t errorCount_;
 };
 }  // namespace fe
 #endif  // INC_REGISTER_GRAPH_OPTIMIZER_BUFFER_FUSION_PATTERN_H_

@@ -18,8 +18,6 @@
 
 namespace ge {
 // Public attribute
-const std::string ATTR_NAME_FORCE_UNKNOWN_SHAPE = "_force_unknown_shape";
-
 const std::string ATTR_NAME_IS_UNKNOWN_SHAPE = "_is_unknown_shape";
 
 const std::string ATTR_NAME_DYNAMIC_SHAPE_PARTITIONED = "_dynamic_shape_partitioned";
@@ -157,7 +155,6 @@ const std::string ATTR_NAME_WEIGHTS_DATA = "weights_data";
 const std::string ATTR_NAME_BROACAST_REAL_DIM_CNT = "broacast_real_dim_cnt";
 const std::string ATTR_NAME_DIM_ALIGN = "dim_align";
 const std::string ATTR_NAME_STREAM_LABEL = "_stream_label";
-const std::string ATTR_NAME_RTS_LABEL_NODE = "_rts_label_node";
 const std::string ATTR_NAME_CONTINUOUS_STREAM_LABEL = "_continuous_stream_label";
 const std::string ATTR_NAME_STREAM_CYCLE_EVENT_FLAG = "need_stream_cycle_event";
 const std::string ATTR_NAME_RTSWITCH_RECV_EVENT_ID = "rtswitch_event_id";
@@ -189,7 +186,6 @@ const std::string REFINEDET_MBOX_CONF_FUSION = "permute_flatten_reshape_flatten_
 const std::string REFINEDET_MBOX_FUSION_BOX_TYPE_NUM = "ssd_mbox_fusion_box_type_num";
 const std::string REFINEDET_RESHAPE_SLICE_CONCAT_FUSION = "reshape_slice_concat_fusion";
 const std::string SSD_PRIORBOX_CONCAT = "ssd_mbox_conf_priorbox_concat_flag";
-
 
 // _Arg
 const std::string ATTR_NAME_INDEX = "index";
@@ -620,7 +616,6 @@ const std::string MUTI_RNN = "multi_rnn";
 const std::string CNN_RNN = "cnn_rnn";
 const std::string RNN_MODE_ = "rnn_";
 
-
 const std::string CELL_MODE = "mode";
 const std::string LSTM_CELL = "lstm_cell";
 const std::string GRU_CELL = "gru_cell";
@@ -723,9 +718,7 @@ const std::string ATTR_MODEL_MEMORY_SIZE = "memory_size";
 
 const std::string ATTR_MODEL_ZERO_COPY_MEMORY_SIZE = "zero_copy_memory_size";
 
-const std::string ATTR_MODEL_P2P_MEMORY_SIZE = "p2p_memory_size";
-
-const std::string ATTR_MODEL_OUT_NODES_NAME  = "attr_model_out_nodes_name";
+const std::string ATTR_MODEL_OUT_NODES_NAME = "attr_model_out_nodes_name";
 
 const std::string ATTR_MODEL_WEIGHT_SIZE = "weight_size";
 
@@ -964,7 +957,9 @@ const std::string ATTR_NAME_FUSION_GROUP_KEY = "_fusion_group_key";
 const std::string ATTR_NAME_L1_FUSION_GROUP_KEY = "_l1_fusion_group_key";
 const std::string ATTR_NAME_FUSION_VIRTUAL_OP = "_fusion_virtual_op";
 const std::string ATTR_NAME_FUSION_GROUP_TYPE = "_fusion_group_type";
-const std::string ATTR_NAME_L1_FUSION_EXTEND_PTR= "_l1_fusion_extend_content";
+const std::string ATTR_NAME_INPUT_MEM_TYPE_LIST = "_input_memory_type";
+const std::string ATTR_NAME_OUTPUT_MEM_TYPE_LIST = "_output_memory_type";
+const std::string ATTR_NAME_L1_FUSION_EXTEND_PTR = "_l1_fusion_extend_content";
 const std::string ATTR_NAME_GET_TENSOR_ACTUAL_SIZE = "_tensor_actual_size";
 const std::string ATTR_NAME_OUTPUT_OFFSET_FOR_L1_FUSION = "_output_offset_for_l1_fuison";
 const std::string ATTR_NAME_SWITCH_FOR_L1_FUSION = "_enable_l1_fusion";
@@ -984,12 +979,6 @@ const std::string ATTR_NAME_OPTIMIZE_GROUP = "_optimize_group";
 const std::string ATTR_NAME_OP_COMPILE_STRATEGY = "_op_compile_strategy";
 const std::string ATTR_NAME_TBE_KERNEL_NAME = "_tbe_kernel_name";
 const std::string ATTR_NAME_TBE_KERNEL_BUFFER = "_tbe_kernel_buffer";
-
-// used for memory allocate
-const std::string ATTR_NAME_INPUT_MEM_TYPE_LIST = "_input_memory_type";
-const std::string ATTR_NAME_OUTPUT_MEM_TYPE_LIST = "_output_memory_type";
-const std::string ATTR_NAME_WORKSPACE_TYPE_LIST = "_workspace_type";
-const std::string ATTR_NAME_TENSOR_MEM_TYPE = "_tensor_memory_type";
 
 // Op debug attrs
 const std::string ATTR_OP_DEBUG_FLAG = "_op_debug_flag";
@@ -1090,9 +1079,6 @@ const std::string ATTR_NAME_END_REAR_NODE_ENGINE_NAME = "end_rear_node_engine_na
 const std::string ATTR_VARIABLE_PLACEMENT = "_variable_placement";
 const std::string ATTR_INPUT_MEMORY_TYPE = "_input_memory_type";
 const std::string ATTR_OUTPUT_MEMORY_TYPE = "_output_memory_type";
-
-// stage
-const std::string ATTR_STAGE_LEVEL = "_stage_level";
 
 // input_output_offset
 const std::string ATTR_ZERO_COPY_BASIC_OFFSET = "_zero_copy_basic_offset";

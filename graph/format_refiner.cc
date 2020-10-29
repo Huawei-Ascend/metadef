@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 Huawei Technologies Co., Ltd
+ * Copyright 2019-2020 Huawei Technologies Co., Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,15 +41,13 @@ using namespace ge;
 using namespace std;
 namespace ge {
 namespace {
-const size_t kDimSize4d = 4;
 const std::unordered_set<string> kChangeDimNodes = {PERMUTE, EXPANDDIMS, SQUEEZE};
 const string kIsGraphInferred = "_is_graph_inferred";
 thread_local RefRelations reflection_builder;
 }  // namespace
 
 graphStatus ReflectionProcess(const std::unordered_set<RefCell, RefCellHash> &reflection,
-                              std::deque<ge::NodePtr> &nodes,
-                              ge::Format to_be_set_format) {
+                              std::deque<ge::NodePtr> &nodes, ge::Format to_be_set_format) {
   for (const auto &cell : reflection) {
     auto node = cell.node;
     auto in_out_idx = cell.in_out_idx;
@@ -77,14 +75,11 @@ graphStatus BiasAddFormatFixProcess(ge::NodePtr &node_ptr) {
   if (node_ptr->GetType() != "BiasAdd") {
     return GRAPH_SUCCESS;
   }
-  std::unordered_map<string, Format> kTfFormatFix = {
-    {"NHWC", FORMAT_NDHWC},
-    {"NCHW", FORMAT_NCDHW}
-  };
+  std::unordered_map<string, Format> kTfFormatFix = {{"NHWC", FORMAT_NDHWC}, {"NCHW", FORMAT_NCDHW}};
   for (size_t i = 0; i < node_ptr->GetOpDesc()->GetInputsSize(); i++) {
     auto in_desc = node_ptr->GetOpDesc()->MutableInputDesc(i);
     GE_CHECK_NOTNULL(in_desc);
-    if (in_desc->MutableShape().GetDimNum() != 5) { // 5 means dim num
+    if (in_desc->MutableShape().GetDimNum() != 5) {  // 5 means dim num
       continue;
     }
     auto format = in_desc->GetOriginFormat();
@@ -92,14 +87,14 @@ graphStatus BiasAddFormatFixProcess(ge::NodePtr &node_ptr) {
     auto fixed_format = (kTfFormatFix.count(key) == 0) ? format : kTfFormatFix[key];
     in_desc->SetOriginFormat(fixed_format);
     in_desc->SetFormat(fixed_format);
-    GELOGD("fix the %zu'th input of node[%s]. Origin format is %s , after fixed it is %s",
-      i, node_ptr->GetName().c_str(), TypeUtils::FormatToSerialString(format).c_str(),
-      TypeUtils::FormatToSerialString(fixed_format).c_str());
+    GELOGD("fix the %zu'th input of node[%s]. Origin format is %s , after fixed it is %s", i,
+           node_ptr->GetName().c_str(), TypeUtils::FormatToSerialString(format).c_str(),
+           TypeUtils::FormatToSerialString(fixed_format).c_str());
   }
   for (size_t i = 0; i < node_ptr->GetOpDesc()->GetOutputsSize(); i++) {
     auto out_desc = node_ptr->GetOpDesc()->MutableOutputDesc(i);
     GE_CHECK_NOTNULL(out_desc);
-    if (out_desc->MutableShape().GetDimNum() != 5) { // 5 means dim num
+    if (out_desc->MutableShape().GetDimNum() != 5) {  // 5 means dim num
       continue;
     }
     auto format = out_desc->GetOriginFormat();
@@ -107,9 +102,9 @@ graphStatus BiasAddFormatFixProcess(ge::NodePtr &node_ptr) {
     auto fixed_format = (kTfFormatFix.count(key) == 0) ? format : kTfFormatFix[key];
     out_desc->SetOriginFormat(fixed_format);
     out_desc->SetFormat(fixed_format);
-    GELOGD("fix the %zu'th output of node[%s]. Origin format is %s , after fixed it is %s",
-      i, node_ptr->GetName().c_str(), TypeUtils::FormatToSerialString(format).c_str(),
-      TypeUtils::FormatToSerialString(fixed_format).c_str());
+    GELOGD("fix the %zu'th output of node[%s]. Origin format is %s , after fixed it is %s", i,
+           node_ptr->GetName().c_str(), TypeUtils::FormatToSerialString(format).c_str(),
+           TypeUtils::FormatToSerialString(fixed_format).c_str());
   }
   return GRAPH_SUCCESS;
 }
@@ -254,7 +249,7 @@ graphStatus FormatRefiner::BackInferProcess(std::deque<ge::NodePtr> &nodes, ge::
     auto status = reflection_builder.LookUpRefRelations(key, reflection);
     if (status != GRAPH_SUCCESS) {
       GELOGE(GRAPH_FAILED, "LookUpRefRelations failed!Node is [%s],the %d out edge",
-        (peer_out_data_node->GetName()).c_str(), idx);
+             (peer_out_data_node->GetName()).c_str(), idx);
       return GRAPH_FAILED;
     }
 
@@ -330,7 +325,7 @@ graphStatus FormatRefiner::ForwardInferProcess(std::deque<ge::NodePtr> &nodes, g
       auto status = reflection_builder.LookUpRefRelations(key, reflection);
       if (status != GRAPH_SUCCESS) {
         GELOGE(GRAPH_FAILED, "LookUpRefRelations failed!Node is [%s],the %d input edge",
-          (peer_in_data_node->GetName()).c_str(), idx);
+               (peer_in_data_node->GetName()).c_str(), idx);
         return GRAPH_FAILED;
       }
       auto ge_tensor_desc = peer_in_data_node->GetOpDesc()->GetInputDesc(static_cast<uint32_t>(idx));
@@ -415,26 +410,28 @@ graphStatus FormatRefiner::DataNodeFormatProcess(const ComputeGraphPtr &graph, s
     GE_CHECK_NOTNULL(data_node);
     auto op_desc = data_node->GetOpDesc();
     GE_CHECK_NOTNULL(op_desc);
-
-    auto input_desc = op_desc->MutableInputDesc(0);
-    auto output_desc = op_desc->MutableOutputDesc(0);
-    GE_CHECK_NOTNULL(input_desc);
-    GE_CHECK_NOTNULL(output_desc);
-
-    auto curr_format = output_desc->GetOriginFormat();
+    GE_CHECK_NOTNULL(op_desc->GetOutputDescPtr(0));
+    auto curr_format = op_desc->GetOutputDescPtr(0)->GetOriginFormat();
     if (curr_format != FORMAT_ND) {
       // Data format has been infered , continue
       continue;
     }
-    // keep data format be ND because lacking of defination when input shape num is smaller than 4
-    if (input_desc->MutableShape().GetDimNum() < kDimSize4d) {
-      continue;
-    }
     // Set format for un-infered data node
-    input_desc->SetOriginFormat(data_format);
-    input_desc->SetFormat(data_format);
-    output_desc->SetOriginFormat(data_format);
-    output_desc->SetFormat(data_format);
+    auto input_descs = op_desc->GetAllInputsDescPtr();
+    auto output_descs = op_desc->GetAllOutputsDescPtr();
+
+    for (const auto &input_desc : input_descs) {
+      if (input_desc != nullptr) {
+        input_desc->SetOriginFormat(data_format);
+        input_desc->SetFormat(data_format);
+      }
+    }
+    for (const auto &output_desc : output_descs) {
+      if (output_desc != nullptr) {
+        output_desc->SetOriginFormat(data_format);
+        output_desc->SetFormat(data_format);
+      }
+    }
     uninfered_data_nodes.push_back(data_node);
   }
   // Reinfer format from uninfered data nodes

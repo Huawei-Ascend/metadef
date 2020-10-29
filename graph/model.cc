@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 Huawei Technologies Co., Ltd
+ * Copyright 2019-2020 Huawei Technologies Co., Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,7 +47,6 @@ const int ACCESS_PERMISSION_BITS = 0400;
 namespace ge {
 void Model::Init() {
   (void)AttrUtils::SetInt(this, ATTR_MODEL_MEMORY_SIZE, 0);
-  (void)AttrUtils::SetInt(this, ATTR_MODEL_P2P_MEMORY_SIZE, 0);
   (void)AttrUtils::SetInt(this, ATTR_MODEL_STREAM_NUM, 0);
   (void)AttrUtils::SetInt(this, ATTR_MODEL_EVENT_NUM, 0);
   (void)AttrUtils::SetInt(this, ATTR_MODEL_LABEL_NUM, 0);

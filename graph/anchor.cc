@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 Huawei Technologies Co., Ltd
+ * Copyright 2019-2020 Huawei Technologies Co., Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,9 +26,7 @@ Anchor::Anchor(const NodePtr &owner_node, int idx) : owner_node_(owner_node), id
 
 bool Anchor::IsTypeOf(TYPE type) const { return strcmp(Anchor::TypeOf<Anchor>(), type) == 0; }
 
-size_t Anchor::GetPeerAnchorsSize() const {
-  return peer_anchors_.size();
-}
+size_t Anchor::GetPeerAnchorsSize() const { return peer_anchors_.size(); }
 
 Anchor::Vistor<AnchorPtr> Anchor::GetPeerAnchors() const {
   vector<AnchorPtr> ret;
@@ -72,10 +70,10 @@ graphStatus Anchor::Unlink(const AnchorPtr &peer) {
   GE_IF_BOOL_EXEC(it == peer_anchors_.end(), GELOGW("this anchor is not connected to peer"); return GRAPH_FAILED);
 
   auto it_peer =
-      std::find_if(peer->peer_anchors_.begin(), peer->peer_anchors_.end(), [this](const std::weak_ptr<Anchor> &an) {
-        auto anchor = an.lock();
-        return Equal(anchor);
-      });
+    std::find_if(peer->peer_anchors_.begin(), peer->peer_anchors_.end(), [this](const std::weak_ptr<Anchor> &an) {
+      auto anchor = an.lock();
+      return Equal(anchor);
+    });
 
   GE_CHK_BOOL_RET_STATUS(it_peer != peer->peer_anchors_.end(), GRAPH_FAILED, "peer is not connected to this anchor");
 

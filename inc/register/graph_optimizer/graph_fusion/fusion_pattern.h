@@ -83,21 +83,21 @@ class FusionPattern {
    *
    * @param id pattern id
    *
-   * @param input_ids inputs to id op
+   * @param inputIds inputs to id op
    *
    * @return FusionPattern
    */
-  FusionPattern &SetInputs(const string &id, const initializer_list<string> &input_ids);
+  FusionPattern &SetInputs(const string &id, const initializer_list<string> &inputIds);
 
   /** set input Ops with unknown number of args
    *
    * @param id pattern id
    *
-   * @param input_ids inputs to id op
+   * @param inputIds inputs to id op
    *
    * @return FusionPattern
    */
-  FusionPattern &SetInputs(const string &id, const vector<string> &input_ids);
+  FusionPattern &SetInputs(const string &id, const vector<string> &inputIds);
 
   /** set output Op
    *

@@ -28,14 +28,14 @@ namespace fe {
 
 class FusionInfo {
  public:
-  explicit FusionInfo(uint64_t session_id = 0, std::string graph_id = "", std::string pass_name = "",
-                      int32_t match_times = 0, int32_t effect_times = 0);
+  explicit FusionInfo(uint64_t sessionId = 0, std::string graphId = "", std::string passName = "",
+                      int32_t matchTimes = 0, int32_t effectTimes = 0);
 
   virtual ~FusionInfo();
 
-  void AddMatchTimes(int32_t match_times);
+  void AddMatchTimes(int32_t matchTimes);
 
-  void AddEffectTimes(int32_t effect_times);
+  void AddEffectTimes(int32_t effectTimes);
 
   int32_t GetMatchTimes();
 
@@ -47,16 +47,16 @@ class FusionInfo {
 
   uint64_t GetSessionId();
 
-  void SetMatchTimes(int32_t match_times);
+  void SetMatchTimes(int32_t matchTimes);
 
-  void SetEffectTimes(int32_t effect_times);
+  void SetEffectTimes(int32_t effectTimes);
 
  private:
-  uint64_t session_id_;
-  std::string graph_id_;
-  std::string pass_name_;
-  int32_t match_times_;
-  int32_t effect_times_;
+  uint64_t sessionId_;
+  std::string graphId_;
+  std::string passName_;
+  int32_t matchTimes_;
+  int32_t effectTimes_;
 };
 
 using FusionStatisticMap = std::map<std::string, std::map<std::string, FusionInfo>>;
@@ -69,25 +69,25 @@ class FusionStatisticRecorder {
 
   static FusionStatisticRecorder &Instance();
 
-  void UpdateGraphFusionMatchTimes(FusionInfo &fusion_info);
+  void UpdateGraphFusionMatchTimes(FusionInfo &fusionInfo);
 
-  void UpdateGraphFusionEffectTimes(FusionInfo &fusion_info);
+  void UpdateGraphFusionEffectTimes(FusionInfo &fusionInfo);
 
-  void UpdateBufferFusionMatchTimes(FusionInfo &fusion_info);
+  void UpdateBufferFusionMatchTimes(FusionInfo &fusionInfo);
 
-  void UpdateBufferFusionEffectTimes(FusionInfo &fusion_info);
+  void UpdateBufferFusionEffectTimes(FusionInfo &fusionInfo);
 
-  void GetAndClearFusionInfo(const std::string &session_graph_id, std::map<std::string, FusionInfo> &graph_fusion_info_map,
-                             std::map<std::string, FusionInfo> &buffer_fusion_info_map);
+  void GetAndClearFusionInfo(const std::string &sessionGraphId, std::map<std::string, FusionInfo> &graphFusionInfoMap,
+                             std::map<std::string, FusionInfo> &bufferFusionInfoMap);
 
  private:
   FusionStatisticRecorder();
   virtual ~FusionStatisticRecorder();
-  FusionStatisticMap graph_fusion_info_map_;
-  FusionStatisticMap buffer_fusion_info_map_;
-  void GetFusionInfo(const std::string &session_graph_id, std::map<std::string, FusionInfo> &graph_fusion_info_map,
-                     std::map<std::string, FusionInfo> &buffer_fusion_info_map);
-  void ClearFusionInfo(std::string session_graph_id);
+  FusionStatisticMap graphFusionInfoMap_;
+  FusionStatisticMap bufferFusionInfoMap_;
+  void GetFusionInfo(const std::string &sessionGraphId, std::map<std::string, FusionInfo> &graphFusionInfoMap,
+                     std::map<std::string, FusionInfo> &bufferFusionInfoMap);
+  void ClearFusionInfo(std::string sessionGraphId);
   std::recursive_mutex mutex_;
 };
 }  // namespace fe
