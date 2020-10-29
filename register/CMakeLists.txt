@@ -56,16 +56,6 @@ target_include_directories(register PRIVATE
     ${CMAKE_BINARY_DIR}/proto/ge
     #### yellow zone ####
     ${METADEF_DIR}/../inc
-    #### blue zone ####
-    ${ASCEND_DIR}/driver/include
-    ${ASCEND_DIR}/fwkacllib/include
-    ${METADEF_DIR}/../third_party/fwkacllib/inc
-    #### independent compile #####
-    ${METADEF_DIR}/third_party/graphengine/inc
-    ${METADEF_DIR}/third_party/graphengine/ge/inc
-    ${METADEF_DIR}/third_party/graphengine/inc/framework
-    ${METADEF_DIR}/third_party/graphengine/inc/external
-    ${METADEF_DIR}/third_party/fwkacllib/inc
     #### temp independent ####
     ${METADEF_DIR}/../graphengine/inc
     ${METADEF_DIR}/../graphengine/inc/framework
@@ -79,6 +69,16 @@ target_include_directories(register PRIVATE
     ${METADEF_DIR}/../../graphengine/inc/framework
     ${METADEF_DIR}/../../graphengine/inc/external
     ${METADEF_DIR}/../../inc
+    #### blue zone ####
+    ${ASCEND_DIR}/driver/include
+    ${ASCEND_DIR}/fwkacllib/include
+    ${METADEF_DIR}/../third_party/fwkacllib/inc
+    #### blue independent compile #####
+    ${METADEF_DIR}/third_party/graphengine/inc
+    ${METADEF_DIR}/third_party/graphengine/ge/inc
+    ${METADEF_DIR}/third_party/graphengine/inc/framework
+    ${METADEF_DIR}/third_party/graphengine/inc/external
+    ${METADEF_DIR}/third_party/fwkacllib/inc
 )
 
 target_link_libraries(register PRIVATE
@@ -113,15 +113,6 @@ target_include_directories(register_static PRIVATE
     ${CMAKE_BINARY_DIR}/proto/ge
     #### yellow zone ####
     ${METADEF_DIR}/../inc
-    #### blue zone ####
-    ${ASCEND_DIR}/driver/include
-    ${ASCEND_DIR}/fwkacllib/include
-    #### independent compile #####
-    ${METADEF_DIR}/../third_party/fwkacllib/inc 
-    ${METADEF_DIR}/third_party/graphengine/inc
-    ${METADEF_DIR}/third_party/graphengine/inc/framework
-    ${METADEF_DIR}/third_party/graphengine/inc/external
-    ${METADEF_DIR}/third_party/fwkacllib/inc
     #### temp independent ####
     ${METADEF_DIR}/../graphengine/inc
     ${METADEF_DIR}/../graphengine/inc/framework
@@ -135,6 +126,15 @@ target_include_directories(register_static PRIVATE
     ${METADEF_DIR}/../../graphengine/inc/framework
     ${METADEF_DIR}/../../graphengine/inc/external
     ${METADEF_DIR}/../../inc
+    #### blue zone ####
+    ${ASCEND_DIR}/driver/include
+    ${ASCEND_DIR}/fwkacllib/include
+    #### blue independent compile #####
+    ${METADEF_DIR}/../third_party/fwkacllib/inc 
+    ${METADEF_DIR}/third_party/graphengine/inc
+    ${METADEF_DIR}/third_party/graphengine/inc/framework
+    ${METADEF_DIR}/third_party/graphengine/inc/external
+    ${METADEF_DIR}/third_party/fwkacllib/inc
 )
 
 target_link_libraries(register_static PRIVATE
@@ -166,14 +166,6 @@ target_include_directories(op_tiling_o2 PRIVATE
     ${CMAKE_BINARY_DIR}/proto/ge
     #### yellow zone ####
     ${METADEF_DIR}/../inc
-    #### blue zone ####
-    ${ASCEND_DIR}/driver/include
-    ${ASCEND_DIR}/fwkacllib/include
-    ${METADEF_DIR}/../third_party/fwkacllib/inc
-    #### independent compile ####
-    ${METADEF_DIR}/third_party/graphengine/inc
-    ${METADEF_DIR}/third_party/graphengine/inc/external
-    ${METADEF_DIR}/third_party/fwkacllib/inc
     #### temp independent ####
     ${METADEF_DIR}/../graphengine/inc
     ${METADEF_DIR}/../graphengine/inc/framework
@@ -187,6 +179,14 @@ target_include_directories(op_tiling_o2 PRIVATE
     ${METADEF_DIR}/../../graphengine/inc/framework
     ${METADEF_DIR}/../../graphengine/inc/external
     ${METADEF_DIR}/../../inc
+    #### blue zone ####
+    ${ASCEND_DIR}/driver/include
+    ${ASCEND_DIR}/fwkacllib/include
+    ${METADEF_DIR}/../third_party/fwkacllib/inc
+    #### blue independent compile ####
+    ${METADEF_DIR}/third_party/graphengine/inc
+    ${METADEF_DIR}/third_party/graphengine/inc/external
+    ${METADEF_DIR}/third_party/fwkacllib/inc
 )
 
 target_compile_options(op_tiling_o2 PRIVATE
