@@ -51,6 +51,7 @@ set(SRC_LIST
     "runtime_inference_context.cc"
 )
 
+if (NOT ENABLE_D AND NOT ENABLE_ACL)
 ######### libgraph.so #############
 add_library(graph SHARED ${SRC_LIST} ${PROTO_SRCS})
 
@@ -311,6 +312,51 @@ set_target_properties(fwk_stub_graph PROPERTIES
     LIBRARY_OUTPUT_DIRECTORY fwk_stub
 )
 
+else ()
+######### libgraph.so w/static protobuf #############
+add_library(graph SHARED ${SRC_LIST} ${PROTO_SRCS})
+
+target_compile_options(graph PRIVATE
+        -O2
+        $<$<STREQUAL:${PRODUCT_SIDE},host>:-fexceptions>
+        )
+
+target_compile_definitions(graph PRIVATE
+        $<$<STREQUAL:${PRODUCT_SIDE},host>:FMK_SUPPORT_DUMP>
+        )
+
+target_include_directories(graph PRIVATE
+        ${CMAKE_CURRENT_LIST_DIR}
+        ${CMAKE_BINARY_DIR}
+        ${CMAKE_BINARY_DIR}/proto/ge
+        ${CMAKE_BINARY_DIR}/proto/ge/proto
+        ${METADEF_DIR}
+        ${METADEF_DIR}/graph
+        ${METADEF_DIR}/inc
+        ${METADEF_DIR}/inc/graph
+        ${METADEF_DIR}/inc/external
+        ${METADEF_DIR}/inc/external/graph
+        ${METADEF_DIR}/../third_party/fwkacllib/inc/ops
+        ${METADEF_DIR}/../third_party/fwkacllib/inc
+        ${METADEF_DIR}/../inc
+        ${METADEF_DIR}/../inc/framework
+        ${METADEF_DIR}/../inc/external
+        ${METADEF_DIR}/../../ops/built-in/op_proto/inc
+        )
+
+target_link_libraries(graph PRIVATE
+        $<BUILD_INTERFACE:intf_pub>
+        protobuf_static
+        -Wl,--no-as-needed
+        c_sec
+        slog
+        error_manager
+        -Wl,--as-needed
+        -lrt
+        -ldl
+        )
+endif ()
+
 ############ install ############
 set(INSTALL_BASE_DIR "")
 set(INSTALL_LIBRARY_DIR lib)
@@ -318,7 +364,7 @@ set(INSTALL_LIBRARY_DIR lib)
 install(TARGETS graph OPTIONAL
     LIBRARY DESTINATION ${INSTALL_LIBRARY_DIR}
 )
-
+if (NOT ENABLE_D AND NOT ENABLE_ACL)
 install(TARGETS atc_stub_graph OPTIONAL
     LIBRARY DESTINATION ${INSTALL_LIBRARY_DIR}/stub
 )
@@ -326,3 +372,4 @@ install(TARGETS atc_stub_graph OPTIONAL
 install(TARGETS fwk_stub_graph OPTIONAL
     LIBRARY DESTINATION ${INSTALL_LIBRARY_DIR}/fwk_stub
 )
+endif ()
