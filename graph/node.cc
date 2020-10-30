@@ -1,5 +1,5 @@
 /**
- * Copyright 2019-2020 Huawei Technologies Co., Ltd
+ * Copyright 2020 Huawei Technologies Co., Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -282,7 +282,7 @@ GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY graphStatus Node::AddLinkFrom(con
     return GRAPH_FAILED;
   }
   in_data_anchors_.push_back(anchor);
-  (void)out_anchors.at(0)->LinkTo(in_data_anchors_.back());
+  (void) out_anchors.at(0)->LinkTo(in_data_anchors_.back());
 
   return GRAPH_SUCCESS;
 }
@@ -307,16 +307,16 @@ GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY graphStatus Node::AddLinkFrom(con
   }
 
   if (index < GetAllInDataAnchors().size()) {
-    (void)out_anchors.at(0)->LinkTo(in_data_anchors_[index]);
+    (void) out_anchors.at(0)->LinkTo(in_data_anchors_[index]);
   } else {
-    std::shared_ptr<InDataAnchor> anchor =
-      ComGraphMakeShared<InDataAnchor>(shared_from_this(), in_data_anchors_.size());
+    std::shared_ptr<InDataAnchor>
+        anchor = ComGraphMakeShared<InDataAnchor>(shared_from_this(), in_data_anchors_.size());
     if (anchor == nullptr) {
       GELOGE(GRAPH_FAILED, "out_anchor size is:%zu, malloc shared_ptr failed.", out_anchors.size());
       return GRAPH_FAILED;
     }
     in_data_anchors_.push_back(anchor);
-    (void)out_anchors.at(0)->LinkTo(in_data_anchors_.back());
+    (void) out_anchors.at(0)->LinkTo(in_data_anchors_.back());
   }
 
   return GRAPH_SUCCESS;
@@ -358,20 +358,20 @@ GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY graphStatus Node::AddLinkFrom(con
   auto index = op_->GetInputIndexByName(name);
   if (index != -1) {
     if (index >= static_cast<int>(in_data_anchors_.size())) {
-      GELOGE(GRAPH_FAILED, "op %s get input name %s 's index %d is illegal.", op_->GetName().c_str(), name.c_str(),
-             index);
+      GELOGE(GRAPH_FAILED, "op %s get input name %s 's index %d is illegal.",
+             op_->GetName().c_str(), name.c_str(), index);
       return GRAPH_FAILED;
     }
-    (void)out_anchors.at(0)->LinkTo(in_data_anchors_[index]);
+    (void) out_anchors.at(0)->LinkTo(in_data_anchors_[index]);
   } else {
-    std::shared_ptr<InDataAnchor> anchor =
-      ComGraphMakeShared<InDataAnchor>(shared_from_this(), in_data_anchors_.size());
+    std::shared_ptr<InDataAnchor>
+        anchor = ComGraphMakeShared<InDataAnchor>(shared_from_this(), in_data_anchors_.size());
     if (anchor == nullptr) {
       GELOGE(GRAPH_FAILED, "in_data_anchors_size is:%zu, malloc shared_ptr failed.", in_data_anchors_.size());
       return GRAPH_FAILED;
     }
     in_data_anchors_.push_back(anchor);
-    (void)out_anchors.at(0)->LinkTo(in_data_anchors_.back());
+    (void) out_anchors.at(0)->LinkTo(in_data_anchors_.back());
   }
   if (op_->AddInputDesc(name, input_op_desc->GetOutputDesc(0)) != GRAPH_SUCCESS) {
     GELOGE(GRAPH_FAILED, "add input desc failed.");
@@ -452,10 +452,11 @@ GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY Node::Vistor<AnchorPtr> Node::Get
 GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY InDataAnchorPtr Node::GetInDataAnchor(int idx) const {
   if (idx < 0 || idx >= static_cast<int>(in_data_anchors_.size())) {
     ErrorManager::GetInstance().ATCReportErrMessage(
-      "E19019", {"opname", "index", "anchorname", "optype"},
-      {GetName().c_str(), std::to_string(idx), "in_data_anchor", GetType().c_str()});
-    GELOGE(GRAPH_FAILED, "Op[%s] doesn't have index[%d]'s in_data_anchor which optype is %s.", GetName().c_str(), idx,
-           GetType().c_str());
+        "E19019", {"opname", "index", "anchorname", "optype"},
+        {GetName().c_str(), std::to_string(idx), "in_data_anchor", GetType().c_str()});
+    GELOGE(GRAPH_FAILED,
+        "Op[%s] doesn't have index[%d]'s in_data_anchor which optype is %s.",
+        GetName().c_str(), idx, GetType().c_str());
     return nullptr;
   } else {
     return in_data_anchors_[idx];
@@ -481,15 +482,11 @@ GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY AnchorPtr Node::GetInAnchor(int i
 GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY AnchorPtr Node::GetOutAnchor(int idx) const {
   // Idx can't be less than -1 or >= out_data_anchors_.size(), -1 means index of control anchor_
   if (idx < -1 || idx >= static_cast<int>(out_data_anchors_.size())) {
-    ErrorManager::GetInstance().ATCReportErrMessage("E19019", {"opname", "index", "anchorname", "optype"},
-                                                    {
-                                                      GetName().c_str(),
-                                                      std::to_string(idx),
-                                                      "out_anchor",
-                                                      GetType().c_str(),
-                                                    });
-    GELOGE(GRAPH_FAILED, "Op[%s] doesn't have index[%d]'s out_anchor which optype is %s.", GetName().c_str(), idx,
-           GetType().c_str());
+    ErrorManager::GetInstance().ATCReportErrMessage(
+        "E19019", {"opname", "index", "anchorname", "optype"},
+        {GetName().c_str(), std::to_string(idx), "out_anchor", GetType().c_str(), });
+    GELOGE(GRAPH_FAILED,
+        "Op[%s] doesn't have index[%d]'s out_anchor which optype is %s.", GetName().c_str(), idx, GetType().c_str());
     return nullptr;
   } else {
     // Return control anchor
@@ -505,10 +502,11 @@ GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY AnchorPtr Node::GetOutAnchor(int 
 GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY OutDataAnchorPtr Node::GetOutDataAnchor(int idx) const {
   if (idx < 0 || idx >= static_cast<int>(out_data_anchors_.size())) {
     ErrorManager::GetInstance().ATCReportErrMessage(
-      "E19019", {"opname", "index", "anchorname", "optype"},
-      {GetName().c_str(), std::to_string(idx), "out_data_anchor", GetType().c_str()});
-    GELOGE(GRAPH_FAILED, "Op[%s] doesn't have index[%d]'s out_data_anchor which optype is %s.", GetName().c_str(), idx,
-           GetType().c_str());
+        "E19019", {"opname", "index", "anchorname", "optype"},
+        {GetName().c_str(), std::to_string(idx), "out_data_anchor", GetType().c_str()});
+    GELOGE(GRAPH_FAILED,
+        "Op[%s] doesn't have index[%d]'s out_data_anchor which optype is %s.",
+        GetName().c_str(), idx, GetType().c_str());
     return nullptr;
   } else {
     return out_data_anchors_[idx];
@@ -561,7 +559,7 @@ GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY Node::Vistor<NodePtr> Node::GetIn
 }
 
 GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY bool Node::IsAllInNodesSeen(
-  std::unordered_set<Node *> &nodes_seen) const {
+    std::unordered_set<Node *> &nodes_seen) const {
   for (const auto &in_anchor : in_data_anchors_) {
     GE_CHK_BOOL_EXEC((in_anchor != nullptr), continue, "in_data_anchor is nullptr");
     auto out_anchor = in_anchor->GetPeerOutAnchor();
@@ -761,11 +759,12 @@ graphStatus Node::Verify() const {
 
   if (!is_unknown_graph) {
     for (const auto &in_anchor_ptr : GetAllInDataAnchors()) {
-      GE_IF_BOOL_EXEC(in_anchor_ptr == nullptr, GELOGW("in anchor ptr is null"); continue);
-      bool valid_anchor =
-        op_->GetType() == data_type || op_->GetType() == aipp_data_type || op_->GetType() == const_type ||
-        op_->GetType() == variable_type || op_->IsOptionalInput(in_anchor_ptr->GetIdx()) ||
-        op_->MutableInputDesc(in_anchor_ptr->GetIdx()) == nullptr || in_anchor_ptr->GetPeerAnchors().size() > 0;
+      GE_IF_BOOL_EXEC(in_anchor_ptr == nullptr, GELOGW("in anchor ptr is null");
+                      continue);
+      bool valid_anchor = op_->GetType() == data_type || op_->GetType() == aipp_data_type ||
+          op_->GetType() == const_type || op_->GetType() == variable_type ||
+          op_->IsOptionalInput(in_anchor_ptr->GetIdx()) || op_->MutableInputDesc(in_anchor_ptr->GetIdx()) == nullptr ||
+          in_anchor_ptr->GetPeerAnchors().size() > 0;
       if (!valid_anchor) {
         ErrorManager::GetInstance().ATCReportErrMessage("E11019", {"opname", "index"},
                                                         {GetName(), std::to_string(in_anchor_ptr->GetIdx())});

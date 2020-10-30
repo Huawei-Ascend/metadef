@@ -1,5 +1,5 @@
 /**
- * Copyright 2019-2020 Huawei Technologies Co., Ltd
+ * Copyright 2020 Huawei Technologies Co., Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,5 +65,5 @@ GE_REGISTER_OPTYPE(NODE_NAME_NET_OUTPUT, "Node_Output");
 
 GE_REGISTER_OPTYPE(RECV, "Recv");
 GE_REGISTER_OPTYPE(SEND, "Send");
-};      // namespace ge
+};  // namespace ge
 #endif  // COMMON_GRAPH_DEBUG_GE_OP_TYPES_H_

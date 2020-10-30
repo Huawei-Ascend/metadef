@@ -1,5 +1,5 @@
 /**
- * Copyright 2019-2020 Huawei Technologies Co., Ltd
+ * Copyright 2020 Huawei Technologies Co., Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -120,8 +120,8 @@ class GraphImpl {
 
     // Del last ";"
     if (!output_name_.empty()) {
-      output_name_ = output_name_.substr(0, output_name_.length() - 1);
-    }
+        output_name_ = output_name_.substr(0, output_name_.length() - 1);
+      }
     compute_graph_->SetUserDefOutput(output_name_);
     compute_graph_->SetOutputSize(static_cast<uint32_t>(output_indexs.size()));
     compute_graph_->SetGraphOutNodesInfo(output_nodes);
@@ -240,7 +240,9 @@ class GraphImpl {
     compute_graph_->SetNeedIteration(need_iteration);
   }
 
-  const std::string &GetName() const { return name_; }
+  const std::string &GetName() const {
+    return name_;
+  }
 
  private:
   std::string name_;
@@ -356,7 +358,10 @@ graphStatus Graph::LoadFromFile(const string &file_name) {
   return GRAPH_SUCCESS;
 }
 
-GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY const std::string &Graph::GetName() const { return impl_->GetName(); }
+GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY
+const std::string &Graph::GetName() const {
+  return impl_->GetName();
+}
 
 GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY Graph
 GraphUtils::CreateGraphFromComputeGraph(const ge::ComputeGraphPtr compute_graph) {
@@ -371,7 +376,8 @@ GraphUtils::CreateGraphFromComputeGraph(const ge::ComputeGraphPtr compute_graph)
   return graph;
 }
 
-GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY graphStatus GraphUtils::RecoverGraphOperators(const Graph &graph) {
+GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY
+graphStatus GraphUtils::RecoverGraphOperators(const Graph &graph) {
   GE_CHECK_NOTNULL(graph.impl_);
   GE_CHECK_NOTNULL(graph.impl_->compute_graph_);
 

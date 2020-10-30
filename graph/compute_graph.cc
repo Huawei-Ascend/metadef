@@ -1,5 +1,5 @@
 /**
- * Copyright 2019-2020 Huawei Technologies Co., Ltd
+ * Copyright 2020 Huawei Technologies Co., Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -99,14 +99,15 @@ ComputeGraph::Vistor<NodePtr> ComputeGraph::AllGraphNodes(std::vector<std::share
   return Vistor<NodePtr>(shared_from_this(), all_nodes);
 }
 
-GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY ComputeGraph::Vistor<NodePtr> ComputeGraph::GetNodes(
-  bool is_unknown_shape) const {
+GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY
+ComputeGraph::Vistor<NodePtr> ComputeGraph::GetNodes(bool is_unknown_shape) const {
   if (is_unknown_shape) {
     return GetDirectNode();
   } else {
     return GetAllNodes();
   }
 }
+
 
 size_t ComputeGraph::GetDirectNodesSize() const { return nodes_.size(); }
 
@@ -146,8 +147,8 @@ GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY NodePtr ComputeGraph::FindNode(co
   return nullptr;
 }
 
-GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY NodePtr
-ComputeGraph::FindFirstNodeMatchType(const std::string &name) const {
+GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY
+NodePtr ComputeGraph::FindFirstNodeMatchType(const std::string &name) const {
   for (const auto &node : nodes_) {
     if (node == nullptr) {
       continue;
@@ -160,7 +161,7 @@ ComputeGraph::FindFirstNodeMatchType(const std::string &name) const {
 }
 
 GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY bool ComputeGraph::GraphAttrsAreEqual(
-  const ComputeGraph &r_graph) const {
+    const ComputeGraph &r_graph) const {
   // ProtoMsgOwner <::google::protobuf::Message> is temporarily ignored
   if ((this->attrs_.protoMsg_ != nullptr) && (r_graph.attrs_.protoMsg_ != nullptr)) {
     const auto &proto_attr_map = *(this->attrs_.protoMsg_);
@@ -187,7 +188,7 @@ GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY bool ComputeGraph::GraphAttrsAreE
 /// Since there may be different input nodes
 /// chosen by user in the same graph, special judgment is needed
 GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY bool ComputeGraph::VectorInputNodePtrIsEqual(
-  const std::vector<NodePtr> &left_nodes, const std::vector<NodePtr> &right_nodes) const {
+    const std::vector<NodePtr> &left_nodes, const std::vector<NodePtr> &right_nodes) const {
   const auto left_nodes_size = left_nodes.size();
   const auto right_nodes_size = right_nodes.size();
   if (left_nodes_size != right_nodes_size) {
@@ -216,7 +217,7 @@ GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY bool ComputeGraph::VectorInputNod
 }
 
 GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY bool ComputeGraph::GraphMembersAreEqual(
-  const ComputeGraph &r_graph) const {
+    const ComputeGraph &r_graph) const {
   return (IsEqual(this->sub_graph_.size(), r_graph.sub_graph_.size(), "graph.subgraphs_.size()") &&
           IsEqual(this->nodes_.size(), r_graph.nodes_.size(), "graph.nodes_.size()") &&
           VectorInputNodePtrIsEqual(this->input_nodes_, r_graph.input_nodes_) &&
@@ -368,7 +369,9 @@ NodePtr ComputeGraph::AddInputNode(NodePtr node) {
   return node;
 }
 
-NodePtr ComputeGraph::AddOutputNode(NodePtr node) { return AddOutputNodeByIndex(node, 0); }
+NodePtr ComputeGraph::AddOutputNode(NodePtr node) {
+  return AddOutputNodeByIndex(node, 0);
+}
 
 NodePtr ComputeGraph::AddOutputNodeByIndex(NodePtr node, int32_t index) {
   if (node == nullptr || node->GetOpDesc() == nullptr) {
@@ -531,9 +534,9 @@ ComputeGraph::AddSubgraph(const std::string &name, const std::shared_ptr<Compute
   }
   if (parent_node->GetOwnerComputeGraph() != parent_graph) {
     GE_LOGE(
-      "Try to add a subgraph which parent node's parent graph is not equal to "
-      "the subgraph's parent graph, subgraph name %s, parent node name %s",
-      subgraph->GetName().c_str(), parent_graph->GetName().c_str());
+        "Try to add a subgraph which parent node's parent graph is not equal to "
+        "the subgraph's parent graph, subgraph name %s, parent node name %s",
+        subgraph->GetName().c_str(), parent_graph->GetName().c_str());
     return GRAPH_PARAM_INVALID;
   }
   if (!this->parent_graph_.expired()) {
@@ -574,14 +577,14 @@ GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY void ComputeGraph::RemoveSubgraph
 }
 
 GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY void ComputeGraph::RemoveSubgraph(
-  const std::shared_ptr<ComputeGraph> &subgraph) {
+    const std::shared_ptr<ComputeGraph> &subgraph) {
   if (subgraph != nullptr) {
     RemoveSubgraph(subgraph->GetName());
   }
 }
 
 GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY std::shared_ptr<ComputeGraph> ComputeGraph::GetSubgraph(
-  const std::string &name) const {
+    const std::string &name) const {
   std::shared_ptr<ComputeGraph> parent = parent_graph_.lock();
   if (parent == nullptr) {
     auto iter = names_to_subgraph_.find(name);
@@ -601,7 +604,7 @@ GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY shared_ptr<ComputeGraph> ComputeG
 }
 
 GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY void ComputeGraph::SetParentGraph(
-  const shared_ptr<ComputeGraph> &parent) {
+    const shared_ptr<ComputeGraph> &parent) {
   parent_graph_ = parent;
 }
 
@@ -758,14 +761,14 @@ graphStatus ComputeGraph::DFSTopologicalSorting(std::vector<NodePtr> &node_vec,
       }
     }
     GE_IF_BOOL_EXEC(
-      node->GetOutControlAnchor() != nullptr, for (AnchorPtr peer_in_anchor
-                                                   : node->GetOutControlAnchor()->GetPeerAnchors()) {
-        GE_CHECK_NOTNULL(peer_in_anchor);
-        auto iter = map_in_edge_num.find(peer_in_anchor->GetOwnerNode());
-        if (iter != map_in_edge_num.end() && --iter->second == 0) {
-          stack.push_back(peer_in_anchor->GetOwnerNode());
-        }
-      })
+        node->GetOutControlAnchor() != nullptr, for (AnchorPtr peer_in_anchor
+                                                     : node->GetOutControlAnchor()->GetPeerAnchors()) {
+          GE_CHECK_NOTNULL(peer_in_anchor);
+          auto iter = map_in_edge_num.find(peer_in_anchor->GetOwnerNode());
+          if (iter != map_in_edge_num.end() && --iter->second == 0) {
+            stack.push_back(peer_in_anchor->GetOwnerNode());
+          }
+        })
   }
 
   return GRAPH_SUCCESS;
@@ -1110,7 +1113,7 @@ GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY graphStatus ComputeGraph::Isolate
       GE_CHK_BOOL_EXEC(GraphUtils::RemoveEdge(pre_out_data_anchor, in_data_anchor) == GRAPH_SUCCESS,
                        return GRAPH_FAILED, "remove edge failed");
       GE_IF_BOOL_EXEC(pre_out_data_anchor->GetOwnerNode()->GetType() == CONSTANT ||
-                        pre_out_data_anchor->GetOwnerNode()->GetType() == CONSTANTOP,
+                          pre_out_data_anchor->GetOwnerNode()->GetType() == CONSTANTOP,
                       continue);
       for (const auto &out_data_anchor : node->GetAllOutDataAnchors()) {
         for (const auto &next_in_data_anchor : out_data_anchor->GetPeerInDataAnchors()) {
