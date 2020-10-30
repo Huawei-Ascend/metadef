@@ -1140,6 +1140,9 @@ GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY extern const std::string ATTR_STA
 // input_output_offset
 GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY extern const std::string ATTR_ZERO_COPY_BASIC_OFFSET;
 GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY extern const std::string ATTR_ZERO_COPY_RELATIVE_OFFSET;
+
+// The processing mode of INF and NAN during floating-point number calculation.
+GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY extern const std::string ATTR_FP_CEILING_MODE;
 }  // namespace ge
 
 #endif  // INC_GRAPH_DEBUG_GE_ATTR_DEFINE_H_

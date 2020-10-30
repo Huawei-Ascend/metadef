@@ -1097,4 +1097,7 @@ const std::string ATTR_STAGE_LEVEL = "_stage_level";
 // input_output_offset
 const std::string ATTR_ZERO_COPY_BASIC_OFFSET = "_zero_copy_basic_offset";
 const std::string ATTR_ZERO_COPY_RELATIVE_OFFSET = "_zero_copy_relative_offset";
+
+// The processing mode of INF and NAN during floating-point number calculation.
+const std::string ATTR_FP_CEILING_MODE = "_fp_ceiling_mode";
 }  // namespace ge
