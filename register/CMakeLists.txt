@@ -17,7 +17,6 @@ protobuf_generate(ge PROTO_SRCS PROTO_HDRS ${PROTO_LIST})
 
 set(SRC_LIST
     "register.cpp"
-    "ops_kernel_builder_registry.cc"
     "graph_optimizer/graph_fusion/graph_fusion_pass_base.cpp"
     "graph_optimizer/graph_fusion/fusion_pass_registry.cpp"
     "graph_optimizer/graph_fusion/fusion_pattern.cpp"

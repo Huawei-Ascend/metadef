@@ -187,6 +187,7 @@ const std::string REFINEDET_MBOX_FUSION_BOX_TYPE_NUM = "ssd_mbox_fusion_box_type
 const std::string REFINEDET_RESHAPE_SLICE_CONCAT_FUSION = "reshape_slice_concat_fusion";
 const std::string SSD_PRIORBOX_CONCAT = "ssd_mbox_conf_priorbox_concat_flag";
 
+
 // _Arg
 const std::string ATTR_NAME_INDEX = "index";
 // _RetVal
@@ -616,6 +617,7 @@ const std::string MUTI_RNN = "multi_rnn";
 const std::string CNN_RNN = "cnn_rnn";
 const std::string RNN_MODE_ = "rnn_";
 
+
 const std::string CELL_MODE = "mode";
 const std::string LSTM_CELL = "lstm_cell";
 const std::string GRU_CELL = "gru_cell";
@@ -718,7 +720,7 @@ const std::string ATTR_MODEL_MEMORY_SIZE = "memory_size";
 
 const std::string ATTR_MODEL_ZERO_COPY_MEMORY_SIZE = "zero_copy_memory_size";
 
-const std::string ATTR_MODEL_OUT_NODES_NAME = "attr_model_out_nodes_name";
+const std::string ATTR_MODEL_OUT_NODES_NAME  = "attr_model_out_nodes_name";
 
 const std::string ATTR_MODEL_WEIGHT_SIZE = "weight_size";
 
@@ -959,7 +961,7 @@ const std::string ATTR_NAME_FUSION_VIRTUAL_OP = "_fusion_virtual_op";
 const std::string ATTR_NAME_FUSION_GROUP_TYPE = "_fusion_group_type";
 const std::string ATTR_NAME_INPUT_MEM_TYPE_LIST = "_input_memory_type";
 const std::string ATTR_NAME_OUTPUT_MEM_TYPE_LIST = "_output_memory_type";
-const std::string ATTR_NAME_L1_FUSION_EXTEND_PTR = "_l1_fusion_extend_content";
+const std::string ATTR_NAME_L1_FUSION_EXTEND_PTR= "_l1_fusion_extend_content";
 const std::string ATTR_NAME_GET_TENSOR_ACTUAL_SIZE = "_tensor_actual_size";
 const std::string ATTR_NAME_OUTPUT_OFFSET_FOR_L1_FUSION = "_output_offset_for_l1_fuison";
 const std::string ATTR_NAME_SWITCH_FOR_L1_FUSION = "_enable_l1_fusion";

@@ -64,7 +64,7 @@ max_code_len_per_line = 100
     when DEBUG on
 """
 white_list_for_debug = ["attr_value.h", "operator.h", "tensor.h", "graph.h", "operator_factory.h", "inference_context.h",
-                        "ge_ir_build.h", "ge_api.h", "ascend_string.h", "gnode.h"]
+                        "ge_ir_build.h", "ge_api.h"]
 include_dir_key_words = ["ge", "graph"]
 DEBUG = True
 

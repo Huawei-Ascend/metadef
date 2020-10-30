@@ -1,5 +1,5 @@
 /**
- * Copyright 2019-2020 Huawei Technologies Co., Ltd
+ * Copyright 2020 Huawei Technologies Co., Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,9 @@
 #include "graph/ge_attr_value.h"
 
 namespace ge {
-GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY AttrValue::AttrValue() { impl = ComGraphMakeShared<AttrValueImpl>(); }
+GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY AttrValue::AttrValue() {
+  impl = ComGraphMakeShared<AttrValueImpl>();
+}
 
 #define ATTR_VALUE_SET_GET_IMP(type)                 \
   graphStatus AttrValue::GetValue(type &val) const { \

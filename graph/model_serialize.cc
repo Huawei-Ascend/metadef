@@ -1,5 +1,5 @@
 /**
- * Copyright 2019-2020 Huawei Technologies Co., Ltd
+ * Copyright 2020 Huawei Technologies Co., Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -92,7 +92,7 @@ bool ModelSerializeImp::SerializeOpDesc(const ConstOpDescPtr &op_desc, proto::Op
   GE_CHK_BOOL_EXEC(op_def_proto != nullptr, return false, "op_def_proto is null.");
   if (op_desc->op_def_.GetProtoMsg() != nullptr) {
     *op_def_proto = *op_desc->op_def_.GetProtoMsg();
-    // Delete unnecessary attr
+    //Delete unnecessary attr
     if (is_dump) {
       auto attr = op_def_proto->mutable_attr();
       attr->erase(ATTR_NAME_FRAMEWORK_NODE_DEF);
@@ -248,7 +248,7 @@ bool ModelSerializeImp::SerializeModel(const Model &model, proto::ModelDef *mode
 }
 
 GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY bool ModelSerializeImp::UnserializeTensor(
-  GeTensorPtr &tensor, proto::TensorDef &tensor_proto) {
+    GeTensorPtr &tensor, proto::TensorDef &tensor_proto) {
   tensor = std::shared_ptr<GeTensor>(new (std::nothrow) GeTensor(protobuf_owner_, &tensor_proto));
   if (tensor == nullptr) {
     GELOGE(GRAPH_FAILED, "tensor is nullptr");
@@ -258,13 +258,16 @@ GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY bool ModelSerializeImp::Unseriali
   }
 }
 
-void ModelSerializeImp::AttrDefToOpDesc(OpDescPtr &op_desc, std::vector<string> &key_in, std::vector<string> &key_out,
-                                        std::vector<uint32_t> &value_in, std::vector<uint32_t> &value_out,
+void ModelSerializeImp::AttrDefToOpDesc(OpDescPtr &op_desc,
+                                        std::vector<string> &key_in,
+                                        std::vector<string> &key_out,
+                                        std::vector<uint32_t> &value_in,
+                                        std::vector<uint32_t> &value_out,
                                         std::vector<string> &opt_input) {
   if (!key_in.empty()) {
     if (key_in.size() != value_in.size()) {
-      GELOGW("Key and value vector size is different. key_size: %zu, value_size: %zu.", key_out.size(),
-             value_in.size());
+      GELOGW("Key and value vector size is different. key_size: %zu, value_size: %zu.",
+             key_out.size(), value_in.size());
     } else {
       for (uint32_t i = 0; i < key_in.size(); ++i) {
         op_desc->input_name_idx_.insert(std::pair<string, uint32_t>(key_in.at(i), value_in.at(i)));
@@ -273,8 +276,8 @@ void ModelSerializeImp::AttrDefToOpDesc(OpDescPtr &op_desc, std::vector<string> 
   }
   if (!key_out.empty()) {
     if (key_out.size() != value_out.size()) {
-      GELOGW("Key and value vector size is different. key_size: %zu, value_size: %zu.", key_out.size(),
-             value_out.size());
+      GELOGW("Key and value vector size is different. key_size: %zu, value_size: %zu.",
+             key_out.size(), value_out.size());
     } else {
       for (uint32_t i = 0; i < key_out.size(); ++i) {
         op_desc->output_name_idx_.insert(std::pair<string, uint32_t>(key_out.at(i), value_out.at(i)));
@@ -287,6 +290,7 @@ void ModelSerializeImp::AttrDefToOpDesc(OpDescPtr &op_desc, std::vector<string> 
     }
   }
 }
+
 
 bool ModelSerializeImp::UnserializeOpDesc(OpDescPtr &op_desc, proto::OpDef &op_def_proto) {
   std::vector<string> opt_input;
@@ -341,14 +345,14 @@ bool ModelSerializeImp::UnserializeOpDesc(OpDescPtr &op_desc, proto::OpDef &op_d
   // Input tensor
   for (auto &input_desc : *op_def_proto.mutable_input_desc()) {
     std::shared_ptr<GeTensorDesc> temp_value =
-      std::shared_ptr<GeTensorDesc>(new (std::nothrow) GeTensorDesc(protobuf_owner_, &input_desc));
+        std::shared_ptr<GeTensorDesc>(new (std::nothrow) GeTensorDesc(protobuf_owner_, &input_desc));
     GE_CHK_BOOL_RET_STATUS(temp_value != nullptr, false, "temp_value is nullptr");
     op_desc->inputs_desc_.push_back(temp_value);
   }
   // Output tensor
   for (auto &output_desc : *op_def_proto.mutable_output_desc()) {
     std::shared_ptr<GeTensorDesc> temp_value =
-      std::shared_ptr<GeTensorDesc>(new (std::nothrow) GeTensorDesc(protobuf_owner_, &output_desc));
+        std::shared_ptr<GeTensorDesc>(new (std::nothrow) GeTensorDesc(protobuf_owner_, &output_desc));
     GE_CHK_BOOL_RET_STATUS(temp_value != nullptr, false, "temp_value is nullptr");
     op_desc->outputs_desc_.push_back(temp_value);
   }
@@ -467,8 +471,8 @@ bool ModelSerializeImp::RebuildOwnership(ComputeGraphPtr &compute_graph, map<str
       for (const std::string &name : op_desc->GetSubgraphInstanceNames()) {
         auto it = subgraphs.find(name);
         if (it == subgraphs.end()) {
-          GELOGE(GRAPH_FAILED, "Node:%s, Subgraph:%s not found, num:%zu.", op_desc->GetName().c_str(), name.c_str(),
-                 subgraphs.size());
+          GELOGE(GRAPH_FAILED, "Node:%s, Subgraph:%s not found, num:%zu.",
+                 op_desc->GetName().c_str(), name.c_str(), subgraphs.size());
           return false;
         }
 

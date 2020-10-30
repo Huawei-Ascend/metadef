@@ -1,5 +1,5 @@
 /**
- * Copyright 2019-2020 Huawei Technologies Co., Ltd
+ * Copyright 2020 Huawei Technologies Co., Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,7 +47,8 @@ thread_local RefRelations reflection_builder;
 }  // namespace
 
 graphStatus ReflectionProcess(const std::unordered_set<RefCell, RefCellHash> &reflection,
-                              std::deque<ge::NodePtr> &nodes, ge::Format to_be_set_format) {
+                              std::deque<ge::NodePtr> &nodes,
+                              ge::Format to_be_set_format) {
   for (const auto &cell : reflection) {
     auto node = cell.node;
     auto in_out_idx = cell.in_out_idx;
@@ -75,11 +76,14 @@ graphStatus BiasAddFormatFixProcess(ge::NodePtr &node_ptr) {
   if (node_ptr->GetType() != "BiasAdd") {
     return GRAPH_SUCCESS;
   }
-  std::unordered_map<string, Format> kTfFormatFix = {{"NHWC", FORMAT_NDHWC}, {"NCHW", FORMAT_NCDHW}};
+  std::unordered_map<string, Format> kTfFormatFix = {
+    {"NHWC", FORMAT_NDHWC},
+    {"NCHW", FORMAT_NCDHW}
+  };
   for (size_t i = 0; i < node_ptr->GetOpDesc()->GetInputsSize(); i++) {
     auto in_desc = node_ptr->GetOpDesc()->MutableInputDesc(i);
     GE_CHECK_NOTNULL(in_desc);
-    if (in_desc->MutableShape().GetDimNum() != 5) {  // 5 means dim num
+    if (in_desc->MutableShape().GetDimNum() != 5) { // 5 means dim num
       continue;
     }
     auto format = in_desc->GetOriginFormat();
@@ -87,14 +91,14 @@ graphStatus BiasAddFormatFixProcess(ge::NodePtr &node_ptr) {
     auto fixed_format = (kTfFormatFix.count(key) == 0) ? format : kTfFormatFix[key];
     in_desc->SetOriginFormat(fixed_format);
     in_desc->SetFormat(fixed_format);
-    GELOGD("fix the %zu'th input of node[%s]. Origin format is %s , after fixed it is %s", i,
-           node_ptr->GetName().c_str(), TypeUtils::FormatToSerialString(format).c_str(),
-           TypeUtils::FormatToSerialString(fixed_format).c_str());
+    GELOGD("fix the %zu'th input of node[%s]. Origin format is %s , after fixed it is %s",
+      i, node_ptr->GetName().c_str(), TypeUtils::FormatToSerialString(format).c_str(),
+      TypeUtils::FormatToSerialString(fixed_format).c_str());
   }
   for (size_t i = 0; i < node_ptr->GetOpDesc()->GetOutputsSize(); i++) {
     auto out_desc = node_ptr->GetOpDesc()->MutableOutputDesc(i);
     GE_CHECK_NOTNULL(out_desc);
-    if (out_desc->MutableShape().GetDimNum() != 5) {  // 5 means dim num
+    if (out_desc->MutableShape().GetDimNum() != 5) { // 5 means dim num
       continue;
     }
     auto format = out_desc->GetOriginFormat();
@@ -102,9 +106,9 @@ graphStatus BiasAddFormatFixProcess(ge::NodePtr &node_ptr) {
     auto fixed_format = (kTfFormatFix.count(key) == 0) ? format : kTfFormatFix[key];
     out_desc->SetOriginFormat(fixed_format);
     out_desc->SetFormat(fixed_format);
-    GELOGD("fix the %zu'th output of node[%s]. Origin format is %s , after fixed it is %s", i,
-           node_ptr->GetName().c_str(), TypeUtils::FormatToSerialString(format).c_str(),
-           TypeUtils::FormatToSerialString(fixed_format).c_str());
+    GELOGD("fix the %zu'th output of node[%s]. Origin format is %s , after fixed it is %s",
+      i, node_ptr->GetName().c_str(), TypeUtils::FormatToSerialString(format).c_str(),
+      TypeUtils::FormatToSerialString(fixed_format).c_str());
   }
   return GRAPH_SUCCESS;
 }
@@ -249,7 +253,7 @@ graphStatus FormatRefiner::BackInferProcess(std::deque<ge::NodePtr> &nodes, ge::
     auto status = reflection_builder.LookUpRefRelations(key, reflection);
     if (status != GRAPH_SUCCESS) {
       GELOGE(GRAPH_FAILED, "LookUpRefRelations failed!Node is [%s],the %d out edge",
-             (peer_out_data_node->GetName()).c_str(), idx);
+        (peer_out_data_node->GetName()).c_str(), idx);
       return GRAPH_FAILED;
     }
 
@@ -325,7 +329,7 @@ graphStatus FormatRefiner::ForwardInferProcess(std::deque<ge::NodePtr> &nodes, g
       auto status = reflection_builder.LookUpRefRelations(key, reflection);
       if (status != GRAPH_SUCCESS) {
         GELOGE(GRAPH_FAILED, "LookUpRefRelations failed!Node is [%s],the %d input edge",
-               (peer_in_data_node->GetName()).c_str(), idx);
+          (peer_in_data_node->GetName()).c_str(), idx);
         return GRAPH_FAILED;
       }
       auto ge_tensor_desc = peer_in_data_node->GetOpDesc()->GetInputDesc(static_cast<uint32_t>(idx));

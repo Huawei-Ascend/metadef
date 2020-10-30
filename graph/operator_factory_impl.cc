@@ -1,5 +1,5 @@
 /**
- * Copyright 2019-2020 Huawei Technologies Co., Ltd
+ * Copyright 2020 Huawei Technologies Co., Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -89,9 +89,9 @@ VerifyFunc OperatorFactoryImpl::GetVerifyFunc(const std::string &operator_type) 
   }
   auto it = operator_verify_funcs_->find(operator_type);
   if (it == operator_verify_funcs_->end()) {
-    return nullptr;
-  }
-  return it->second;
+        return nullptr;
+    }
+    return it->second;
 }
 
 graphStatus OperatorFactoryImpl::RegisterOperatorCreator(const string &operator_type, OpCreator const &op_creator) {

@@ -17,8 +17,6 @@ set(SRC_LIST
     "attr_value.cc"
     "buffer.cc"
     "compute_graph.cc"
-    "ascend_string.cc"
-    "gnode.cc"
     "graph.cc"
     "inference_context.cc"
     "shape_refiner.cc"
@@ -186,8 +184,6 @@ add_custom_command(
            ${CMAKE_CURRENT_BINARY_DIR}/stub_operator_factory.cc
            ${CMAKE_CURRENT_BINARY_DIR}/stub_tensor.cc
            ${CMAKE_CURRENT_BINARY_DIR}/stub_inference_context.cc
-           ${CMAKE_CURRENT_BINARY_DIR}/stub_ascend_string.cc
-           ${CMAKE_CURRENT_BINARY_DIR}/stub_gnode.cc
     COMMAND echo "Generating stub files."
             && ${HI_PYTHON} ${CMAKE_CURRENT_LIST_DIR}/stub/gen_stubapi.py ${METADEF_DIR}/inc/external ${CMAKE_CURRENT_BINARY_DIR}
             && mv attr_value.cc stub_attr_value.cc
@@ -196,8 +192,6 @@ add_custom_command(
             && mv operator_factory.cc stub_operator_factory.cc
             && mv tensor.cc stub_tensor.cc
             && mv inference_context.cc stub_inference_context.cc
-            && mv ascend_string.cc stub_ascend_string.cc
-            && mv gnode.cc stub_gnode.cc
             &&  echo "Generating stub files end."
 )
 
@@ -208,8 +202,6 @@ add_custom_target(graph_stub
             ${CMAKE_CURRENT_BINARY_DIR}/stub_operator_factory.cc
             ${CMAKE_CURRENT_BINARY_DIR}/stub_tensor.cc
             ${CMAKE_CURRENT_BINARY_DIR}/stub_inference_context.cc
-            ${CMAKE_CURRENT_BINARY_DIR}/stub_ascend_string.cc
-            ${CMAKE_CURRENT_BINARY_DIR}/stub_gnode.cc
 )
 
 #############################################################
@@ -222,8 +214,6 @@ add_library(atc_stub_graph SHARED
     stub_operator_factory.cc
     stub_tensor.cc
     stub_attr_value.cc
-    stub_ascend_string.cc
-    stub_gnode.cc
 )
 add_dependencies(atc_stub_graph graph_stub)
 
@@ -270,8 +260,6 @@ add_library(fwk_stub_graph SHARED
     stub_tensor.cc
     stub_attr_value.cc
     stub_inference_context.cc
-    stub_ascend_string.cc
-    stub_gnode.cc
 )
 
 add_dependencies(fwk_stub_graph graph_stub)
