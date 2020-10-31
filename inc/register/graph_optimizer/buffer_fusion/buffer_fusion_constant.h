@@ -48,7 +48,6 @@ static const std::string OP_PATTERN_REQUANTS16 = "requant_s16";
 static const std::string OP_PATTERN_READ_SELECT = "read_select";
 static const std::string OP_PATTERN_WRITE_SELECT = "write_select";
 static const std::string OP_PATTERN_BATCH_MATMUL = "BatchMatmul";
-static const std::string OP_PATTERN_CONV3D = "Conv3d";
 
 static const std::vector<std::string> OP_PATTERN_VEC{OP_PATTERN_ELEMWISE,
                                                      OP_PATTERN_COMMONREDUCE,
@@ -73,8 +72,7 @@ static const std::vector<std::string> OP_PATTERN_VEC{OP_PATTERN_ELEMWISE,
                                                      OP_PATTERN_REQUANTS16,
                                                      OP_PATTERN_READ_SELECT,
                                                      OP_PATTERN_WRITE_SELECT,
-                                                     OP_PATTERN_BATCH_MATMUL
-                                                     OP_PATTERN_CONV3D};
+                                                     OP_PATTERN_BATCH_MATMUL};
 }  // namespace fe
 
 #endif  // INC_REGISTER_GRAPH_OPTIMIZER_BUFFER_FUSION_CONSTANT_H_
