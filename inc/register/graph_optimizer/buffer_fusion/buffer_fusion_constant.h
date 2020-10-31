@@ -73,7 +73,7 @@ static const std::vector<std::string> OP_PATTERN_VEC{OP_PATTERN_ELEMWISE,
                                                      OP_PATTERN_REQUANTS16,
                                                      OP_PATTERN_READ_SELECT,
                                                      OP_PATTERN_WRITE_SELECT,
-                                                     OP_PATTERN_BATCH_MATMUL
+                                                     OP_PATTERN_BATCH_MATMUL,
                                                      OP_PATTERN_CONV3D};
 }  // namespace fe
 
