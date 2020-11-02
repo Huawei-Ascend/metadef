@@ -16,6 +16,7 @@
 
 #include "graph/utils/type_utils.h"
 #include "debug/ge_util.h"
+#include "common/util/error_manager/error_manager.h"
 
 using domi::domiTensorFormat_t;
 
@@ -447,6 +448,8 @@ bool TypeUtils::GetDataTypeLength(ge::DataType data_type, uint32_t &length) {
     length = it->second;
     return true;
   } else {
+    ErrorManager::GetInstance().ATCReportErrMessage("E19012", {"function", "reason"},
+        {"GetDataTypeLength", "data_type[" + std::to_string(data_type) + "] is not support"});
     GELOGE(GRAPH_FAILED, "data_type not support %d", data_type);
     return false;
   }
