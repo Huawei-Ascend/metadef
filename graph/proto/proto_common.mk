@@ -20,6 +20,7 @@ COMMON_LOCAL_C_INCLUDES := \
     third_party/protobuf/include \
     libc_sec/include \
     ops/built-in/op_proto/inc \
+    cann/ops/built-in/op_proto/inc \
 
 #compiler for host
 include $(CLEAR_VARS)
