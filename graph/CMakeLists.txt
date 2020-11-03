@@ -78,6 +78,7 @@ target_include_directories(graph PRIVATE
     #### yellow zone ####
     ${METADEF_DIR}/../inc
     ${METADEF_DIR}/../ops/built-in/op_proto/inc
+    ${METADEF_DIR}/../cann/ops/built-in/op_proto/inc
     #### temp independent ####
     ${METADEF_DIR}/../graphengine/inc
     ${METADEF_DIR}/../graphengine/inc/framework
@@ -87,6 +88,7 @@ target_include_directories(graph PRIVATE
     ${METADEF_DIR}/../inc/framework
     ${METADEF_DIR}/../inc/external
     ${METADEF_DIR}/../../ops/built-in/op_proto/inc
+    ${METADEF_DIR}/../../cann/ops/built-in/op_proto/inc
     #### temp in ge ####
     ${METADEF_DIR}/../../graphengine/inc
     ${METADEF_DIR}/../../graphengine/inc/framework
@@ -144,6 +146,7 @@ target_include_directories(graph_static PRIVATE
     #### yellow zone ####
     ${METADEF_DIR}/../inc
     ${METADEF_DIR}/../ops/built-in/op_proto/inc
+    ${METADEF_DIR}/../cann/ops/built-in/op_proto/inc
     #### temp independent ####
     ${METADEF_DIR}/../graphengine/inc
     ${METADEF_DIR}/../graphengine/inc/framework
@@ -153,6 +156,7 @@ target_include_directories(graph_static PRIVATE
     ${METADEF_DIR}/../inc/framework
     ${METADEF_DIR}/../inc/external
     ${METADEF_DIR}/../../ops/built-in/op_proto/inc
+    ${METADEF_DIR}/../../cann/ops/built-in/op_proto/inc
     #### temp in ge ####
     ${METADEF_DIR}/../../graphengine/inc
     ${METADEF_DIR}/../../graphengine/inc/framework
@@ -240,6 +244,7 @@ target_include_directories(atc_stub_graph PRIVATE
     #### yellow zone ####
     ${METADEF_DIR}/../inc
     ${METADEF_DIR}/../ops/built-in/op_proto/inc
+    ${METADEF_DIR}/../cann/ops/built-in/op_proto/inc
     #### blue zone ####
     ${ASCEND_DIR}/driver/include
     ${ASCEND_DIR}/fwkacllib/include
@@ -252,6 +257,7 @@ target_include_directories(atc_stub_graph PRIVATE
     ${METADEF_DIR}/../inc/framework
     ${METADEF_DIR}/../inc/external
     ${METADEF_DIR}/../../ops/built-in/op_proto/inc
+    ${METADEF_DIR}/../../cann/ops/built-in/op_proto/inc
 )
 
 target_link_libraries(atc_stub_graph PRIVATE
@@ -289,6 +295,7 @@ target_include_directories(fwk_stub_graph PRIVATE
     #### yellow zone ####
     ${METADEF_DIR}/../inc
     ${METADEF_DIR}/../ops/built-in/op_proto/inc
+    ${METADEF_DIR}/../cann/ops/built-in/op_proto/inc
     #### blue zone ####
     ${ASCEND_DIR}/driver/include
     ${ASCEND_DIR}/fwkacllib/include
@@ -301,6 +308,7 @@ target_include_directories(fwk_stub_graph PRIVATE
     ${METADEF_DIR}/../inc/framework
     ${METADEF_DIR}/../inc/external
     ${METADEF_DIR}/../../ops/built-in/op_proto/inc
+    ${METADEF_DIR}/../../cann/ops/built-in/op_proto/inc
 )
 
 target_link_libraries(fwk_stub_graph PRIVATE
@@ -342,6 +350,7 @@ target_include_directories(graph PRIVATE
         ${METADEF_DIR}/../inc/framework
         ${METADEF_DIR}/../inc/external
         ${METADEF_DIR}/../../ops/built-in/op_proto/inc
+        ${METADEF_DIR}/../../cann/ops/built-in/op_proto/inc
         )
 
 target_link_libraries(graph PRIVATE
