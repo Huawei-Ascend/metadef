@@ -62,6 +62,7 @@ target_compile_options(graph PRIVATE
 
 target_compile_definitions(graph PRIVATE
     $<$<OR:$<STREQUAL:${PRODUCT_SIDE},host>,$<STREQUAL:${ENABLE_OPEN_SRC},True>>:FMK_SUPPORT_DUMP>
+    google=ascend_private
 )
 
 target_include_directories(graph PRIVATE
@@ -110,7 +111,7 @@ target_include_directories(graph PRIVATE
 target_link_libraries(graph PRIVATE
     $<BUILD_INTERFACE:intf_pub>
     -Wl,--no-as-needed
-    protobuf
+    ascend_protobuf
     c_sec
     slog
     error_manager
@@ -130,6 +131,7 @@ target_compile_options(graph_static PRIVATE
 
 target_compile_definitions(graph_static PRIVATE
     $<$<OR:$<STREQUAL:${PRODUCT_SIDE},host>,$<STREQUAL:${ENABLE_OPEN_SRC},True>>:FMK_SUPPORT_DUMP>
+    google=ascend_private
 )
 
 target_include_directories(graph_static PRIVATE
@@ -177,7 +179,7 @@ target_include_directories(graph_static PRIVATE
 
 target_link_libraries(graph_static PRIVATE
     $<BUILD_INTERFACE:intf_pub>
-    protobuf
+    ascend_protobuf
     c_sec
     -lrt
     -ldl
