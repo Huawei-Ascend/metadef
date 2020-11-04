@@ -57,11 +57,11 @@ add_library(graph SHARED ${SRC_LIST} ${PROTO_SRCS})
 
 target_compile_options(graph PRIVATE
     -O2
-    $<$<STREQUAL:${PRODUCT_SIDE},host>:-fexceptions>
+    $<$<OR:$<STREQUAL:${PRODUCT_SIDE},host>,$<STREQUAL:${ENABLE_OPEN_SRC},True>>:-fexceptions>
 )
 
 target_compile_definitions(graph PRIVATE
-    $<$<STREQUAL:${PRODUCT_SIDE},host>:FMK_SUPPORT_DUMP>
+    $<$<OR:$<STREQUAL:${PRODUCT_SIDE},host>,$<STREQUAL:${ENABLE_OPEN_SRC},True>>:FMK_SUPPORT_DUMP>
 )
 
 target_include_directories(graph PRIVATE
@@ -125,11 +125,11 @@ add_library(graph_static STATIC ${SRC_LIST} ${PROTO_SRCS})
 target_compile_options(graph_static PRIVATE
     -O2
     -fPIC
-    $<$<STREQUAL:${PRODUCT_SIDE},host>:-fexceptions>
+    $<$<OR:$<STREQUAL:${PRODUCT_SIDE},host>,$<STREQUAL:${ENABLE_OPEN_SRC},True>>:-fexceptions>
 )
 
 target_compile_definitions(graph_static PRIVATE
-    $<$<STREQUAL:${PRODUCT_SIDE},host>:FMK_SUPPORT_DUMP>
+    $<$<OR:$<STREQUAL:${PRODUCT_SIDE},host>,$<STREQUAL:${ENABLE_OPEN_SRC},True>>:FMK_SUPPORT_DUMP>
 )
 
 target_include_directories(graph_static PRIVATE
