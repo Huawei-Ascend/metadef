@@ -195,6 +195,129 @@ bool GetCompileInfo(const ge::OpDescPtr &op_desc, nlohmann::json &dummy, nlohman
     return true;
 }
 
+void ParseShapeDesc(const nlohmann::json &shape, std::vector<TeOpTensor> &tensors)
+{
+    TeOpTensor tensor;
+    if (shape.contains("shape")) {
+        tensor.shape = shape["shape"].get<vector<int64_t>>();
+    }
+    if (shape.contains("ori_shape")) {
+        tensor.ori_shape = shape["ori_shape"].get<vector<int64_t>>();
+    }
+    if (shape.contains("format")) {
+        tensor.format = shape["format"].get<std::string>();
+    }
+    if (shape.contains("ori_format")) {
+        tensor.ori_format = shape["ori_format"].get<std::string>();
+    }
+    if (shape.contains("dtype")) {
+        tensor.dtype = shape["dtype"].get<std::string>();
+    }
+    tensors.emplace_back(tensor);
+}
+
+void ParseShapeDescList(const nlohmann::json &shape_list, std::vector<TeOpTensorArg> &op_args)
+{
+    for (const auto &elem : shape_list) {
+        TeOpTensorArg tensor_arg;
+        tensor_arg.arg_type = TA_NONE;
+
+        if (elem.is_array()) {
+            tensor_arg.arg_type = TA_LIST;
+            for (const auto &shape : elem) {
+                ParseShapeDesc(shape, tensor_arg.tensor);
+            }
+        } else {
+            tensor_arg.arg_type = TA_SINGLE;
+            ParseShapeDesc(elem, tensor_arg.tensor);
+        }
+        op_args.emplace_back(tensor_arg);
+    }
+}
+
+std::string DumpByteBuffer(const ByteBuffer &buf)
+{
+    static const char hex_digits[] = "0123456789ABCDEF";
+    std::string str = buf.str();
+    std::string output;
+    output.reserve(str.size() * 2);
+    for (unsigned char c : str) {
+        output.push_back(hex_digits[c >> 4]);
+        output.push_back(hex_digits[c & 15]);
+    }
+    return output;
+}
+
+bool DumpRunInfo(const OpRunInfo &run_info, char *run_info_json, size_t run_info_len)
+{
+    if (run_info_json == nullptr) {
+        GE_LOGE("run_info buffer is null");
+        return false;
+    }
+
+    nlohmann::json json_obj;
+    json_obj["block_dim"] = run_info.block_dim;
+    json_obj["workspaces"] = run_info.workspaces;
+    json_obj["tiling_data"] = DumpByteBuffer(run_info.tiling_data);
+
+    std::string str = json_obj.dump();
+    if (str.size() >= run_info_len) {
+        GE_LOGE("runinfo too large. %zu/%zu", str.size(), run_info_len);
+        return false;
+    }
+    (void)std::memcpy(run_info_json, str.c_str(), str.size());
+    run_info_json[str.size()] = 0;
+    return true;
+}
+
+extern "C" int TbeOpTilingPyInterface(const char *optype, const char *compile_info,
+                                  const char *inputs, const char *outputs,
+                                  char *run_info_json, size_t run_info_len)
+{
+    if (optype == nullptr || compile_info == nullptr || inputs == nullptr || outputs == nullptr) {
+        GE_LOGE("optype/compile_info/inputs/outputs is null, %s, %s, %s, %s",
+                optype, compile_info, inputs, outputs);
+        return 0;
+    }
+
+    std::string compile_info_str = compile_info;
+    TeOpParas op_params;
+    nlohmann::json compile_info_json;
+    try {
+        compile_info_json = nlohmann::json::parse(compile_info);
+        nlohmann::json inputs_json = nlohmann::json::parse(inputs);
+        nlohmann::json outputs_json = nlohmann::json::parse(outputs);
+        ParseShapeDescList(inputs_json, op_params.inputs);
+        ParseShapeDescList(outputs_json, op_params.outputs);
+    } catch (...) {
+        GE_LOGE("Failed to parse json_str. %s, %s, %s", compile_info, inputs, outputs);
+        return 0;
+    }
+
+    auto &interf = OpTilingInterf::RegisteredOpInterf();
+    auto iter = interf.find(optype);
+    if (iter == interf.end()) {
+        iter = interf.find("AutoTiling");
+    }
+    
+    if (iter == interf.end()) {
+        GE_LOGE("Optiling func not found, op_type:%s", optype);
+        return 0;
+    }
+
+    OpRunInfo run_info;
+    GELOGI("Optiling func found, op_type:%s, func:[%s:%p]",
+           optype, iter->first.c_str(), iter->second.target<OpTilingFuncPtr>());
+
+    bool rc = (iter->second)(optype, op_params, compile_info_json, run_info);
+    if (!rc) {
+        GE_LOGE("Optiling failed. op_type:%s", optype);
+        return 0;
+    }
+    GELOGI("Optiling succeed. op_type:%s", optype);
+    DumpRunInfo(run_info, run_info_json, run_info_len);
+    return 1;
+}
 
 extern "C" ge::graphStatus OpParaCalculate(const ge::Node &node, OpRunInfo &runInfo)
 {
