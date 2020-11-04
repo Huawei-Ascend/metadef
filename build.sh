@@ -135,6 +135,10 @@ build_metadef()
     CMAKE_ARGS="${CMAKE_ARGS} -DENABLE_GE_ST=ON"
   fi
 
+  if [[ "X$ENABLE_GITEE" = "Xon" ]]; then
+    CMAKE_ARGS="${CMAKE_ARGS} -DENABLE_GITEE=ON"
+  fi
+
   CMAKE_ARGS="${CMAKE_ARGS} -DENABLE_OPEN_SRC=True -DCMAKE_INSTALL_PREFIX=${OUTPUT_PATH}"
   echo "${CMAKE_ARGS}"
   cmake ${CMAKE_ARGS} ..
