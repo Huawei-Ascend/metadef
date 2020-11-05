@@ -26,7 +26,7 @@ COMMON_LOCAL_C_INCLUDES := \
 include $(CLEAR_VARS)
 LOCAL_MODULE := libproto_common
 
-LOCAL_CFLAGS += -DFMK_SUPPORT_DUMP
+LOCAL_CFLAGS += -DFMK_SUPPORT_DUMP -Dgoogle=ascend_private
 
 LOCAL_CPPFLAGS += -fexceptions
 LOCAL_C_INCLUDES := $(COMMON_LOCAL_C_INCLUDES)
@@ -34,7 +34,7 @@ LOCAL_SRC_FILES  := $(COMMON_LOCAL_SRC_FILES)
 
 LOCAL_SHARED_LIBRARIES := \
     libc_sec      \
-    libprotobuf   \
+    libascend_protobuf   \
     libslog       \
 
 LOCAL_LDFLAGS := -lrt -ldl
@@ -48,14 +48,14 @@ include $(BUILD_HOST_STATIC_LIBRARY)
 include $(CLEAR_VARS)
 LOCAL_MODULE := libproto_common
 
-LOCAL_CFLAGS += -O2
+LOCAL_CFLAGS += -O2 -Dgoogle=ascend_private
 
 LOCAL_C_INCLUDES := $(COMMON_LOCAL_C_INCLUDES)
 LOCAL_SRC_FILES  := $(COMMON_LOCAL_SRC_FILES)
 
 LOCAL_SHARED_LIBRARIES := \
     libc_sec      \
-    libprotobuf   \
+    libascend_protobuf   \
     libslog       \
 
 LOCAL_LDFLAGS := -lrt -ldl
@@ -69,7 +69,7 @@ include $(BUILD_STATIC_LIBRARY)
 include $(CLEAR_VARS)
 LOCAL_MODULE := libproto_common
 
-LOCAL_CFLAGS += -Werror -Wno-unused-variable
+LOCAL_CFLAGS += -Werror -Wno-unused-variable -Dgoogle=ascend_private
 LOCAL_CFLAGS += -DDAVINCI_MINI
 
 LOCAL_C_INCLUDES := $(COMMON_LOCAL_C_INCLUDES)
@@ -77,7 +77,7 @@ LOCAL_SRC_FILES  := $(COMMON_LOCAL_SRC_FILES)
 
 LOCAL_SHARED_LIBRARIES := \
     libc_sec      \
-    libprotobuf   \
+    libascend_protobuf   \
     libslog       \
 
 LOCAL_LDFLAGS := -lrt -ldl

@@ -44,6 +44,10 @@ set(SRC_LIST
 ############ libregister.so ############
 add_library(register SHARED ${SRC_LIST} ${PROTO_SRCS})
 
+target_compile_definitions(register PRIVATE
+    google=ascend_private
+)
+
 target_include_directories(register PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}
     ${METADEF_DIR}
@@ -88,7 +92,7 @@ target_link_libraries(register PRIVATE
     op_tiling_o2
     -Wl,--no-whole-archive
     -Wl,--no-as-needed
-    protobuf
+    ascend_protobuf
     c_sec
     slog
     graph
@@ -100,7 +104,9 @@ target_link_libraries(register PRIVATE
 add_library(register_static STATIC ${SRC_LIST} ${PROTO_SRCS}
     "op_tiling.cpp"
 )
-
+target_compile_definitions(register_static PRIVATE
+    google=ascend_private
+)
 target_include_directories(register_static PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}
     ${METADEF_DIR}
@@ -139,7 +145,7 @@ target_include_directories(register_static PRIVATE
 )
 
 target_link_libraries(register_static PRIVATE
-    protobuf
+    ascend_protobuf
     c_sec
     json
     $<BUILD_INTERFACE:intf_pub>

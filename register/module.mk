@@ -74,12 +74,12 @@ include ${BUILD_HOST_STATIC_LIBRARY}
 include $(CLEAR_VARS)
 LOCAL_MODULE := libregister
 
-LOCAL_CFLAGS += -std=c++11
+LOCAL_CFLAGS += -std=c++11 -Dgoogle=ascend_private
 LOCAL_LDFLAGS :=
 
 LOCAL_WHOLE_STATIC_LIBRARIES := libop_tiling_o2 \
 
-LOCAL_SHARED_LIBRARIES :=   libprotobuf \
+LOCAL_SHARED_LIBRARIES :=   libascend_protobuf \
                             libc_sec \
                             libslog \
                             libgraph \
@@ -114,13 +114,13 @@ include ${BUILD_STATIC_LIBRARY}
 include $(CLEAR_VARS)
 LOCAL_MODULE := libregister
 
-LOCAL_CFLAGS += -std=c++11
+LOCAL_CFLAGS += -std=c++11 -Dgoogle=ascend_private
 LOCAL_LDFLAGS :=
 
 LOCAL_WHOLE_STATIC_LIBRARIES := libop_tiling_o2
 
 LOCAL_STATIC_LIBRARIES :=
-LOCAL_SHARED_LIBRARIES :=   libprotobuf \
+LOCAL_SHARED_LIBRARIES :=   libascend_protobuf \
                             libc_sec \
                             libslog \
                             libgraph \
@@ -138,12 +138,12 @@ include ${BUILD_SHARED_LIBRARY}
 include $(CLEAR_VARS)
 LOCAL_MODULE := libregister
 
-LOCAL_CFLAGS += -std=c++11
+LOCAL_CFLAGS += -std=c++11 -Dgoogle=ascend_private
 LOCAL_LDFLAGS :=
 
 LOCAL_STATIC_LIBRARIES := \
     libgraph \
-    libprotobuf \
+    libascend_protobuf \
 
 LOCAL_SHARED_LIBRARIES := \
     libc_sec \
@@ -164,12 +164,12 @@ include ${BUILD_HOST_STATIC_LIBRARY}
 include $(CLEAR_VARS)
 LOCAL_MODULE := libregister
 
-LOCAL_CFLAGS += -std=c++11
+LOCAL_CFLAGS += -std=c++11 -Dgoogle=ascend_private
 LOCAL_LDFLAGS :=
 
 LOCAL_STATIC_LIBRARIES := \
     libgraph \
-    libprotobuf \
+    libascend_protobuf \
 
 LOCAL_SHARED_LIBRARIES := \
     libc_sec \
@@ -189,11 +189,11 @@ include ${BUILD_STATIC_LIBRARY}
 include $(CLEAR_VARS)
 LOCAL_MODULE := libregister
 
-LOCAL_CFLAGS += -std=c++11
+LOCAL_CFLAGS += -std=c++11 -Dgoogle=ascend_private
 LOCAL_LDFLAGS :=
 
 LOCAL_STATIC_LIBRARIES :=
-LOCAL_SHARED_LIBRARIES :=   libprotobuf \
+LOCAL_SHARED_LIBRARIES :=   libascend_protobuf \
                             libc_sec \
                             libslog \
                             libgraph \
