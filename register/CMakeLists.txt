@@ -196,6 +196,7 @@ target_compile_options(op_tiling_o2 PRIVATE
 target_link_libraries(op_tiling_o2 PRIVATE
     $<BUILD_INTERFACE:intf_pub>
     json
+    c_sec
 )
 
 ############ install ############
