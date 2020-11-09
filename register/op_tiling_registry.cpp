@@ -60,5 +60,3 @@ OpTilingRegistryInterf::OpTilingRegistryInterf(std::string op_type, OpTilingFunc
            op_type.c_str(), func.target<OpTilingFuncPtrNew>(), interf_new.size());
 }
 }
-
-

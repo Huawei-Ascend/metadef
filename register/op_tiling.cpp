@@ -169,14 +169,14 @@ bool GetCompileInfo(const ge::OpDescPtr &op_desc, const char *op_type, const cha
     std::string compile_info_key;
     bool bres = ge::AttrUtils::GetStr(op_desc, COMPILE_INFO_KEY, compile_info_key);
     if (!bres) {
-        GELOGE("Can not find the attribute %s. op_type:%s, op_name:%s", COMPILE_INFO_KEY, op_type, op_name);
+        GE_LOGE("Can not find the attribute %s. op_type:%s, op_name:%s", COMPILE_INFO_KEY, op_type, op_name);
         return false;
     }
 
     std::string compile_info_str;
     bres = ge::AttrUtils::GetStr(op_desc, COMPILE_INFO_JSON, compile_info_str);
     if (!bres) {
-        GELOGE("Can not find the attribute %s. op_type:%s, op_name:%s", COMPILE_INFO_JSON, op_type, op_name);
+        GE_LOGE("Can not find the attribute %s. op_type:%s, op_name:%s", COMPILE_INFO_JSON, op_type, op_name);
         return false;
     }
     op_compile_info.key = compile_info_key;
@@ -191,7 +191,7 @@ bool RunCalcFunc(const ge::OpDescPtr &op_desc, const char *op_type, const char *
     if (iter == interf.end()) {
         iter = interf.find("AutoTiling");
     }
-    
+
     if (iter == interf.end()) {
         GE_LOGE("Optiling func not found. op_type:%s", op_type);
         return false;
@@ -208,7 +208,7 @@ bool RunCalcFunc(const ge::OpDescPtr &op_desc, const char *op_type, const char *
            op_type, op_name, iter->first.c_str(), iter->second.target<OpTilingFuncPtrNew>());
     res = (iter->second)(op_params, op_compile_info, run_info);
     if (res) {
-        GE_LOGI("Optiling func succeed. op_type:%s, op_name:%s", op_type, op_name);
+        GELOGI("Optiling func succeed. op_type:%s, op_name:%s", op_type, op_name);
     } else {
         GE_LOGE("Optiling func failed. op_type:%s, op_name:%s", op_type, op_name);
     }
@@ -218,12 +218,12 @@ bool RunCalcFunc(const ge::OpDescPtr &op_desc, const char *op_type, const char *
 bool RunAtomicFunc(const ge::OpDescPtr &op_desc, const char *op_type, const char *op_name, const TeOpParas &op_param,
                  OpRunInfo & run_info) {
     auto &interf = OpTilingRegistryInterf::RegisteredOpInterfNew();
-    auto iter = interf.find(op_type);    
+    auto iter = interf.find(op_type);
     if (iter == interf.end()) {
         GE_LOGE("Atomic optiling func not found. op_type:%s", op_type);
         return false;
     }
-    
+
     ge::NodePtr atomic_clean_node = nullptr;
     atomic_clean_node = op_desc->TryGetExtAttr("atomic_clean_node_ptr", atomic_clean_node);
     if (atomic_clean_node == nullptr) {
@@ -246,13 +246,13 @@ bool RunAtomicFunc(const ge::OpDescPtr &op_desc, const char *op_type, const char
 
     res = (iter->second)(op_params, op_compile_info, run_info);
     if (res) {
-        GE_LOGI("Atomic optiling func succeed. op_type:%s, op_name:%s", op_type, op_name);
+        GELOGI("Atomic optiling func succeed. op_type:%s, op_name:%s", op_type, op_name);
     } else {
         GE_LOGE("Atomic optiling func failed. op_type:%s, op_name:%s", op_type, op_name);
     }
     return res;
-    
 }
+
 void ParseShapeDesc(const nlohmann::json &shape, std::vector<TeOpTensor> &tensors)
 {
     TeOpTensor tensor;
@@ -447,8 +447,7 @@ extern "C" ge::graphStatus OpAtomicCalculate(const ge::Node &node, OpRunInfo &ru
     TeOpParas op_param;
     op_param.op_type = op_type;
 
-    GELOGI("Do Atomic optiling, op_type:%s, op_name:%s", op_type.c_str(), op_name.c_str());
-
+    GELOGI("Do Atomic optiling. op_type:%s, op_name:%s", op_type.c_str(), op_name.c_str());
     std::vector<int64_t> atomic_output_indices;
     (void) ge::AttrUtils::GetListInt(op_desc, ge::ATOMIC_ATTR_OUTPUT_INDEX, atomic_output_indices);
     if (atomic_output_indices.empty()) {
