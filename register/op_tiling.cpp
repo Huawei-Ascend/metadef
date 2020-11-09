@@ -206,7 +206,7 @@ bool RunCalcFunc(const ge::OpDescPtr &op_desc, const char *op_type, const char *
 
     GELOGI("Optiling func found. op_type:%s, op_name:%s, func:[%s:%p]",
            op_type, op_name, iter->first.c_str(), iter->second.target<OpTilingFuncPtrNew>());
-    res = (iter->second)(op_params, op_compile_info, run_info);
+    res = (iter->second)(op_param, op_compile_info, run_info);
     if (res) {
         GELOGI("Optiling func succeed. op_type:%s, op_name:%s", op_type, op_name);
     } else {
@@ -244,7 +244,7 @@ bool RunAtomicFunc(const ge::OpDescPtr &op_desc, const char *op_type, const char
         return false;
     }
 
-    res = (iter->second)(op_params, op_compile_info, run_info);
+    res = (iter->second)(op_param, op_compile_info, run_info);
     if (res) {
         GELOGI("Atomic optiling func succeed. op_type:%s, op_name:%s", op_type, op_name);
     } else {
