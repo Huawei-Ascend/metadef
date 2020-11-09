@@ -11,16 +11,14 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  */
 
+#include "register/op_tiling.h"
+
 #include <chrono>
-#include <random>
 #include <cstring>
 #include "securec.h"
 #include "framework/common/debug/ge_log.h"
 #include "graph/debug/ge_log.h"
 #include "graph/debug/ge_util.h"
-
-#include "register/op_tiling.h"
-#include "graph/utils/graph_utils.h"
 #include "graph/utils/op_desc_utils.h"
 #include "graph/utils/type_utils.h"
 #include "graph/utils/tensor_utils.h"
@@ -29,8 +27,8 @@
 #define LOG_ENABLED(loglvl) CheckLogLevel(GE_MODULE_NAME, loglvl)
 
 namespace optiling {
-
-constexpr int UUID_LENGTH = 32;
+const char* COMPILE_INFO_JSON = "compile_info_json";
+const char* COMPILE_INFO_KEY = "compile_info_key";
 
 const std::map<ge::DataType, std::string> DATATYPE_STRING_MAP {
   {ge::DT_FLOAT,     "float32"  },
@@ -49,35 +47,6 @@ const std::map<ge::DataType, std::string> DATATYPE_STRING_MAP {
   {ge::DT_DUAL_SUB_INT8, "dual_sub_int8"},
   {ge::DT_DUAL_SUB_UINT8, "dual_sub_uint8"}
 };
-
-std::string GenUuid()
-{
-    static std::random_device dev;
-    static std::mt19937 rng(dev());
-    const char *v = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-    std::uniform_int_distribution<int> dist(0, std::strlen(v) - 1);
-    char res[UUID_LENGTH + 1] = {0};
-    for (size_t i = 0; i < sizeof(res) - 1; i++) {
-        res[i] = v[dist(rng)];
-    }
-    return res;
-}
-
-std::string OpTilingInterf::OpTilingUuid = GenUuid();
-
-std::map<std::string, OpTilingFunc> & OpTilingInterf::RegisteredOpInterf() {
-    static std::map<std::string, OpTilingFunc> interf;
-    return interf;
-}
-
-
-OpTilingInterf::OpTilingInterf(std::string op_type, OpTilingFunc func) {
-    auto &interf = RegisteredOpInterf();
-    interf.emplace(op_type, func);
-    GELOGI("Register tiling function: op_type:%s, funcPointer:%p, registered count:%zu",
-           op_type.c_str(), func.target<OpTilingFuncPtr>(), interf.size());
-}
 
 bool FeedTeOpTensorArg(ge::OpDesc::Vistor<ge::GeTensorDescPtr> &tensor_desc, std::vector<TeOpTensorArg> &tensor_arg)
 {
@@ -195,6 +164,95 @@ bool GetCompileInfo(const ge::OpDescPtr &op_desc, nlohmann::json &dummy, nlohman
     return true;
 }
 
+bool GetCompileInfo(const ge::OpDescPtr &op_desc, const char *op_type, const char *op_name,
+    OpCompileInfo &op_compile_info) {
+    std::string compile_info_key;
+    bool bres = ge::AttrUtils::GetStr(op_desc, COMPILE_INFO_KEY, compile_info_key);
+    if (!bres) {
+        GELOGE("Can not find the attribute %s, op_type:%s, op_name:%s", COMPILE_INFO_KEY, op_type, op_name);
+        return false;
+    }
+
+    std::string compile_info_json;
+    bres = ge::AttrUtils::GetStr(op_desc, COMPILE_INFO_JSON, compile_info_json);
+    if (!bres) {
+        GELOGE("Can not find the attribute %s, op_type:%s, op_name:%s", COMPILE_INFO_JSON, op_type, op_name);
+        return false;
+    }
+    op_compile_info.key = compile_info_key;
+    op_compile_info.str = compile_info_json;
+    return true;
+}
+
+bool RunCalcFunc(const ge::OpDescPtr &op_desc, const char *op_type, const char *op_name, const TeOpParas &op_param,
+                 OpRunInfo & run_info) {
+    auto &interf = OpTilingRegistryInterf::RegisteredOpInterfNew();
+    auto iter = interf.find(op_type);
+    if (iter == interf.end()) {
+        iter = interf.find("AutoTiling");
+    }
+    
+    if (iter == interf.end()) {
+        GE_LOGE("Optiling func not found, op_type:%s", op_type);
+        return false;
+    }
+
+    OpCompileInfo op_compile_info;
+    bool res = GetCompileInfo(op_desc, op_type, op_name, op_compile_info);
+    if (!res) {
+        GE_LOGE("Failed to get compile info. op_type:%s, op_name:%s", op_type, op_name);
+        return false;
+    }
+
+    GELOGI("Optiling func found, op_type:%s, op_name:%s, func:[%s:%p]",
+           op_type, op_name, iter->first.c_str(), iter->second.target<OpTilingFuncPtrNew>());
+    res = (iter->second)(op_params, op_compile_info, run_info);
+    if (!res) {
+        GE_LOGE("Optiling func succeed. op_type:%s, op_name:%s", op_type, op_name);
+    } else {
+        GE_LOGE("Optiling func failed. op_type:%s, op_name:%s", op_type, op_name);
+    }
+    return res;
+}
+
+bool RunAtomicFunc(const ge::OpDescPtr &op_desc, const char *op_type, const char *op_name, const TeOpParas &op_param,
+                 OpRunInfo & run_info) {
+    auto &interf = OpTilingRegistryInterf::RegisteredOpInterfNew();
+    auto iter = interf.find(op_type);    
+    if (iter == interf.end()) {
+        GE_LOGE("Atomic optiling func not found, op_type:%s", op_type);
+        return false;
+    }
+    
+    ge::NodePtr atomic_clean_node = nullptr;
+    atomic_clean_node = op_desc->TryGetExtAttr("atomic_clean_node_ptr", atomic_clean_node);
+    if (atomic_clean_node == nullptr) {
+        GE_LOGE("This node has no atomice node. op_type:%s, op_name:%s", op_type, op_name);
+        return false;
+    }
+
+    ge::OpDescPtr atomic_op_desc = atomic_clean_node->GetOpDesc();
+    if (atomic_op_desc == nullptr) {
+        GE_LOGE("Failed to get op desc from node. op_type:%s, op_name:%s", op_type, op_name);
+        return false;
+    }
+
+    OpCompileInfo op_compile_info;
+    bool res = GetCompileInfo(atomic_op_desc, op_type, op_name, op_compile_info);
+    if (!res) {
+        GE_LOGE("Failed to get compile info. op_type:%s, op_name:%s", op_type, op_name);
+        return false;
+    }
+
+    res = (iter->second)(op_params, op_compile_info, run_info);
+    if (!res) {
+        GE_LOGE("Atomic optiling func succeed. op_type:%s, op_name:%s", op_type, op_name);
+    } else {
+        GE_LOGE("Atomic optiling func failed. op_type:%s, op_name:%s", op_type, op_name);
+    }
+    return res;
+    
+}
 void ParseShapeDesc(const nlohmann::json &shape, std::vector<TeOpTensor> &tensors)
 {
     TeOpTensor tensor;
@@ -323,10 +381,11 @@ extern "C" int TbeOpTilingPyInterface(const char *optype, const char *compile_in
 
 extern "C" ge::graphStatus OpParaCalculate(const ge::Node &node, OpRunInfo &runInfo)
 {
-    TeOpParas op_param;
     ge::OpDescPtr op_desc = node.GetOpDesc();
     std::string op_type = op_desc->GetType();
     std::string op_name = op_desc->GetName();
+    TeOpParas op_param;
+    op_param.op_type = op_type;
 
     GELOGI("Do optiling, op_type:%s, op_name:%s", op_type.c_str(), op_name.c_str());
 
@@ -373,19 +432,23 @@ extern "C" ge::graphStatus OpParaCalculate(const ge::Node &node, OpRunInfo &runI
         return rc ? ge::GRAPH_SUCCESS : ge::GRAPH_FAILED;
     }
 
-    GE_LOGE("Optiling func not found, op_type:%s, op_name:%s", op_type.c_str(), op_name.c_str());
-    return ge::GRAPH_FAILED;
+    if (!RunCalcFunc(op_desc, op_type.c_str(), op_name.c_str(), op_param, runInfo)) {
+        return ge::GRAPH_FAILED;
+    }
+    return ge::GRAPH_SUCCESS;
 }
 
 extern "C" ge::graphStatus OpAtomicCalculate(const ge::Node &node, OpRunInfo &runInfo)
 {
-    TeOpParas op_param;
     ge::OpDescPtr op_desc = node.GetOpDesc();
     std::string op_type = "DynamicAtomicAddrClean";
     std::string op_name = op_desc->GetName();
     std::string origin_op_type = "DynamicAtomicAddrClean";
+    TeOpParas op_param;
+    op_param.op_type = op_type;
 
     GELOGI("Do Atomic optiling, op_type:%s, op_name:%s", op_type.c_str(), op_name.c_str());
+
     std::vector<int64_t> atomic_output_indices;
     (void) ge::AttrUtils::GetListInt(op_desc, ge::ATOMIC_ATTR_OUTPUT_INDEX, atomic_output_indices);
     if (atomic_output_indices.empty()) {
@@ -417,8 +480,10 @@ extern "C" ge::graphStatus OpAtomicCalculate(const ge::Node &node, OpRunInfo &ru
     auto &interf = OpTilingInterf::RegisteredOpInterf();
     auto iter = interf.find(op_type);
     if (iter == interf.end()) {
-        GE_LOGE("Atomic op tiling func not found. op_type:%s, op_name:%s", op_type.c_str(), op_name.c_str());
-        return ge::GRAPH_FAILED;
+        if (!RunCalcFunc(op_desc, op_type.c_str(), op_name.c_str(), op_param, runInfo)) {
+            return ge::GRAPH_FAILED;
+        }
+        return ge::GRAPH_SUCCESS;
     }
 
     ge::NodePtr atomic_clean_node = nullptr;

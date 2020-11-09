@@ -103,6 +103,7 @@ target_link_libraries(register PRIVATE
 ############ libregister.a ############
 add_library(register_static STATIC ${SRC_LIST} ${PROTO_SRCS}
     "op_tiling.cpp"
+    "op_tiling registry.cpp"
 )
 target_compile_definitions(register_static PRIVATE
     google=ascend_private
@@ -158,6 +159,7 @@ set_target_properties(register_static PROPERTIES
 ############ libop_tiling_o2.a ############
 add_library(op_tiling_o2 STATIC
     "op_tiling.cpp"
+    "op_tiling registry.cpp"
 )
 
 target_include_directories(op_tiling_o2 PRIVATE
