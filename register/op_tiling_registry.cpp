@@ -10,7 +10,7 @@
  * Apache License for more details at
  * http://www.apache.org/licenses/LICENSE-2.0
  */
-#include "register/op_tiling registry.h"
+#include "register/op_tiling_registry.h"
 
 #include <random>
 #include "framework/common/debug/ge_log.h"

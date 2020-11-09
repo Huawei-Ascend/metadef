@@ -51,7 +51,7 @@ local_lib_inc_path :=   \
 				        third_party/json/include \
 
 tiling_src_files := op_tiling.cpp \
-                    op_tiling registry.cpp \
+                    op_tiling_registry.cpp \
 
 #compiler for host
 include $(CLEAR_VARS)
