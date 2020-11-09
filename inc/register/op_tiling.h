@@ -19,7 +19,7 @@
 
 #include "graph/debug/ge_attr_define.h"
 #include "graph/node.h"
-#include "register/op_tiling registry.h"
+#include "register/op_tiling_registry.h"
 
 namespace optiling {
 

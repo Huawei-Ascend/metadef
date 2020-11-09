@@ -113,8 +113,7 @@ using OpTilingFuncNew = std::function<bool(const TeOpParas&, const OpCompileInfo
 
 using OpTilingFuncPtrNew = bool(*)(const TeOpParas&, const OpCompileInfo& , OpRunInfo&);
 
-class FMK_FUNC_HOST_VISIBILITY OpTilingRegistryInterf
-{
+class FMK_FUNC_HOST_VISIBILITY OpTilingRegistryInterf {
 public:
     OpTilingRegistryInterf(std::string op_type, OpTilingFuncNew func);
     ~OpTilingRegistryInterf() = default;
