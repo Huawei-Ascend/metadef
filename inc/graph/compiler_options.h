@@ -14,31 +14,19 @@
  * limitations under the License.
  */
 
-#ifndef INC_GRAPH_OPSPROTO_MANAGER_H_
-#define INC_GRAPH_OPSPROTO_MANAGER_H_
-
-#include <string.h>
-#include <map>
-#include <string>
-#include <vector>
-#include <mutex>
+#ifndef INC_GRAPH_COMPILER_OPTIONS_H_
+#define INC_GRAPH_COMPILER_OPTIONS_H_
 
 namespace ge {
-class OpsProtoManager {
- public:
-  static OpsProtoManager *Instance();
-
-  bool Initialize(const std::map<std::string, std::string> &options);
-  void Finalize();
-
- private:
-  void LoadOpsProtoPluginSo(std::string &path);
-
-  std::string pluginPath_;
-  std::vector<void *> handles_;
-  bool is_init_ = false;
-  std::mutex mutex_;
-};
+#ifdef __GNUC__
+#define METADEF_ATTRIBUTE_UNUSED __attribute__((unused))
+#define METADEF_FUNCTION_IDENTIFIER __PRETTY_FUNCTION__
+#define METADEF_BUILTIN_PREFETCH(args_addr) __builtin_prefetch(args_addr)
+#else
+#define METADEF_ATTRIBUTE_UNUSED
+#define METADEF_FUNCTION_IDENTIFIER __FUNCSIG__
+#define METADEF_BUILTIN_PREFETCH(args_addr)
+#endif
 }  // namespace ge
 
-#endif  // INC_GRAPH_OPSPROTO_MANAGER_H_
+#endif  // INC_GRAPH_COMPILER_OPTIONS_H_

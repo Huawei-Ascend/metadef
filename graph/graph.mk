@@ -93,6 +93,7 @@ LOCAL_SHARED_LIBRARIES := \
     libc_sec      \
     libascend_protobuf   \
     libslog       \
+    libmmpa       \
     liberror_manager \
 
 LOCAL_LDFLAGS := -lrt -ldl
@@ -168,6 +169,7 @@ LOCAL_SHARED_LIBRARIES := \
     libc_sec      \
     libascend_protobuf   \
     libslog       \
+    libmmpa       \
     liberror_manager \
 
 LOCAL_LDFLAGS := -lrt -ldl
@@ -254,6 +256,7 @@ LOCAL_SHARED_LIBRARIES := \
     libc_sec      \
     libascend_protobuf   \
     libslog       \
+    libmmpa       \
     liberror_manager \
 
 LOCAL_LDFLAGS := -lrt -ldl
