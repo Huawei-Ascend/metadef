@@ -52,7 +52,6 @@ enum TensorArgType {
     TA_LIST,
 };
 
-
 using ByteBuffer = std::stringstream;
 
 struct TeOpTensor {
