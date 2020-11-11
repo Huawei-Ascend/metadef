@@ -46,6 +46,7 @@ add_library(register SHARED ${SRC_LIST} ${PROTO_SRCS})
 
 target_compile_definitions(register PRIVATE
     google=ascend_private
+    $<$<STREQUAL:${ENABLE_OPEN_SRC},True>:ONLY_COMPILE_OPEN_SRC>
 )
 
 target_include_directories(register PRIVATE
@@ -106,6 +107,7 @@ add_library(register_static STATIC ${SRC_LIST} ${PROTO_SRCS}
 )
 target_compile_definitions(register_static PRIVATE
     google=ascend_private
+    $<$<STREQUAL:${ENABLE_OPEN_SRC},True>:ONLY_COMPILE_OPEN_SRC>
 )
 target_include_directories(register_static PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}
