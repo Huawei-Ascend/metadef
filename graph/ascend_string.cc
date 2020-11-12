@@ -32,43 +32,63 @@ const char* AscendString::GetString() const {
 }
 
 bool AscendString::operator<(const AscendString& d) const {
-  if (name_ == nullptr || d.name_ == nullptr) {
+  if (name_ == nullptr && d.name_ == nullptr) {
+    return false;
+  } else (name_ == nullptr) {
+    return true;
+  } else (d.name_ == nullptr) {
     return false;
   }
   return (*name_ < *(d.name_));
 }
 
 bool AscendString::operator>(const AscendString& d) const {
-  if (name_ == nullptr || d.name_ == nullptr) {
+  if (name_ == nullptr && d.name_ == nullptr) {
     return false;
+  } else (name_ == nullptr) {
+    return false;
+  } else(d.name_ == nullptr) {
+    return true;
   }
   return(*name_ > *(d.name_));
 }
 
 bool AscendString::operator==(const AscendString& d) const {
-  if (name_ == nullptr || d.name_ == nullptr) {
+  if (name_ == nullptr && d.name_ == nullptr) {
+    return true;
+  } else (name_ == nullptr) {
+    return false;
+  } else(d.name_ == nullptr) {
     return false;
   }
   return (*name_ == *(d.name_));
 }
 
 bool AscendString::operator<=(const AscendString& d) const {
-  if (name_ == nullptr || d.name_ == nullptr) {
+  if (name_ == nullptr) {
+    return true;
+  } else(d.name_ == nullptr) {
     return false;
   }
   return (*name_ <= *(d.name_));
 }
 
 bool AscendString::operator>=(const AscendString& d) const {
-  if (name_ == nullptr || d.name_ == nullptr) {
+  if (d.name_ == nullptr) {
+    return true;
+  } else (name_ == nullptr) {
     return false;
   }
   return (*name_ >= *(d.name_));
 }
 
 bool AscendString::operator!=(const AscendString& d) const {
-  if (name_ == nullptr || d.name_ == nullptr) {
+  if (name_ == nullptr && d.name_ == nullptr) {
     return false;
+  } else (name_ == nullptr) {
+    return true;
+  } else(d.name_ == nullptr) {
+    return true;
   }
   return (*name_ != *(d.name_));
 }
