@@ -343,7 +343,11 @@ const std::set<std::string> ir_builder_suppported_options = {INPUT_FORMAT,
                                                              OUTPUT_TYPE,
                                                              OUT_NODES,
                                                              INPUT_FP16_NODES,
-                                                             LOG_LEVEL};
+                                                             LOG_LEVEL,
+                                                             OP_DEBUG_LEVEL,
+                                                             DEBUG_DIR,
+                                                             OP_COMPILER_CACHE_DIR,
+                                                             OP_COMPILER_CACHE_MODE};
 
 // for interface: aclgrphParse
 const std::set<std::string> ir_parser_suppported_options = {INPUT_FORMAT,
