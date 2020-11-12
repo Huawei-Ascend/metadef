@@ -18,6 +18,7 @@
 #define INC_EXTERNAL_GRAPH_ASCEND_STRING_H_
 
 #include <string>
+#include <string.h>
 #include <memory>
 
 namespace ge {
