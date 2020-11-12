@@ -34,9 +34,9 @@ const char* AscendString::GetString() const {
 bool AscendString::operator<(const AscendString& d) const {
   if (name_ == nullptr && d.name_ == nullptr) {
     return false;
-  } else (name_ == nullptr) {
+  } else if (name_ == nullptr) {
     return true;
-  } else (d.name_ == nullptr) {
+  } else if (d.name_ == nullptr) {
     return false;
   }
   return (*name_ < *(d.name_));
@@ -45,9 +45,9 @@ bool AscendString::operator<(const AscendString& d) const {
 bool AscendString::operator>(const AscendString& d) const {
   if (name_ == nullptr && d.name_ == nullptr) {
     return false;
-  } else (name_ == nullptr) {
+  } else if (name_ == nullptr) {
     return false;
-  } else(d.name_ == nullptr) {
+  } else if (d.name_ == nullptr) {
     return true;
   }
   return(*name_ > *(d.name_));
@@ -56,9 +56,9 @@ bool AscendString::operator>(const AscendString& d) const {
 bool AscendString::operator==(const AscendString& d) const {
   if (name_ == nullptr && d.name_ == nullptr) {
     return true;
-  } else (name_ == nullptr) {
+  } else if (name_ == nullptr) {
     return false;
-  } else(d.name_ == nullptr) {
+  } else if (d.name_ == nullptr) {
     return false;
   }
   return (*name_ == *(d.name_));
@@ -67,7 +67,7 @@ bool AscendString::operator==(const AscendString& d) const {
 bool AscendString::operator<=(const AscendString& d) const {
   if (name_ == nullptr) {
     return true;
-  } else(d.name_ == nullptr) {
+  } else if (d.name_ == nullptr) {
     return false;
   }
   return (*name_ <= *(d.name_));
@@ -76,7 +76,7 @@ bool AscendString::operator<=(const AscendString& d) const {
 bool AscendString::operator>=(const AscendString& d) const {
   if (d.name_ == nullptr) {
     return true;
-  } else (name_ == nullptr) {
+  } else if (name_ == nullptr) {
     return false;
   }
   return (*name_ >= *(d.name_));
@@ -85,9 +85,9 @@ bool AscendString::operator>=(const AscendString& d) const {
 bool AscendString::operator!=(const AscendString& d) const {
   if (name_ == nullptr && d.name_ == nullptr) {
     return false;
-  } else (name_ == nullptr) {
+  } else if (name_ == nullptr) {
     return true;
-  } else(d.name_ == nullptr) {
+  } else if (d.name_ == nullptr) {
     return true;
   }
   return (*name_ != *(d.name_));
