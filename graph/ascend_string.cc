@@ -32,44 +32,44 @@ const char* AscendString::GetString() const {
 }
 
 bool AscendString::operator<(const AscendString& d) {
-  if (name_ == nullptr || d.name_ == nullptr) {
+  if (this->GetString() == nullptr || d.GetString() == nullptr) {
     return false;
   }
-  return (*name_ < *(d.name_));
+  return (strcmp(this->GetString(), d.GetString()) < 0);
 }
 
 bool AscendString::operator>(const AscendString& d) {
-  if (name_ == nullptr || d.name_ == nullptr) {
+  if (this->GetString() == nullptr || d.GetString() == nullptr) {
     return false;
   }
-  return(*name_ > *(d.name_));
+  return (strcmp(this->GetString(), d.GetString()) > 0);
 }
 
 bool AscendString::operator==(const AscendString& d) {
-  if (name_ == nullptr || d.name_ == nullptr) {
+  if (this->GetString() == nullptr || d.GetString() == nullptr) {
     return false;
   }
-  return (*name_ == *(d.name_));
+  return (strcmp(this->GetString(), d.GetString()) == 0);
 }
 
 bool AscendString::operator<=(const AscendString& d) {
-  if (name_ == nullptr || d.name_ == nullptr) {
+  if (this->GetString() == nullptr || d.GetString() == nullptr) {
     return false;
   }
-  return (*name_ <= *(d.name_));
+  return (strcmp(this->GetString(), d.GetString()) <= 0);
 }
 
 bool AscendString::operator>=(const AscendString& d) {
-  if (name_ == nullptr || d.name_ == nullptr) {
+  if (this->GetString() == nullptr || d.GetString() == nullptr) {
     return false;
   }
-  return (*name_ >= *(d.name_));
+  return (strcmp(this->GetString(), d.GetString()) >= 0);
 }
 
 bool AscendString::operator!=(const AscendString& d) {
-  if (name_ == nullptr || d.name_ == nullptr) {
+  if (this->GetString() == nullptr || d.GetString() == nullptr) {
     return false;
   }
-  return (*name_ != *(d.name_));
+  return (strcmp(this->GetString(), d.GetString()) != 0);
 }
 }  // namespace ge
