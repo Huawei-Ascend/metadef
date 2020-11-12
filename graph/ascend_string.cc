@@ -30,4 +30,46 @@ const char* AscendString::GetString() const {
 
   return (*name_).c_str();
 }
+
+bool AscendString::operator<(const AscendString& d) {
+  if (name_ == nullptr || d.name_ == nullptr) {
+    return false;
+  }
+  return (*name_ < *(d.name_));
+}
+
+bool AscendString::operator>(const AscendString& d) {
+  if (name_ == nullptr || d.name_ == nullptr) {
+    return false;
+  }
+  return(*name_ > *(d.name_));
+}
+
+bool AscendString::operator==(const AscendString& d) {
+  if (name_ == nullptr || d.name_ == nullptr) {
+    return false;
+  }
+  return (*name_ == *(d.name_));
+}
+
+bool AscendString::operator<=(const AscendString& d) {
+  if (name_ == nullptr || d.name_ == nullptr) {
+    return false;
+  }
+  return (*name_ <= *(d.name_));
+}
+
+bool AscendString::operator>=(const AscendString& d) {
+  if (name_ == nullptr || d.name_ == nullptr) {
+    return false;
+  }
+  return (*name_ >= *(d.name_));
+}
+
+bool AscendString::operator!=(const AscendString& d) {
+  if (name_ == nullptr || d.name_ == nullptr) {
+    return false;
+  }
+  return (*name_ != *(d.name_));
+}
 }  // namespace ge
