@@ -18,7 +18,6 @@
 #define INC_EXTERNAL_GRAPH_ASCEND_STRING_H_
 
 #include <string>
-#include <string.h>
 #include <memory>
 
 namespace ge {
@@ -32,17 +31,17 @@ class AscendString {
 
   const char* GetString() const;
 
-  bool operator<(const AscendString& d);
+  bool operator<(const AscendString& d) const;
 
-  bool operator>(const AscendString& d);
+  bool operator>(const AscendString& d) const;
 
-  bool operator<=(const AscendString& d);
+  bool operator<=(const AscendString& d) const;
 
-  bool operator>=(const AscendString& d);
+  bool operator>=(const AscendString& d) const;
 
-  bool operator==(const AscendString& d);
+  bool operator==(const AscendString& d) const;
 
-  bool operator!=(const AscendString& d);
+  bool operator!=(const AscendString& d) const;
 
  private:
   std::shared_ptr<std::string> name_;

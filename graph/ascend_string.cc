@@ -31,45 +31,45 @@ const char* AscendString::GetString() const {
   return (*name_).c_str();
 }
 
-bool AscendString::operator<(const AscendString& d) {
-  if (this->GetString() == nullptr || d.GetString() == nullptr) {
+bool AscendString::operator<(const AscendString& d) const {
+  if (name_ == nullptr || d.name_ == nullptr) {
     return false;
   }
-  return (strcmp(this->GetString(), d.GetString()) < 0);
+  return (*name_ < *(d.name_));
 }
 
-bool AscendString::operator>(const AscendString& d) {
-  if (this->GetString() == nullptr || d.GetString() == nullptr) {
+bool AscendString::operator>(const AscendString& d) const {
+  if (name_ == nullptr || d.name_ == nullptr) {
     return false;
   }
-  return (strcmp(this->GetString(), d.GetString()) > 0);
+  return(*name_ > *(d.name_));
 }
 
-bool AscendString::operator==(const AscendString& d) {
-  if (this->GetString() == nullptr || d.GetString() == nullptr) {
+bool AscendString::operator==(const AscendString& d) const {
+  if (name_ == nullptr || d.name_ == nullptr) {
     return false;
   }
-  return (strcmp(this->GetString(), d.GetString()) == 0);
+  return (*name_ == *(d.name_));
 }
 
-bool AscendString::operator<=(const AscendString& d) {
-  if (this->GetString() == nullptr || d.GetString() == nullptr) {
+bool AscendString::operator<=(const AscendString& d) const {
+  if (name_ == nullptr || d.name_ == nullptr) {
     return false;
   }
-  return (strcmp(this->GetString(), d.GetString()) <= 0);
+  return (*name_ <= *(d.name_));
 }
 
-bool AscendString::operator>=(const AscendString& d) {
-  if (this->GetString() == nullptr || d.GetString() == nullptr) {
+bool AscendString::operator>=(const AscendString& d) const {
+  if (name_ == nullptr || d.name_ == nullptr) {
     return false;
   }
-  return (strcmp(this->GetString(), d.GetString()) >= 0);
+  return (*name_ >= *(d.name_));
 }
 
-bool AscendString::operator!=(const AscendString& d) {
-  if (this->GetString() == nullptr || d.GetString() == nullptr) {
+bool AscendString::operator!=(const AscendString& d) const {
+  if (name_ == nullptr || d.name_ == nullptr) {
     return false;
   }
-  return (strcmp(this->GetString(), d.GetString()) != 0);
+  return (*name_ != *(d.name_));
 }
 }  // namespace ge
