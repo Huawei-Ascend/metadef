@@ -1259,11 +1259,15 @@ GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY OpDescPtr AttrUtils::CopyOpDesc(c
   op_desc->optional_input_names_.insert(org_op_desc->optional_input_names_.begin(),
                                         org_op_desc->optional_input_names_.end());
   op_desc->output_name_idx_.insert(org_op_desc->output_name_idx_.begin(), org_op_desc->output_name_idx_.end());
-
+  op_desc->inputs_desc_ = org_op_desc->inputs_desc_;
+  op_desc->register_input_name_ = org_op_desc->register_input_name_;
+  op_desc->outputs_desc_ = org_op_desc->outputs_desc_;
+  op_desc->register_output_name_ = org_op_desc->register_output_name_;
   op_desc->infer_func_ = org_op_desc->infer_func_;
   op_desc->infer_format_func_ = org_op_desc->infer_format_func_;
   op_desc->verifier_func_ = org_op_desc->verifier_func_;
-
+  op_desc->op_kernel_lib_name_ = org_op_desc->op_kernel_lib_name_;
+  op_desc->engine_name_ = org_op_desc->engine_name_;
   return op_desc;
 }
 std::string AttrUtils::GetAllAttrsStr(AttrUtils::ConstAttrHolderAdapter &&obj) {
