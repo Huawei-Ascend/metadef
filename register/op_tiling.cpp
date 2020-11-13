@@ -207,8 +207,9 @@ bool RunCalcFunc(const ge::OpDescPtr &op_desc, const char *op_type, const char *
         return false;
     }
 
-    GELOGI("Optiling func found. op_type:%s, op_name:%s, func:[%s:%p]",
-           op_type, op_name, iter->first.c_str(), iter->second.target<OpTilingFuncPtrNew>());
+    GELOGI("Optiling func found. op_type:%s, op_name:%s, func:[%s:%p], compile_info_key=%s",
+           op_type, op_name, iter->first.c_str(), iter->second.target<OpTilingFuncPtrNew>(),
+                   op_compile_info.key.c_str());
     res = (iter->second)(op_param, op_compile_info, run_info);
     if (res) {
         GELOGI("Optiling func succeed. op_type:%s, op_name:%s", op_type, op_name);
@@ -409,6 +410,18 @@ extern "C" ge::graphStatus OpParaCalculate(const ge::Node &node, OpRunInfo &runI
     FeedTeOpConstTensor(node, op_desc, op_param.const_inputs);
 
     auto &interf = OpTilingInterf::RegisteredOpInterf();
+    auto iter = interf.find(op_type);
+    if (iter == interf.end()) {
+        iter = interf.find("AutoTiling");
+    }
+
+    if (iter == interf.end()) {
+        if (!RunCalcFunc(op_desc, op_type.c_str(), op_name.c_str(), op_param, runInfo)) {
+            return ge::GRAPH_FAILED;
+        }
+        return ge::GRAPH_SUCCESS;
+    }
+
     nlohmann::json dummy;
     nlohmann::json *pJson = nullptr;
     bres = GetCompileInfo(op_desc, dummy, pJson, op_type.c_str(), op_name.c_str());
@@ -416,29 +429,16 @@ extern "C" ge::graphStatus OpParaCalculate(const ge::Node &node, OpRunInfo &runI
         GE_LOGE("Failed to get compile_info, op_type:%s, op_name:%s", op_type.c_str(), op_name.c_str());
         return ge::GRAPH_FAILED;
     }
-
-    auto iter = interf.find(op_type);
-    if (iter == interf.end()) {
-        iter = interf.find("AutoTiling");
+    TeOpParas opParas;
+    GELOGI("Optiling func found, op_type:%s, op_name:%s, func:[%s:%p]",
+           op_type.c_str(), op_name.c_str(), iter->first.c_str(), iter->second.target<OpTilingFuncPtr>());
+    bool rc =  (iter->second)(op_type, op_param, *pJson, runInfo);
+    if (rc) {
+        GELOGI("Optiling succeed. op_type:%s, op_name:%s", op_type.c_str(), op_name.c_str());
+    } else {
+        GE_LOGE("Optiling failed. op_type:%s, op_name:%s", op_type.c_str(), op_name.c_str());
     }
-
-    if (iter != interf.end()) {
-        TeOpParas opParas;
-        GELOGI("Optiling func found, op_type:%s, op_name:%s, func:[%s:%p]",
-               op_type.c_str(), op_name.c_str(), iter->first.c_str(), iter->second.target<OpTilingFuncPtr>());
-        bool rc =  (iter->second)(op_type, op_param, *pJson, runInfo);
-        if (rc) {
-            GELOGI("Optiling succeed. op_type:%s, op_name:%s", op_type.c_str(), op_name.c_str());
-        } else {
-            GE_LOGE("Optiling failed. op_type:%s, op_name:%s", op_type.c_str(), op_name.c_str());
-        }
-        return rc ? ge::GRAPH_SUCCESS : ge::GRAPH_FAILED;
-    }
-
-    if (!RunCalcFunc(op_desc, op_type.c_str(), op_name.c_str(), op_param, runInfo)) {
-        return ge::GRAPH_FAILED;
-    }
-    return ge::GRAPH_SUCCESS;
+    return rc ? ge::GRAPH_SUCCESS : ge::GRAPH_FAILED;
 }
 
 extern "C" ge::graphStatus OpAtomicCalculate(const ge::Node &node, OpRunInfo &runInfo)
