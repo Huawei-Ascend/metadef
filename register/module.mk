@@ -39,16 +39,20 @@ local_lib_src_files :=  register.cpp \
 
 local_lib_inc_path :=   \
                         inc \
+                        metadef/inc \
+                        graphengine/inc \
                         inc/external \
-                        inc/external/graph \
-                        inc/graph \
-                        inc/common \
-                        inc/framework \
-                        common \
-                        common/graph \
+                        metadef/inc/external \
+                        graphengine/inc/external \
+                        metadef/inc/external/graph \
+                        metadef/inc/graph \
+                        metadef/inc/common \
+                        graphengine/inc/framework \
+                        metadef \
+                        metadef/graph \
                         third_party/protobuf/include \
                         libc_sec/include \
-				        third_party/json/include \
+                        third_party/json/include \
 
 tiling_src_files := op_tiling.cpp \
                     op_tiling_registry.cpp \
