@@ -76,8 +76,6 @@ class FMK_FUNC_HOST_VISIBILITY FMK_FUNC_DEV_VISIBILITY OpRegistry {
 
   bool GetOmTypeByOriOpType(const std::string &ori_optype, std::string &om_type);
 
-  ParseOpToGraphFunc GetParseOpToGraphFunc(const std::string &op_type, const std::string &ori_type);
-
  private:
   std::unordered_map<std::string, domi::ImplyType> op_run_mode_map_;
   std::unordered_map<std::string, ParseParamFunc> op_parse_params_fn_map_;
@@ -87,9 +85,6 @@ class FMK_FUNC_HOST_VISIBILITY FMK_FUNC_DEV_VISIBILITY OpRegistry {
   std::unordered_map<std::string, ParseSubgraphFunc> op_types_to_parse_subgraph_post_func_;
   std::unordered_map<std::string, std::vector<RemoveInputConfigure>> remove_input_configure_map_;
   std::unordered_map<std::string, std::string> origin_type_to_om_type_;
-#ifndef ONLY_COMPILE_OPEN_SRC
-  std::unordered_map<std::string, ParseOpToGraphFunc> parse_op_to_graph_fn_map_;
-#endif
 };
 }  // namespace domi
 #endif  // INC_REGISTER_OP_REGISTRY_H_
