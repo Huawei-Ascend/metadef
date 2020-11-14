@@ -169,21 +169,17 @@ bool GetCompileInfo(const ge::OpDescPtr &op_desc, nlohmann::json &dummy, nlohman
 
 bool GetCompileInfo(const ge::OpDescPtr &op_desc, const char *op_type, const char *op_name,
     OpCompileInfo &op_compile_info) {
-    std::string compile_info_key;
-    bool bres = ge::AttrUtils::GetStr(op_desc, COMPILE_INFO_KEY, compile_info_key);
+    bool bres = ge::AttrUtils::GetStr(op_desc, COMPILE_INFO_KEY, op_compile_info.key);
     if (!bres) {
         GE_LOGE("Can not find the attribute %s. op_type:%s, op_name:%s", COMPILE_INFO_KEY, op_type, op_name);
         return false;
     }
 
-    std::string compile_info_str;
-    bres = ge::AttrUtils::GetStr(op_desc, COMPILE_INFO_JSON, compile_info_str);
+    bres = ge::AttrUtils::GetStr(op_desc, COMPILE_INFO_JSON, op_compile_info.str);
     if (!bres) {
         GE_LOGE("Can not find the attribute %s. op_type:%s, op_name:%s", COMPILE_INFO_JSON, op_type, op_name);
         return false;
     }
-    op_compile_info.key = compile_info_key;
-    op_compile_info.str = compile_info_str;
     return true;
 }
 
