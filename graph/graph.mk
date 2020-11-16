@@ -57,12 +57,16 @@ COMMON_LOCAL_C_INCLUDES := \
     proto/op_mapping_info.proto \
     proto/dump_task.proto \
     inc \
+    metadef/inc \
+    graphengine/inc \
     inc/external \
-    inc/external/graph \
-    inc/graph \
-    inc/common \
-    common \
-    common/graph \
+    metadef/inc/external \
+    graphengine/inc/external \
+    metadef/inc/external/graph \
+    metadef/inc/graph \
+    metadef/inc/common \
+    metadef \
+    metadef/graph \
     third_party/protobuf/include \
     libc_sec/include \
     ops/built-in/op_proto/inc \
