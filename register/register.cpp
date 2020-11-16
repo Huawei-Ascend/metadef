@@ -618,6 +618,7 @@ class OpRegistrationDataImpl {
   FusionParseParamByOpFunc fusion_parse_param_by_op_fn_;   // fusion parseParam by op function
   ParseSubgraphFunc parse_subgraph_post_fn_;               // a function called after the subgraph was generated
   std::vector<RemoveInputConfigure> remove_input_configure_vec_;
+  ParseOpToGraphFunc parse_op_to_graph_fn_;
 };
 
 OpRegistrationDataImpl::OpRegistrationDataImpl(const std::string &om_optype)
@@ -628,7 +629,8 @@ OpRegistrationDataImpl::OpRegistrationDataImpl(const std::string &om_optype)
       parse_param_by_op_fn_(nullptr),
       fusionParseParamFn_(nullptr),
       fusion_parse_param_by_op_fn_(nullptr),
-      parse_subgraph_post_fn_(nullptr){}
+      parse_subgraph_post_fn_(nullptr),
+      parse_op_to_graph_fn_(nullptr) {}
 
 OpRegistrationData::~OpRegistrationData() = default;
 
@@ -802,6 +804,20 @@ ParseSubgraphFunc OpRegistrationData::GetParseSubgraphPostFn() const {
   return impl_->parse_subgraph_post_fn_;
 }
 
+OpRegistrationData &OpRegistrationData::ParseOpToGraphFn(const ParseOpToGraphFunc &parse_op_to_graph_fn) {
+  if (impl_ != nullptr) {
+    impl_->parse_op_to_graph_fn_ = parse_op_to_graph_fn;
+  }
+  return *this;
+}
+
+ParseOpToGraphFunc OpRegistrationData::GetParseOpToGraphFn() const {
+  if (impl_ == nullptr) {
+    return nullptr;
+  }
+  return impl_->parse_op_to_graph_fn_;
+}
+
 OpRegistry *OpRegistry::Instance() {
   static OpRegistry instance;
   return &instance;
@@ -831,6 +847,9 @@ bool OpRegistry::Register(const OpRegistrationData &reg_data) {
     fusion_parse_params_by_op_fn_map_[om_ori_type] = reg_data.impl_->fusion_parse_param_by_op_fn_;
     parse_params_by_op_func_map_[om_ori_type] = reg_data.impl_->parse_param_by_op_fn_;
     remove_input_configure_map_[om_ori_type] = reg_data.impl_->remove_input_configure_vec_;
+#ifndef ONLY_COMPILE_OPEN_SRC
+    parse_op_to_graph_fn_map_[om_ori_type] = reg_data.impl_->parse_op_to_graph_fn_;
+#endif
 
     if (origin_type_to_om_type_.find(ori_type) == origin_type_to_om_type_.end()) {
       origin_type_to_om_type_[ori_type] = reg_data.impl_->om_optype_;
@@ -943,6 +962,19 @@ bool OpRegistry::GetOmTypeByOriOpType(const std::string &ori_optype, std::string
     return true;
   }
   return false;
+}
+
+ParseOpToGraphFunc OpRegistry::GetParseOpToGraphFunc(const std::string &op_type, const std::string &ori_type) {
+#ifndef ONLY_COMPILE_OPEN_SRC
+  std::string type = GetParserKey(op_type, ori_type);
+  auto iter = parse_op_to_graph_fn_map_.find(type);
+  if (iter == parse_op_to_graph_fn_map_.end()) {
+    return nullptr;
+  }
+  return iter->second;
+#else
+  return nullptr;
+#endif
 }
 }  // namespace domi
 /*lint +e1073*/
