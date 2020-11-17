@@ -49,6 +49,9 @@ set(SRC_LIST
     "option/ge_context.cc"
     "option/ge_local_context.cc"
     "runtime_inference_context.cc"
+    "${METADEF_DIR}/third_party/transformer/src/axis_util.cpp"
+    "${METADEF_DIR}/third_party/transformer/src/transfer_shape_according_to_format.cpp"
+    "utils/transformer_utils.cc"
 )
 
 if (NOT ENABLE_D AND NOT ENABLE_ACL)
@@ -107,6 +110,8 @@ target_include_directories(graph PRIVATE
     ${METADEF_DIR}/third_party/graphengine/inc/external
     ${METADEF_DIR}/third_party/fwkacllib/inc
     ${METADEF_DIR}/third_party/fwkacllib/inc/ops
+    ${METADEF_DIR}/third_party
+    ${METADEF_DIR}/third_party/transformer/inc
 )
 
 target_link_libraries(graph PRIVATE
@@ -177,6 +182,8 @@ target_include_directories(graph_static PRIVATE
     ${METADEF_DIR}/third_party/graphengine/inc/external
     ${METADEF_DIR}/third_party/fwkacllib/inc
     ${METADEF_DIR}/third_party/fwkacllib/inc/ops
+    ${METADEF_DIR}/third_party
+    ${METADEF_DIR}/third_party/transformer/inc
 )
 
 target_link_libraries(graph_static PRIVATE
@@ -262,6 +269,8 @@ target_include_directories(atc_stub_graph PRIVATE
     ${METADEF_DIR}/../inc/external
     ${METADEF_DIR}/../../ops/built-in/op_proto/inc
     ${METADEF_DIR}/../../cann/ops/built-in/op_proto/inc
+    ${METADEF_DIR}/third_party
+    ${METADEF_DIR}/third_party/transformer/inc
 )
 
 target_link_libraries(atc_stub_graph PRIVATE
@@ -313,6 +322,8 @@ target_include_directories(fwk_stub_graph PRIVATE
     ${METADEF_DIR}/../inc/external
     ${METADEF_DIR}/../../ops/built-in/op_proto/inc
     ${METADEF_DIR}/../../cann/ops/built-in/op_proto/inc
+    ${METADEF_DIR}/third_party
+    ${METADEF_DIR}/third_party/transformer/inc
 )
 
 target_link_libraries(fwk_stub_graph PRIVATE
@@ -356,6 +367,8 @@ target_include_directories(graph PRIVATE
         ${METADEF_DIR}/../inc/external
         ${METADEF_DIR}/../../ops/built-in/op_proto/inc
         ${METADEF_DIR}/../../cann/ops/built-in/op_proto/inc
+        ${METADEF_DIR}/third_party
+        ${METADEF_DIR}/third_party/transformer/inc
         )
 
 target_link_libraries(graph PRIVATE
