@@ -190,7 +190,7 @@ target_link_libraries(graph_static PRIVATE
     $<BUILD_INTERFACE:intf_pub>
     ascend_protobuf
     c_sec
-    -lrt
+    $<$<NOT:$<STREQUAL:${TARGET_SYSTEM_NAME},Android>>:-lrt>
     -ldl
 )
 
