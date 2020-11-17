@@ -347,6 +347,7 @@ target_compile_options(graph PRIVATE
 target_compile_definitions(graph PRIVATE
         $<$<STREQUAL:${PRODUCT_SIDE},host>:FMK_SUPPORT_DUMP>
         $<$<STREQUAL:${ENABLE_OPEN_SRC},True>:ONLY_COMPILE_OPEN_SRC>
+        google=ascend_private
         )
 
 target_include_directories(graph PRIVATE
@@ -373,7 +374,7 @@ target_include_directories(graph PRIVATE
 
 target_link_libraries(graph PRIVATE
         $<BUILD_INTERFACE:intf_pub>
-        protobuf_static
+        ascend_protobuf_static
         -Wl,--no-as-needed
         c_sec
         slog
