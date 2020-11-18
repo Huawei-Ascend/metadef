@@ -18,6 +18,7 @@
 
 #include <chrono>
 #include <cstring>
+#include <algorithm>
 #include "securec.h"
 #include "framework/common/debug/ge_log.h"
 #include "graph/debug/ge_log.h"
@@ -168,7 +169,7 @@ bool GetCompileInfo(const ge::OpDescPtr &op_desc, nlohmann::json &dummy, nlohman
 }
 
 bool GetCompileInfo(const ge::OpDescPtr &op_desc, const char *op_type, const char *op_name,
-    OpCompileInfo &op_compile_info) {
+                    OpCompileInfo &op_compile_info) {
     bool bres = ge::AttrUtils::GetStr(op_desc, COMPILE_INFO_KEY, op_compile_info.key);
     if (!bres) {
         GE_LOGE("Can not find the attribute %s. op_type:%s, op_name:%s", COMPILE_INFO_KEY, op_type, op_name);
@@ -183,8 +184,33 @@ bool GetCompileInfo(const ge::OpDescPtr &op_desc, const char *op_type, const cha
     return true;
 }
 
+bool RunCalcFunc(const char *compile_info, const char *op_type, const TeOpParas &op_param,
+                 OpRunInfo &run_info) {
+    auto &interf = OpTilingRegistryInterf::RegisteredOpInterfNew();
+    auto iter = interf.find(op_type);
+    if (iter == interf.end()) {
+        iter = interf.find("AutoTiling");
+    }
+
+    if (iter == interf.end()) {
+        GE_LOGE("Optiling func not found. op_type:%s", op_type);
+        return false;
+    }
+
+    OpCompileInfo op_compile_info{compile_info};
+    GELOGI("Optiling func found. op_type:%s, func:[%s:%p]",
+           op_type, iter->first.c_str(), iter->second.target<OpTilingFuncPtrNew>());
+    bool res = (iter->second)(op_param, op_compile_info, run_info);
+    if (res) {
+        GELOGI("Optiling func succeed. op_type:%s", op_type);
+    } else {
+        GE_LOGE("Optiling func failed. op_type:%s", op_type);
+    }
+    return res;
+}
+
 bool RunCalcFunc(const ge::OpDescPtr &op_desc, const char *op_type, const char *op_name, const TeOpParas &op_param,
-                 OpRunInfo & run_info) {
+                 OpRunInfo &run_info) {
     auto &interf = OpTilingRegistryInterf::RegisteredOpInterfNew();
     auto iter = interf.find(op_type);
     if (iter == interf.end()) {
@@ -216,7 +242,7 @@ bool RunCalcFunc(const ge::OpDescPtr &op_desc, const char *op_type, const char *
 }
 
 bool RunAtomicFunc(const ge::OpDescPtr &op_desc, const char *op_type, const char *op_name, const TeOpParas &op_param,
-                 OpRunInfo & run_info) {
+                   OpRunInfo &run_info) {
     auto &interf = OpTilingRegistryInterf::RegisteredOpInterfNew();
     auto iter = interf.find(op_type);
     if (iter == interf.end()) {
@@ -293,6 +319,110 @@ void ParseShapeDescList(const nlohmann::json &shape_list, std::vector<TeOpTensor
     }
 }
 
+template<typename T>
+void GetConstDataPointer(const nlohmann::json &json_array, std::vector<uint8_t> &const_value)
+{
+    std::vector<T> value = json_array.get<std::vector<T>>();
+    uint8_t *pv_begin = reinterpret_cast<uint8_t*>(value.data());
+    uint8_t *pv_end = pv_begin + value.size() * sizeof(T);
+    const_value = std::move(std::vector<uint8_t>(pv_begin, pv_end));
+}
+
+bool CopyConstData(const std::string &dtype, const nlohmann::json &json_array,
+                   std::vector<uint8_t> &value)
+{
+    if (dtype == "int8") {
+        GetConstDataPointer<int8_t>(json_array, value);
+    } else if (dtype == "uint8") {
+        GetConstDataPointer<uint8_t>(json_array, value);
+    } else if (dtype == "int16") {
+        GetConstDataPointer<int16_t>(json_array, value);
+    } else if (dtype == "uint16") {
+        GetConstDataPointer<uint16_t>(json_array, value);
+    } else if (dtype == "int32") {
+        GetConstDataPointer<int32_t>(json_array, value);
+    } else if (dtype == "uint32") {
+        GetConstDataPointer<uint32_t>(json_array, value);
+    } else if (dtype == "int64") {
+        GetConstDataPointer<int64_t>(json_array, value);
+    } else if (dtype == "uint64") {
+        GetConstDataPointer<uint64_t>(json_array, value);
+    } else if (dtype == "float32") {
+        GetConstDataPointer<float>(json_array, value);
+    } else if (dtype == "double") {
+        GetConstDataPointer<double>(json_array, value);
+    } else {
+        GE_LOGE("Unknown dtype: %s", dtype.c_str());
+        return false;
+    }
+    return true;
+}
+
+void ParseConstShapeDesc(const nlohmann::json &shape_json,
+                         std::map<std::string, TeConstTensorData> &const_tensors,
+                         std::map<std::string, std::vector<uint8_t>> &const_values)
+{
+    std::vector<int64_t> shape;
+    std::string format_str;
+    std::string dtype_str;
+
+    if (!shape_json.contains("const_value")) {
+        GELOGI("Not const tenosr");
+        return;
+    }
+    if (!shape_json.contains("name")) {
+        GE_LOGE("const tensor has no name");
+        return;
+    }
+    std::string name = shape_json["name"];
+
+    if (shape_json.contains("shape")) {
+        shape = shape_json["shape"].get<vector<int64_t>>();
+    }
+    if (shape_json.contains("format")) {
+        format_str = shape_json["format"].get<std::string>();
+    }
+    if (shape_json.contains("dtype")) {
+        dtype_str = shape_json["dtype"].get<std::string>();
+    }
+
+    std::vector<uint8_t> value;
+    bool bres = CopyConstData(dtype_str, shape_json["const_value"], value);
+    if (!bres) {
+        GE_LOGE("CopyConstData faild.  buffer is null");
+        return;
+    }
+    auto res = const_values.emplace(name, std::move(value));
+    if (res.first == const_values.end()) {
+        return;     // CodeDEX complains 'CHECK_CONTAINER_EMPTY'
+    }
+
+    ge::Shape ge_shape(shape);
+    std::transform(dtype_str.begin(), dtype_str.end(), dtype_str.begin(), ::toupper);
+    dtype_str = "DT_" + dtype_str;
+    ge::DataType ge_dtype = ge::TypeUtils::SerialStringToDataType(dtype_str);
+    std::transform(format_str.begin(), format_str.end(), format_str.begin(), ::toupper);
+    ge::Format ge_format = ge::TypeUtils::SerialStringToFormat(format_str);
+    ge::Tensor const_tensor(ge::TensorDesc(ge_shape, ge_format, ge_dtype), res.first->second);
+    const_tensors.emplace(name, std::make_tuple(const_tensor.GetData(), const_tensor.GetSize(), const_tensor));
+    return;
+}
+
+void ParseConstTensorList(const nlohmann::json &shape_list,
+                          std::map<std::string, TeConstTensorData> &const_tensors,
+                          std::map<std::string, std::vector<uint8_t>> &const_values)
+{
+    for (const auto &elem : shape_list) {
+        if (elem.is_array()) {
+            for (const auto &shape : elem) {
+                ParseConstShapeDesc(shape, const_tensors, const_values);
+            }
+        } else {
+            ParseConstShapeDesc(elem, const_tensors, const_values);
+        }
+    }
+}
+
 std::string DumpByteBuffer(const ByteBuffer &buf)
 {
     static const char hex_digits[] = "0123456789ABCDEF";
@@ -317,6 +447,7 @@ bool DumpRunInfo(const OpRunInfo &run_info, char *run_info_json, size_t run_info
     json_obj["block_dim"] = run_info.block_dim;
     json_obj["workspaces"] = run_info.workspaces;
     json_obj["tiling_data"] = DumpByteBuffer(run_info.tiling_data);
+    json_obj["clear_atomic"] = run_info.clear_atomic;
 
     std::string str = json_obj.dump();
     if (str.size() >= run_info_len) {
@@ -343,12 +474,14 @@ extern "C" int TbeOpTilingPyInterface(const char *optype, const char *compile_in
     std::string compile_info_str = compile_info;
     TeOpParas op_params;
     nlohmann::json compile_info_json;
+    std::map<std::string, std::vector<uint8_t>> const_values;
     try {
         compile_info_json = nlohmann::json::parse(compile_info);
         nlohmann::json inputs_json = nlohmann::json::parse(inputs);
         nlohmann::json outputs_json = nlohmann::json::parse(outputs);
         ParseShapeDescList(inputs_json, op_params.inputs);
         ParseShapeDescList(outputs_json, op_params.outputs);
+        ParseConstTensorList(inputs_json, op_params.const_inputs, const_values);
     } catch (...) {
         GE_LOGE("Failed to parse json_str. %s, %s, %s", compile_info, inputs, outputs);
         return 0;
@@ -359,21 +492,24 @@ extern "C" int TbeOpTilingPyInterface(const char *optype, const char *compile_in
     if (iter == interf.end()) {
         iter = interf.find("AutoTiling");
     }
-    
-    if (iter == interf.end()) {
-        GE_LOGE("Optiling func not found, op_type:%s", optype);
-        return 0;
-    }
 
     OpRunInfo run_info;
-    GELOGI("Optiling func found, op_type:%s, func:[%s:%p]",
-           optype, iter->first.c_str(), iter->second.target<OpTilingFuncPtr>());
+    if (iter != interf.end()) {
+        GELOGI("Optiling func found, op_type:%s, func:[%s:%p]", optype, iter->first.c_str(),
+               iter->second.target<OpTilingFuncPtr>());
 
-    bool rc = (iter->second)(optype, op_params, compile_info_json, run_info);
-    if (!rc) {
-        GE_LOGE("Optiling failed. op_type:%s", optype);
-        return 0;
+        bool rc = (iter->second)(optype, op_params, compile_info_json, run_info);
+        if (!rc) {
+            GE_LOGE("Optiling failed. op_type:%s", optype);
+            return 0;
+        }
+    } else {
+        if (!RunCalcFunc(compile_info, optype, op_params, run_info)) {
+            GE_LOGE("Optiling failed. op_type:%s", optype);
+            return 0;
+        }
     }
+
     GELOGI("Optiling succeed. op_type:%s", optype);
     DumpRunInfo(run_info, run_info_json, run_info_len);
     return 1;
