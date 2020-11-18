@@ -70,6 +70,8 @@ class FMK_FUNC_HOST_VISIBILITY FMK_FUNC_DEV_VISIBILITY OpRegistry {
 
   domi::ParseSubgraphFunc GetParseSubgraphPostFunc(const std::string &op_type);
 
+  Status GetParseSubgraphPostFunc(const std::string &op_type, domi::ParseSubgraphFuncV1 &parse_subgraph_func);
+
   domi::ImplyType GetImplyTypeByOriOpType(const std::string &ori_optype);
 
   const std::vector<RemoveInputConfigure> &GetRemoveInputConfigure(const std::string &ori_optype) const;
@@ -85,6 +87,9 @@ class FMK_FUNC_HOST_VISIBILITY FMK_FUNC_DEV_VISIBILITY OpRegistry {
   std::unordered_map<std::string, FusionParseParamFunc> fusion_op_parse_params_fn_map_;
   std::unordered_map<std::string, FusionParseParamByOpFunc> fusion_parse_params_by_op_fn_map_;
   std::unordered_map<std::string, ParseSubgraphFunc> op_types_to_parse_subgraph_post_func_;
+#ifndef ONLY_COMPILE_OPEN_SRC
+  std::unordered_map<std::string, ParseSubgraphFuncV1> op_types_to_parse_subgraph_post_func_v1_;
+#endif
   std::unordered_map<std::string, std::vector<RemoveInputConfigure>> remove_input_configure_map_;
   std::unordered_map<std::string, std::string> origin_type_to_om_type_;
 #ifndef ONLY_COMPILE_OPEN_SRC

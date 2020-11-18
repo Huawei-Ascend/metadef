@@ -617,6 +617,7 @@ class OpRegistrationDataImpl {
   FusionParseParamFunc fusionParseParamFn_;                // fusion parseParam function
   FusionParseParamByOpFunc fusion_parse_param_by_op_fn_;   // fusion parseParam by op function
   ParseSubgraphFunc parse_subgraph_post_fn_;               // a function called after the subgraph was generated
+  ParseSubgraphFuncV1 parse_subgraph_post_gen_fn_; // a function called after the subgraph was generated
   std::vector<RemoveInputConfigure> remove_input_configure_vec_;
   ParseOpToGraphFunc parse_op_to_graph_fn_;
 };
@@ -630,7 +631,8 @@ OpRegistrationDataImpl::OpRegistrationDataImpl(const std::string &om_optype)
       fusionParseParamFn_(nullptr),
       fusion_parse_param_by_op_fn_(nullptr),
       parse_subgraph_post_fn_(nullptr),
-      parse_op_to_graph_fn_(nullptr) {}
+      parse_op_to_graph_fn_(nullptr),
+      parse_subgraph_post_gen_fn_(nullptr) {}
 
 OpRegistrationData::~OpRegistrationData() = default;
 
@@ -641,11 +643,29 @@ OpRegistrationData::OpRegistrationData(const std::string &om_optype) {
   }
 }
 
+OpRegistrationData::OpRegistrationData(const char *om_op_type) {
+  std::string op_type;
+  if (om_op_type != nullptr) {
+    op_type = om_op_type;
+  }
+  impl_ = ComGraphMakeShared<OpRegistrationDataImpl>(op_type);
+  if (impl_ == nullptr) {
+    GELOGW("OpRegistrationDataImpl make shared failed!");
+  }
+}
+
 std::string OpRegistrationData::GetOmOptype() const {
   if (impl_ != nullptr) {
     return impl_->om_optype_;
   }
   return "";
+}
+
+Status OpRegistrationData::GetOmOptype(ge::AscendString &om_op_type) const {
+  if (impl_ != nullptr) {
+    om_op_type = ge::AscendString(impl_->om_optype_.c_str());
+  }
+  return SUCCESS;
 }
 
 OpRegistrationData &OpRegistrationData::FrameworkType(const domi::FrameworkType &fmk_type) {
@@ -671,9 +691,33 @@ OpRegistrationData &OpRegistrationData::OriginOpType(const std::initializer_list
   return *this;
 }
 
+OpRegistrationData &OpRegistrationData::OriginOpType(const std::vector<ge::AscendString> &ori_op_type_list) {
+  if (impl_ != nullptr) {
+    for (auto &ori_op_type : ori_op_type_list) {
+      std::string tmp_ori_op_type;
+      if (ori_op_type.GetString() != nullptr) {
+        tmp_ori_op_type = ori_op_type.GetString();
+      }
+      (void)impl_->ori_optype_set_.insert(tmp_ori_op_type);
+    }
+  }
+  return *this;
+}
+
 OpRegistrationData &OpRegistrationData::OriginOpType(const std::string &ori_optype) {
   if (impl_ != nullptr) {
     (void)impl_->ori_optype_set_.insert(ori_optype);
+  }
+  return *this;
+}
+
+OpRegistrationData &OpRegistrationData::OriginOpType(const char *ori_op_type) {
+  if (impl_ != nullptr) {
+    std::string tmp_ori_op_type;
+    if (ori_op_type != nullptr) {
+      tmp_ori_op_type =  ori_op_type;
+    }
+    (void)impl_->ori_optype_set_.insert(tmp_ori_op_type);
   }
   return *this;
 }
@@ -684,6 +728,17 @@ std::set<std::string> OpRegistrationData::GetOriginOpTypeSet() const {
     return impl_->ori_optype_set_;
   }
   return ori_optype_set;
+}
+
+Status OpRegistrationData::GetOriginOpTypeSet(std::set<ge::AscendString> &ori_op_type) const {
+  std::set<std::string> ori_op_type_set;
+  if (impl_ != nullptr) {
+    ori_op_type_set =  impl_->ori_optype_set_;
+  }
+  for (auto &op_type : ori_op_type_set) {
+    ori_op_type.insert(ge::AscendString(op_type.c_str()));
+  }
+  return SUCCESS;
 }
 
 OpRegistrationData &OpRegistrationData::ParseParamsFn(const ParseParamFunc &parseParamFn) {
@@ -769,6 +824,22 @@ OpRegistrationData &OpRegistrationData::DelInputWithCond(int inputIdx, const std
   return *this;
 }
 
+OpRegistrationData &OpRegistrationData::DelInputWithCond(int input_idx, const char *attr_name, bool attr_value) {
+  std::string tmp_attr_name;
+  if (attr_name != nullptr) {
+    tmp_attr_name = attr_name;
+  }
+  if (impl_ != nullptr) {
+    struct RemoveInputConfigure registerStu;
+    registerStu.inputIdx = input_idx;
+    registerStu.attrName = tmp_attr_name;
+    registerStu.moveType = OMG_REMOVE_TYPE_WITH_COND;
+    registerStu.attrValue = attr_value;
+    impl_->remove_input_configure_vec_.push_back(registerStu);
+  }
+  return *this;
+}
+
 OpRegistrationData &OpRegistrationData::InputReorderVector(const vector<int> &input_order) {
   if (impl_ != nullptr) {
     struct RemoveInputConfigure register_input;
@@ -791,12 +862,28 @@ OpRegistrationData &OpRegistrationData::DelInputWithOriginalType(int input_idx, 
   return *this;
 }
 
+OpRegistrationData &OpRegistrationData::DelInputWithOriginalType(int input_idx, const char *ori_type) {
+  std::string tmp_ori_type;
+  if (ori_type != nullptr) {
+    tmp_ori_type = ori_type;
+  }
+  if (impl_ != nullptr) {
+    struct RemoveInputConfigure register_input;
+    register_input.inputIdx = input_idx;
+    register_input.originalType = tmp_ori_type;
+    register_input.moveType = OMG_REMOVE_INPUT_WITH_ORIGINAL_TYPE;
+    impl_->remove_input_configure_vec_.push_back(register_input);
+  }
+  return *this;
+}
+
 OpRegistrationData &OpRegistrationData::ParseSubgraphPostFn(const ParseSubgraphFunc &subgraph_post_fn) {
   if (impl_ != nullptr) {
     impl_->parse_subgraph_post_fn_ = subgraph_post_fn;
   }
   return *this;
 }
+
 ParseSubgraphFunc OpRegistrationData::GetParseSubgraphPostFn() const {
   if (impl_ == nullptr) {
     return nullptr;
@@ -811,11 +898,26 @@ OpRegistrationData &OpRegistrationData::ParseOpToGraphFn(const ParseOpToGraphFun
   return *this;
 }
 
+OpRegistrationData &OpRegistrationData::ParseSubgraphPostFn(const ParseSubgraphFuncV1 &subgraph_post_fn) {
+  if (impl_ != nullptr) {
+    impl_->parse_subgraph_post_gen_fn_ = subgraph_post_fn;
+  }
+  return *this;
+}
+
 ParseOpToGraphFunc OpRegistrationData::GetParseOpToGraphFn() const {
   if (impl_ == nullptr) {
     return nullptr;
   }
   return impl_->parse_op_to_graph_fn_;
+}
+
+Status OpRegistrationData::GetParseSubgraphPostFn(ParseSubgraphFuncV1 &func) const {
+  if (impl_ == nullptr) {
+    return FAILED;
+  }
+  func = impl_->parse_subgraph_post_gen_fn_;
+  return SUCCESS;
 }
 
 OpRegistry *OpRegistry::Instance() {
@@ -862,6 +964,9 @@ bool OpRegistry::Register(const OpRegistrationData &reg_data) {
   }
   op_run_mode_map_[reg_data.impl_->om_optype_] = reg_data.impl_->imply_type_;
   op_types_to_parse_subgraph_post_func_[reg_data.impl_->om_optype_] = reg_data.impl_->parse_subgraph_post_fn_;
+#ifndef ONLY_COMPILE_OPEN_SRC
+  op_types_to_parse_subgraph_post_func_v1_[reg_data.impl_->om_optype_] = reg_data.impl_->parse_subgraph_post_gen_fn_;
+#endif
   return true;
 }
 
@@ -931,6 +1036,18 @@ domi::ParseSubgraphFunc OpRegistry::GetParseSubgraphPostFunc(const std::string &
     return nullptr;
   }
   return it_find->second;
+}
+
+Status OpRegistry::GetParseSubgraphPostFunc(const std::string &op_type,
+                                            domi::ParseSubgraphFuncV1 &parse_subgraph_func) {
+#ifndef ONLY_COMPILE_OPEN_SRC
+  auto it_find = op_types_to_parse_subgraph_post_func_v1_.find(op_type);
+  if (it_find == op_types_to_parse_subgraph_post_func_v1_.end()) {
+    return FAILED;
+  }
+  parse_subgraph_func = it_find->second;
+#endif
+  return SUCCESS;
 }
 
 void OpRegistry::GetOpTypeByImplyType(std::vector<std::string> &vec_op_type, const domi::ImplyType &imply_type) {
