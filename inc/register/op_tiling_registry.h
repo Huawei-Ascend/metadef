@@ -116,7 +116,7 @@ class FMK_FUNC_HOST_VISIBILITY OpTilingRegistryInterf {
 public:
     OpTilingRegistryInterf(std::string op_type, OpTilingFuncNew func);
     ~OpTilingRegistryInterf() = default;
-    static std::map<std::string, OpTilingFuncNew> &RegisteredOpInterfNew();
+    static std::map<std::string, OpTilingFuncNew> &RegisteredOpInterf();
 };
 
 template <class T>

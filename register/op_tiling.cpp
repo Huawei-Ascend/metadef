@@ -186,7 +186,7 @@ bool GetCompileInfo(const ge::OpDescPtr &op_desc, const char *op_type, const cha
 
 bool RunCalcFunc(const char *compile_info, const char *op_type, const TeOpParas &op_param,
                  OpRunInfo &run_info) {
-    auto &interf = OpTilingRegistryInterf::RegisteredOpInterfNew();
+    auto &interf = OpTilingRegistryInterf::RegisteredOpInterf();
     auto iter = interf.find(op_type);
     if (iter == interf.end()) {
         iter = interf.find("AutoTiling");
@@ -211,7 +211,7 @@ bool RunCalcFunc(const char *compile_info, const char *op_type, const TeOpParas 
 
 bool RunCalcFunc(const ge::OpDescPtr &op_desc, const char *op_type, const char *op_name, const TeOpParas &op_param,
                  OpRunInfo &run_info) {
-    auto &interf = OpTilingRegistryInterf::RegisteredOpInterfNew();
+    auto &interf = OpTilingRegistryInterf::RegisteredOpInterf();
     auto iter = interf.find(op_type);
     if (iter == interf.end()) {
         iter = interf.find("AutoTiling");
@@ -243,7 +243,7 @@ bool RunCalcFunc(const ge::OpDescPtr &op_desc, const char *op_type, const char *
 
 bool RunAtomicFunc(const ge::OpDescPtr &op_desc, const char *op_type, const char *op_name, const TeOpParas &op_param,
                    OpRunInfo &run_info) {
-    auto &interf = OpTilingRegistryInterf::RegisteredOpInterfNew();
+    auto &interf = OpTilingRegistryInterf::RegisteredOpInterf();
     auto iter = interf.find(op_type);
     if (iter == interf.end()) {
         GE_LOGE("Atomic optiling func not found. op_type:%s", op_type);
