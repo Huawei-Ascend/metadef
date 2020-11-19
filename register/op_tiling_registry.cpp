@@ -52,13 +52,13 @@ OpTilingInterf::OpTilingInterf(std::string op_type, OpTilingFunc func) {
            op_type.c_str(), func.target<OpTilingFuncPtr>(), interf.size());
 }
 
-std::map<std::string, OpTilingFuncNew> & OpTilingRegistryInterf::RegisteredOpInterfNew() {
+std::map<std::string, OpTilingFuncNew> & OpTilingRegistryInterf::RegisteredOpInterf() {
     static std::map<std::string, OpTilingFuncNew> interf_new;
     return interf_new;
 }
 
 OpTilingRegistryInterf::OpTilingRegistryInterf(std::string op_type, OpTilingFuncNew func) {
-    auto &interf_new = RegisteredOpInterfNew();
+    auto &interf_new = RegisteredOpInterf();
     interf_new.emplace(op_type, func);
     GELOGI("Register tiling function: op_type:%s, funcPointer:%p, registered count:%zu",
            op_type.c_str(), func.target<OpTilingFuncPtrNew>(), interf_new.size());
