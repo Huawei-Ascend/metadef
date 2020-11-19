@@ -117,11 +117,11 @@ target_include_directories(graph PRIVATE
 
 target_link_libraries(graph PRIVATE
     $<BUILD_INTERFACE:intf_pub>
+    static_mmpa
     -Wl,--no-as-needed
     ascend_protobuf
     c_sec
     slog
-    mmpa
     error_manager
     -Wl,--as-needed
     -lrt
