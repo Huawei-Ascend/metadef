@@ -105,7 +105,8 @@ bool AxisUtil::GetAxisValueByNCHW(const vector<int64_t> &originalDimVec, const u
   CHECK(originalDimVec.empty(), GELOGI("Original dim vector is empty!"), return true);
   /* C0 Must be set for case ND or 2D-NCHW to NZ */
   axisValue[AXIS_C0] = c0;
-  CHECK(CheckParams(originalDimVec, c0, axisValue, ndValue) != true, GELOGE(GRAPH_FAILED,"[ERROR]Parameter is invalid!"),
+  // TODO: temporarily modified to warning level.If modified normally, it needs complementary dimension for origin shape
+  CHECK(CheckParams(originalDimVec, c0, axisValue, ndValue) != true, GELOGW("[WARNING]Parameter is invalid!"),
         return false);
 
   axisValue[AXIS_N] = originalDimVec[AXIS_NCHW_DIM_N];
@@ -123,7 +124,8 @@ bool AxisUtil::GetAxisValueByNHWC(const vector<int64_t> &originalDimVec, const u
   CHECK(originalDimVec.empty(), GELOGI("Original dim vector is empty!"), return true);
   /* C0 Must be set for case ND or 2D-NHWC to NZ */
   axisValue[AXIS_C0] = c0;
-  CHECK(CheckParams(originalDimVec, c0, axisValue, ndValue) != true, GELOGE(GRAPH_FAILED, "[ERROR]Parameter is invalid!"),
+  // TODO: temporarily modified to warning level.If modified normally, it needs complementary dimension for origin shape
+  CHECK(CheckParams(originalDimVec, c0, axisValue, ndValue) != true, GELOGW("[WARNING]Parameter is invalid!"),
         return false);
 
   axisValue[AXIS_N] = originalDimVec[AXIS_NHWC_DIM_N];
@@ -165,7 +167,8 @@ bool AxisUtil::GetAxisValueByHWCN(const vector<int64_t> &originalDimVec, const u
   CHECK(originalDimVec.empty(), GELOGI("Original dim vector is empty!"), return true);
   /* C0 Must be set for case ND or 2D-NHWC to NZ */
   axisValue[AXIS_C0] = c0;
-  CHECK(CheckParams(originalDimVec, c0, axisValue, ndValue) != true, GELOGE(GRAPH_FAILED, "[ERROR]Parameter is invalid!"),
+  // TODO: temporarily modified to warning level. If modified normally, it needs complementary dimension for origin shape
+  CHECK(CheckParams(originalDimVec, c0, axisValue, ndValue) != true, GELOGW("[WARNING]Parameter is invalid!"),
         return false);
 
   axisValue[AXIS_N] = originalDimVec[AXIS_HWCN_DIM_N];
