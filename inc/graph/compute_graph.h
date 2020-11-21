@@ -94,9 +94,6 @@ class ComputeGraph : public std::enable_shared_from_this<ComputeGraph>, public A
   NodePtr AddInputNode(NodePtr node);
   NodePtr AddOutputNode(NodePtr node);
   NodePtr AddOutputNodeByIndex(NodePtr node, int32_t index);
-  // insert node with specific pre_node
-  NodePtr AddNodeAfter(OpDescPtr &op, const NodePtr &pre_node);
-  NodePtr AddNodeAfter(NodePtr node, const NodePtr &pre_node);
 
   graphStatus RemoveNode(const NodePtr &node);
   graphStatus RemoveInputNode(const NodePtr &node);

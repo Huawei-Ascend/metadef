@@ -290,36 +290,6 @@ NodePtr ComputeGraph::AddNodeFront(const OpDescPtr &op) {
   return AddNodeFront(node_ptr);
 }
 
-NodePtr ComputeGraph::AddNodeAfter(NodePtr node, const NodePtr &pre_node) {
-  if (node == nullptr || node->GetOpDesc() == nullptr || pre_node == nullptr) {
-    GELOGE(GRAPH_FAILED, "The node ptr or op desc should not be null.");
-    return nullptr;
-  }
-  node->SetHostNode(is_valid_flag_);
-  node->GetOpDesc()->SetId(nodes_.size());
-  auto node_iter = std::find(nodes_.begin(), nodes_.end(), pre_node);
-  if (node_iter != nodes_.end()) {
-    nodes_.insert(node_iter + 1, node);
-  } else {
-    GELOGE(GRAPH_FAILED, "Cannot find pre_node in nodes_.");
-    return nullptr;
-  }
-
-  return node;
-}
-
-NodePtr ComputeGraph::AddNodeAfter(OpDescPtr &op, const NodePtr &pre_node) {
-  if (op == nullptr) {
-    GELOGE(GRAPH_FAILED, "The OpDesc ptr should not be null.");
-    return nullptr;
-  }
-  op->SetId(nodes_.size());
-  NodePtr node_ptr = shared_ptr<Node>(new (std::nothrow) Node(op, shared_from_this()));
-  GE_IF_BOOL_EXEC(node_ptr == nullptr, GELOGE(GRAPH_FAILED, "node_ptr is NULL!!!"); return nullptr);
-  GE_IF_BOOL_EXEC(node_ptr->Init() != GRAPH_SUCCESS, GELOGE(GRAPH_FAILED, "node init failed."); return nullptr);
-  return AddNodeAfter(node_ptr, pre_node);
-}
-
 GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY NodePtr ComputeGraph::AddNode(NodePtr node) {
   if (node == nullptr || node->GetOpDesc() == nullptr) {
     GELOGE(GRAPH_FAILED, "The node ptr should not be null.");
