@@ -78,7 +78,6 @@ graphStatus UpdataOutputForMultiBatcch(const ConstNodePtr &node,
     int64_t max_size = 0;
     size_t max_shape_index = 0;
     auto &ref_out_tensor = ref_out_tensors[i].at(0);
-    const auto &ref_out_tensor_shape = ref_out_tensor.MutableShape();
     for (size_t j = 0; j < ref_out_tensors[i].size(); ++j) {
       auto &tensor = ref_out_tensors[i].at(j);
       if (ref_out_tensor.GetDataType() != tensor.GetDataType()) {
@@ -87,12 +86,6 @@ graphStatus UpdataOutputForMultiBatcch(const ConstNodePtr &node,
       }
 
       auto shape = tensor.MutableShape();
-      if (shape.GetDims().size() != ref_out_tensor_shape.GetDims().size()) {
-        GELOGE(GRAPH_FAILED, "node is %s, i : %d, shape size: %lu, ref_out_tensor_shape size: %lu",
-               node->GetName().c_str(), i, shape.GetShapeSize(), ref_out_tensor_shape.GetShapeSize());
-        return GRAPH_FAILED;
-      }
-
       int64_t size = 1;
       for (auto dim : shape.GetDims()) {
         if (INT64_MAX / dim < size) {
