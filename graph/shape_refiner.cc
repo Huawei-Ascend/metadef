@@ -76,7 +76,7 @@ graphStatus UpdataOutputForMultiBatcch(const ConstNodePtr &node,
 
     int64_t max_size = 0;
     size_t max_shape_index = 0;
-    const auto &ref_out_tensor_shape = ref_out_tensor.MutableShape();
+    auto &ref_out_tensor = ref_out_tensors[i].at(0);
     for (size_t j = 0; j < ref_out_tensors[i].size(); ++j) {
       auto &tensor = ref_out_tensors[i].at(j);
       if (ref_out_tensor.GetDataType() != tensor.GetDataType()) {
