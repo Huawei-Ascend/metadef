@@ -28,11 +28,6 @@ namespace ge {
 #else
 #define GE_FUNC_DEV_VISIBILITY
 #endif
-#ifdef __GNUC__
-#define ATTRIBUTED_DEPRECATED(replacement) __attribute__((deprecated("Please use " #replacement " instead.")))
-#else
-#define ATTRIBUTED_DEPRECATED(replacement) __declspec(deprecated("Please use " #replacement " instead."))
-#endif
 
 using graphStatus = uint32_t;
 const graphStatus GRAPH_FAILED = 0xFFFFFFFF;

@@ -19,7 +19,6 @@
 
 #include <string>
 #include <memory>
-#include <functional>
 
 namespace ge {
 class AscendString {
@@ -28,7 +27,7 @@ class AscendString {
 
   ~AscendString() = default;
 
-  AscendString(const char* name);
+  explicit AscendString(const char* name);
 
   const char* GetString() const;
 
@@ -48,18 +47,4 @@ class AscendString {
   std::shared_ptr<std::string> name_;
 };
 }  // namespace ge
-
-namespace std {
-template <>
-class hash<ge::AscendString> {
- public:
-  size_t operator()(const ge::AscendString &name) const {
-    std::string str_name;
-    if (name.GetString() != nullptr) {
-      str_name = name.GetString();
-    }
-    return hash<string>()(str_name);
-  }
-};
-}
 #endif  // INC_EXTERNAL_GRAPH_ASCEND_STRING_H_
