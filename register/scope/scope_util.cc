@@ -26,23 +26,6 @@ std::string ScopeUtil::StringReplaceAll(std::string str, const std::string &old_
   return ge::StringUtils::ReplaceAll(str, old_value, new_value);
 }
 
-AscendString ScopeUtil::StringReplaceAll(const char *str, const char *old_value, const char *new_value) {
-  std::string tmp_str;
-  if (str != nullptr) {
-    tmp_str = str;
-  }
-  std::string tmp_old_value;
-  if (old_value != nullptr) {
-    tmp_old_value = old_value;
-  }
-  std::string tmp_new_value;
-  if (new_value != nullptr) {
-    tmp_new_value = new_value;
-  }
-  std::string ret = ge::StringUtils::ReplaceAll(tmp_str, tmp_old_value, tmp_new_value);
-  return AscendString(ret.c_str());
-}
-
 void ScopeUtil::FreeScopePatterns(ScopeFusionPatterns &patterns) {
   for (auto &batch_pattern : patterns) {
     FreeOneBatchPattern(batch_pattern);
