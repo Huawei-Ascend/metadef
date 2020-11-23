@@ -34,8 +34,8 @@ const std::set<std::string> kExeTypes = {DATA, NETOUTPUT};
 NodeNametoNodeNameMap TuningUtils::data_2_netoutput_;
 NodetoNodeNameMap TuningUtils::data_node_2_netoutput_ ;
 NodetoNodeMap TuningUtils::data_node_2_netoutput_node_;
-NodeSet TuningUtils::netoutput_nodes_;
-NodeSet TuningUtils::merged_graph_nodes_;
+NodeVec TuningUtils::netoutput_nodes_;
+NodeVec TuningUtils::merged_graph_nodes_;
 SubgraphCreateOutNode TuningUtils::create_output_;
 std::mutex TuningUtils::mutex_;
 
@@ -614,12 +614,12 @@ graphStatus TuningUtils::MergeSubGraph(ComputeGraphPtr &subgraph) {
           (AttrUtils::GetListStr(op_desc, alias_name_attr, out_alias_name)) && (!out_alias_name.empty());
       if (has_valid_str) {
         std::lock_guard<std::mutex> lock(mutex_);
-        netoutput_nodes_.insert(node);
+        netoutput_nodes_.emplace_back(node);
       }
     }
     {
       std::lock_guard<std::mutex> lock(mutex_);
-      merged_graph_nodes_.emplace(node);
+      merged_graph_nodes_.emplace_back(node);
     }
     GELOGD("TUU:subgraph %s add node %s success", subgraph->GetName().c_str(), node->GetName().c_str());
   }
