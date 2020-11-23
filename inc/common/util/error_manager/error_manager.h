@@ -113,7 +113,9 @@ class ErrorManager {
   std::map<std::string, ErrorInfo> error_map_;
   std::vector<std::string> error_messages_;
   std::vector<std::string> warning_messages_;
+#ifndef ONLY_COMPILE_OPEN_SRC
   std::map<std::string, std::map<std::string, std::vector<std::string>>> compile_failed_msg_map_;
+#endif
 };
 
 #endif  // ERROR_MANAGER_H_
