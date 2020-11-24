@@ -84,6 +84,7 @@ target_include_directories(graph PRIVATE
     ${METADEF_DIR}/../inc
     ${METADEF_DIR}/../ops/built-in/op_proto/inc
     ${METADEF_DIR}/../cann/ops/built-in/op_proto/inc
+    ${METADEF_DIR}/../libc_sec/include
     #### temp independent ####
     ${METADEF_DIR}/../graphengine/inc
     ${METADEF_DIR}/../graphengine/inc/framework
@@ -116,6 +117,7 @@ target_include_directories(graph PRIVATE
 
 target_link_libraries(graph PRIVATE
     $<BUILD_INTERFACE:intf_pub>
+    static_mmpa
     -Wl,--no-as-needed
     ascend_protobuf
     c_sec
@@ -156,6 +158,7 @@ target_include_directories(graph_static PRIVATE
     ${METADEF_DIR}/../inc
     ${METADEF_DIR}/../ops/built-in/op_proto/inc
     ${METADEF_DIR}/../cann/ops/built-in/op_proto/inc
+    ${METADEF_DIR}/../libc_sec/include
     #### temp independent ####
     ${METADEF_DIR}/../graphengine/inc
     ${METADEF_DIR}/../graphengine/inc/framework
@@ -256,6 +259,7 @@ target_include_directories(atc_stub_graph PRIVATE
     ${METADEF_DIR}/../inc
     ${METADEF_DIR}/../ops/built-in/op_proto/inc
     ${METADEF_DIR}/../cann/ops/built-in/op_proto/inc
+    ${METADEF_DIR}/../libc_sec/include
     #### blue zone ####
     ${ASCEND_DIR}/driver/include
     ${ASCEND_DIR}/fwkacllib/include
@@ -309,6 +313,7 @@ target_include_directories(fwk_stub_graph PRIVATE
     ${METADEF_DIR}/../inc
     ${METADEF_DIR}/../ops/built-in/op_proto/inc
     ${METADEF_DIR}/../cann/ops/built-in/op_proto/inc
+    ${METADEF_DIR}/../libc_sec/include
     #### blue zone ####
     ${ASCEND_DIR}/driver/include
     ${ASCEND_DIR}/fwkacllib/include

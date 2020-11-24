@@ -95,6 +95,9 @@ LOCAL_SHARED_LIBRARIES := \
     libslog       \
     liberror_manager \
 
+LOCAL_STATIC_LIBRARIES := \
+    libmmpa       \
+
 LOCAL_LDFLAGS := -lrt -ldl
 
 LOCAL_MULTILIB := 64
@@ -169,6 +172,9 @@ LOCAL_SHARED_LIBRARIES := \
     libascend_protobuf   \
     libslog       \
     liberror_manager \
+
+LOCAL_STATIC_LIBRARIES := \
+    libmmpa       \
 
 LOCAL_LDFLAGS := -lrt -ldl
 
@@ -255,6 +261,9 @@ LOCAL_SHARED_LIBRARIES := \
     libascend_protobuf   \
     libslog       \
     liberror_manager \
+
+LOCAL_STATIC_LIBRARIES := \
+    libmmpa       \
 
 LOCAL_LDFLAGS := -lrt -ldl
 

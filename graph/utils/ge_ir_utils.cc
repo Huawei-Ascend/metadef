@@ -17,6 +17,7 @@
 #include "graph/utils/ge_ir_utils.h"
 #include <utility>
 #include "framework/common/debug/ge_log.h"
+#include "mmpa/mmpa_api.h"
 
 namespace {
 const char *const kControlAnchorIndex = ":-1";
@@ -25,9 +26,9 @@ const char *const kPrefixForInputDesc = "input_desc_attr_";
 const char *const kPrefixForOutputDesc = "output_desc_attr_";
 const char *const kDumpGEGraph = "DUMP_GE_GRAPH";
 const int8_t kMaxRecursionDepth = 10;
-const char *const kDumpGeGraph = std::getenv(kDumpGEGraph);
+char kDumpGeGraph[MMPA_MAX_PATH] = { 0x00 };
 const int64_t kDumpLevel =
-    (kDumpGeGraph != nullptr) ? std::strtol(kDumpGeGraph, nullptr, 10) : ge::OnnxUtils::NO_DUMP;
+    (mmGetEnv(kDumpGEGraph, kDumpGeGraph, MMPA_MAX_PATH) == EN_OK) ? std::strtol(kDumpGeGraph, nullptr, 10) : ge::OnnxUtils::NO_DUMP;
 const int64_t kInputPrefixLength = 5;
 const int64_t kOutputPrefixLength = 6;
 using AttrDefPair = ::google::protobuf::MapPair<std::string, ge::proto::AttrDef>;
