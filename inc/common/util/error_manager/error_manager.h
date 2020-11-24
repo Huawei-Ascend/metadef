@@ -72,23 +72,22 @@ class ErrorManager {
   /// @param [in] msg: failed message map, key is error code, value is op_name
   /// @return int 0(success) -1(fail)
   ///
-  void ReportMstuneCompileFailedMsg(const std::map<std::string, std::string> &msg);
-  
+  int ReportMstuneCompileFailedMsg(const std::map<std::string, std::string> &msg);
+
   ///
   /// @brief save graph compile failed message from thread local map to global map
   /// @param [in] graph_name: graph name
-  /// @return int 0(success) -1(fail)
   ///
   void SaveMstuneCompileFailedMsg(const std::string &graph_name);
-  
+
   ///
   /// @brief get graph compile failed message in mstune case
   /// @param [in] graph_name: graph name
   /// @param [out] msg_map: failed message map, key is error code, value is op_name list
   /// @return int 0(success) -1(fail)
   ///
-  void GetMstuneCompileFailedMsg(const std::string &graph_name, std::map<std::string, std::vector<std::string>> &msg_map);
-  
+  int GetMstuneCompileFailedMsg(const std::string &graph_name, std::map<std::string, std::vector<std::string>> &msg_map);
+
  private:
   struct ErrorInfo {
     std::string error_id;
