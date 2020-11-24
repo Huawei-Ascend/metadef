@@ -380,6 +380,7 @@ target_include_directories(graph PRIVATE
 target_link_libraries(graph PRIVATE
         $<BUILD_INTERFACE:intf_pub>
         ascend_protobuf_static
+        static_mmpa
         -Wl,--no-as-needed
         c_sec
         slog
