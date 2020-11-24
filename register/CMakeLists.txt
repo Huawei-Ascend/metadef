@@ -44,6 +44,10 @@ set(SRC_LIST
 ############ libregister.so ############
 add_library(register SHARED ${SRC_LIST} ${PROTO_SRCS})
 
+target_compile_options(register PRIVATE
+    -Wno-deprecated-declarations
+)
+
 target_compile_definitions(register PRIVATE
     google=ascend_private
     $<$<STREQUAL:${ENABLE_OPEN_SRC},True>:ONLY_COMPILE_OPEN_SRC>
@@ -106,6 +110,11 @@ add_library(register_static STATIC ${SRC_LIST} ${PROTO_SRCS}
     "op_tiling.cpp"
     "op_tiling_registry.cpp"
 )
+
+target_compile_options(register_static PRIVATE
+    -Wno-deprecated-declarations
+)
+
 target_compile_definitions(register_static PRIVATE
     google=ascend_private
     $<$<STREQUAL:${ENABLE_OPEN_SRC},True>:ONLY_COMPILE_OPEN_SRC>
@@ -202,6 +211,7 @@ target_include_directories(op_tiling_o2 PRIVATE
 
 target_compile_options(op_tiling_o2 PRIVATE
     -O2
+    -Wno-deprecated-declarations
 )
 
 target_link_libraries(op_tiling_o2 PRIVATE

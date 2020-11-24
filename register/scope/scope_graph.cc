@@ -182,26 +182,76 @@ Status Scope::Init(const std::string &name, const std::string &sub_type, Scope *
   return impl_->Init(name, sub_type, father_scope);
 }
 
+Status Scope::Init(const char *name, const char *sub_type, Scope *father_scope) {
+  std::string scope_name;
+  std::string scope_sub_type;
+  if (name != nullptr) {
+    scope_name = name;
+  }
+  if (sub_type != nullptr) {
+    scope_sub_type = sub_type;
+  }
+  impl_ = std::unique_ptr<ScopeImpl>(new (std::nothrow) ScopeImpl);
+  if (impl_ == nullptr) {
+    GELOGE(ge::MEMALLOC_FAILED, "Make unique_ptr of ScopeImpl failed.");
+    return ge::MEMALLOC_FAILED;
+  }
+
+  return impl_->Init(scope_name, scope_sub_type, father_scope);
+}
+
 Scope::~Scope() {}
 
 const std::string &Scope::Name() const {
   return impl_->Name();
 }
 
+Status Scope::Name(AscendString &name) const {
+  name = AscendString(impl_->Name().c_str());
+  return SUCCESS;
+}
+
 const std::string &Scope::SubType() const {
    return impl_->SubType();
+}
+
+Status Scope::SubType(AscendString &sub_type) const {
+  sub_type = AscendString(impl_->SubType().c_str());
+  return SUCCESS;
 }
 
 const std::unordered_map<std::string, ge::OperatorPtr> &Scope::AllNodesMap() const {
   return impl_->AllNodesMap();
 }
 
+Status Scope::AllNodesMap(std::unordered_map<AscendString, ge::OperatorPtr> &node_map) const {
+  std::unordered_map<std::string, ge::OperatorPtr> nodes = impl_->AllNodesMap();
+  for (auto &node : nodes) {
+    AscendString tmp(node.first.c_str());
+    node_map[tmp] = node.second;
+  }
+  return SUCCESS;
+}
+
 Scope *Scope::GetSubScope(const std::string &scope_name) const {
   return impl_->GetSubScope(scope_name);
 }
 
+Scope *Scope::GetSubScope(const char *scope_name) const {
+  std::string str_scope_name;
+  if (scope_name != nullptr) {
+    str_scope_name = scope_name;
+  }
+  return impl_->GetSubScope(str_scope_name);
+}
+
 const std::string Scope::LastName() const {
   return impl_->LastName();
+}
+
+Status Scope::LastName(AscendString &name) const {
+  name = AscendString(impl_->LastName().c_str());
+  return SUCCESS;
 }
 
 const Scope *Scope::GetFatherScope() const {
@@ -285,9 +335,35 @@ FusionScopesResult::InnerNodeInfo::InnerNodeInfo(const std::string &fusion_node_
   impl_ = std::unique_ptr<InnerNodeInfoImpl>(new (std::nothrow) InnerNodeInfoImpl(fusion_node_name));
 }
 
+FusionScopesResult::InnerNodeInfo::InnerNodeInfo(const char *fusion_node_name) {
+  std::string str_fusion_node_name;
+  if (fusion_node_name != nullptr) {
+    str_fusion_node_name = fusion_node_name;
+  }
+  impl_ = std::unique_ptr<InnerNodeInfoImpl>(new (std::nothrow) InnerNodeInfoImpl(str_fusion_node_name));
+}
+
 FusionScopesResult::InnerNodeInfo::InnerNodeInfo(const std::string &fusion_node_name, const std::string &name,
                                                  const std::string &type) {
   impl_ = std::unique_ptr<InnerNodeInfoImpl>(new (std::nothrow) InnerNodeInfoImpl(fusion_node_name, name, type));
+}
+
+FusionScopesResult::InnerNodeInfo::InnerNodeInfo(const char *fusion_node_name, const char *name,
+                                                 const char *type) {
+  std::string node_name;
+  if (fusion_node_name != nullptr) {
+    node_name = fusion_node_name;
+  }
+  std::string str_name;
+  if (name != nullptr) {
+    str_name = name;
+  }
+  std::string str_type;
+  if (type != nullptr) {
+    str_type = type;
+  }
+  impl_ = std::unique_ptr<InnerNodeInfoImpl>(new (std::nothrow) InnerNodeInfoImpl(node_name,
+                                                                                     str_name, str_type));
 }
 
 FusionScopesResult::InnerNodeInfo::InnerNodeInfo(FusionScopesResult::InnerNodeInfo &&other) noexcept
@@ -310,9 +386,25 @@ FusionScopesResult::InnerNodeInfo &FusionScopesResult::InnerNodeInfo::SetName(co
   return *this;
 }
 
+FusionScopesResult::InnerNodeInfo &FusionScopesResult::InnerNodeInfo::SetName(const char *name) {
+  if (impl_ != nullptr && name != nullptr) {
+    std::string str_name = name;
+    impl_->SetName(str_name);
+  }
+  return *this;
+}
+
 FusionScopesResult::InnerNodeInfo &FusionScopesResult::InnerNodeInfo::SetType(const std::string &type) {
   if (impl_ != nullptr) {
     impl_->SetType(type);
+  }
+  return *this;
+}
+
+FusionScopesResult::InnerNodeInfo &FusionScopesResult::InnerNodeInfo::SetType(const char *type) {
+  if (impl_ != nullptr && type != nullptr) {
+    std::string str_type = type;
+    impl_->SetType(str_type);
   }
   return *this;
 }
@@ -325,10 +417,28 @@ FusionScopesResult::InnerNodeInfo &FusionScopesResult::InnerNodeInfo::InsertInpu
   return *this;
 }
 
+FusionScopesResult::InnerNodeInfo &FusionScopesResult::InnerNodeInfo::InsertInput(const char *input_node,
+                                                                                  int32_t peer_out_idx) {
+  if (impl_ != nullptr && input_node != nullptr) {
+    std::string str_input_node = input_node;
+    impl_->InsertInput(str_input_node, peer_out_idx);
+  }
+  return *this;
+}
+
 FusionScopesResult::InnerNodeInfo &FusionScopesResult::InnerNodeInfo::InsertOutput(const std::string &output_node,
                                                                                    int32_t peer_in_idx) {
   if (impl_ != nullptr) {
     impl_->InsertOutput(output_node, peer_in_idx);
+  }
+  return *this;
+}
+
+FusionScopesResult::InnerNodeInfo &FusionScopesResult::InnerNodeInfo::InsertOutput(const char *output_node,
+                                                                                   int32_t peer_in_idx) {
+  if (impl_ != nullptr && output_node != nullptr) {
+    std::string str_output_node = output_node;
+    impl_->InsertOutput(str_output_node, peer_in_idx);
   }
   return *this;
 }
@@ -355,10 +465,30 @@ ge::graphStatus FusionScopesResult::InnerNodeInfo::SetInputFormat(const std::str
   return ge::GRAPH_PARAM_INVALID;
 }
 
+ge::graphStatus FusionScopesResult::InnerNodeInfo::SetInputFormat(const char *input_name,
+                                                                  const char *format) {
+  if (impl_ != nullptr && input_name != nullptr && format != nullptr) {
+    std::string str_input_name = input_name;
+    std::string str_format = format;
+    return impl_->SetInputFormat(str_input_name, str_format);
+  }
+  return ge::GRAPH_PARAM_INVALID;
+}
+
 ge::graphStatus FusionScopesResult::InnerNodeInfo::SetOutputFormat(const std::string &output_name,
                                                                    const std::string &format) {
   if (impl_ != nullptr) {
     return impl_->SetOutputFormat(output_name, format);
+  }
+  return ge::GRAPH_PARAM_INVALID;
+}
+
+ge::graphStatus FusionScopesResult::InnerNodeInfo::SetOutputFormat(const char *output_name,
+                                                                   const char *format) {
+  if (impl_ != nullptr && output_name != nullptr && format != nullptr) {
+    std::string str_output_name = output_name;
+    std::string str_format = format;
+    return impl_->SetOutputFormat(str_output_name, str_format);
   }
   return ge::GRAPH_PARAM_INVALID;
 }
@@ -371,10 +501,30 @@ ge::graphStatus FusionScopesResult::InnerNodeInfo::SetDynamicInputFormat(const s
   return ge::GRAPH_PARAM_INVALID;
 }
 
+ge::graphStatus FusionScopesResult::InnerNodeInfo::SetDynamicInputFormat(const char *input_name, uint32_t index,
+                                                                         const char *format) {
+  if (impl_ != nullptr && input_name != nullptr && format != nullptr) {
+    std::string str_input_name = input_name;
+    std::string str_format = format;
+    return impl_->SetDynamicInputFormat(str_input_name, index, str_format);
+  }
+  return ge::GRAPH_PARAM_INVALID;
+}
+
 ge::graphStatus FusionScopesResult::InnerNodeInfo::SetDynamicOutputFormat(const std::string &output_name,
                                                                           uint32_t index, const std::string &format) {
   if (impl_ != nullptr) {
     return impl_->SetDynamicOutputFormat(output_name, index, format);
+  }
+  return ge::GRAPH_PARAM_INVALID;
+}
+
+ge::graphStatus FusionScopesResult::InnerNodeInfo::SetDynamicOutputFormat(const char *output_name,
+                                                                          uint32_t index, const char *format) {
+  if (impl_ != nullptr && output_name != nullptr && format != nullptr) {
+    std::string str_output_name = output_name;
+    std::string str_format = format;
+    return impl_->SetDynamicOutputFormat(str_output_name, index, str_format);
   }
   return ge::GRAPH_PARAM_INVALID;
 }
@@ -386,11 +536,25 @@ std::string FusionScopesResult::InnerNodeInfo::GetName() const {
   return "";
 }
 
+ge::graphStatus FusionScopesResult::InnerNodeInfo::GetName(AscendString &name) const {
+  if (impl_ != nullptr) {
+    name = AscendString(impl_->GetName().c_str());
+  }
+  return GRAPH_SUCCESS;
+}
+
 std::string FusionScopesResult::InnerNodeInfo::GetType() const {
   if (impl_ != nullptr) {
     return impl_->GetType();
   }
   return "";
+}
+
+ge::graphStatus FusionScopesResult::InnerNodeInfo::GetType(AscendString &type) const {
+  if (impl_ != nullptr) {
+    type = AscendString(impl_->GetType().c_str());
+  }
+  return GRAPH_SUCCESS;
 }
 
 std::vector<std::pair<std::string, int32_t>> FusionScopesResult::InnerNodeInfo::GetInputs() const {
@@ -401,12 +565,36 @@ std::vector<std::pair<std::string, int32_t>> FusionScopesResult::InnerNodeInfo::
   return tmp;
 }
 
+ge::graphStatus FusionScopesResult::InnerNodeInfo::GetInputs(
+  std::vector<std::pair<AscendString, int32_t>> &inputs) const {
+  std::vector<std::pair<std::string, int32_t>> tmps;
+  if (impl_ != nullptr) {
+    tmps = impl_->GetInputs();
+  }
+  for (auto &tmp : tmps) {
+    inputs.emplace_back(std::pair<AscendString, int32_t>(AscendString(tmp.first.c_str()),tmp.second));
+  }
+  return GRAPH_SUCCESS;
+}
+
 std::vector<std::pair<std::string, int32_t>> FusionScopesResult::InnerNodeInfo::GetOutputs() const {
   std::vector<std::pair<std::string, int32_t>> tmp;
   if (impl_ != nullptr) {
     return impl_->GetOutputs();
   }
   return tmp;
+}
+
+ge::graphStatus FusionScopesResult::InnerNodeInfo::GetOutputs(
+  std::vector<std::pair<AscendString, int32_t>> &outputs) const {
+  std::vector<std::pair<std::string, int32_t>> tmps;
+  if (impl_ != nullptr) {
+    tmps = impl_->GetOutputs();
+  }
+  for (auto &tmp : tmps) {
+    outputs.emplace_back(std::pair<AscendString, int32_t>(tmp.first.c_str(), tmp.second));
+  }
+  return GRAPH_SUCCESS;
 }
 
 void FusionScopesResult::FusionScopesResultImpl::AddNodes(std::vector<ge::OperatorPtr> nodes) {
@@ -527,16 +715,45 @@ void FusionScopesResult::SetName(const std::string &name) {
   impl_->SetName(name);
 }
 
+void FusionScopesResult::SetName(const char *name) {
+  std::string str_name;
+  if (name != nullptr) {
+    str_name = name;
+  }
+  impl_->SetName(str_name);
+}
+
 void FusionScopesResult::SetType(const std::string &type) {
   impl_->SetType(type);
+}
+
+void FusionScopesResult::SetType(const char *type) {
+  std::string str_type;
+  if (type != nullptr) {
+    str_type = type;
+  }
+  impl_->SetType(str_type);
 }
 
 void FusionScopesResult::SetDescription(const std::string &description) {
   impl_->SetDescription(description);
 }
 
+void FusionScopesResult::SetDescription(const char *description) {
+  std::string str_desc;
+  if (description != nullptr) {
+    str_desc = description;
+  }
+  impl_->SetDescription(str_desc);
+}
+
 const std::string &FusionScopesResult::Name() const {
   return impl_->Name();
+}
+
+const Status FusionScopesResult::Name(AscendString &name) const {
+  name = AscendString(impl_->Name().c_str());
+  return SUCCESS;
 }
 
 const std::vector<ge::OperatorPtr> &FusionScopesResult::Nodes() const {
@@ -547,8 +764,24 @@ void FusionScopesResult::InsertInputs(const std::string &inner_op_name, const st
   impl_->InsertInputs(inner_op_name, index_map);
 }
 
+void FusionScopesResult::InsertInputs(const char *inner_op_name, const std::vector<int32_t> &index_map) {
+  std::string op_name;
+  if (inner_op_name != nullptr) {
+    op_name = inner_op_name;
+  }
+  impl_->InsertInputs(op_name, index_map);
+}
+
 void FusionScopesResult::InsertOutputs(const std::string &inner_op_name, const std::vector<int32_t> &index_map) {
   impl_->InsertOutputs(inner_op_name, index_map);
+}
+
+void FusionScopesResult::InsertOutputs(const char *inner_op_name, const std::vector<int32_t> &index_map) {
+  std::string op_name;
+  if (inner_op_name != nullptr) {
+    op_name = inner_op_name;
+  }
+  impl_->InsertOutputs(op_name, index_map);
 }
 
 FusionScopesResult::InnerNodeInfo *FusionScopesResult::AddInnerNode(const std::string &name, const std::string &type) {
@@ -557,6 +790,22 @@ FusionScopesResult::InnerNodeInfo *FusionScopesResult::AddInnerNode(const std::s
     return nullptr;
   }
   return impl_->AddInnerNode(name, type);
+}
+
+FusionScopesResult::InnerNodeInfo *FusionScopesResult::AddInnerNode(const char *name, const char *type) {
+  if (impl_ == nullptr) {
+    GELOGE(ge::MEMALLOC_FAILED, "FusionScopesResult is not properly initialized.");
+    return nullptr;
+  }
+  std::string str_name;
+  if (name != nullptr) {
+    str_name = name;
+  }
+  std::string str_type;
+  if (type != nullptr) {
+    str_type = type;
+  }
+  return impl_->AddInnerNode(str_name, str_type);
 }
 
 FusionScopesResult::InnerNodeInfo *FusionScopesResult::MutableRecentInnerNode() {
@@ -894,5 +1143,17 @@ const ScopeTree *ScopeGraph::GetScopeTree() const {
 
 const std::unordered_map<std::string, ge::OperatorPtr> &ScopeGraph::GetNodesMap() const {
   return impl_->GetNodesMap();
+}
+
+Status ScopeGraph::GetNodesMap(std::unordered_map<AscendString, ge::OperatorPtr> &nodes_map) const {
+  std::unordered_map<std::string, ge::OperatorPtr> tmps;
+  if (impl_ != nullptr) {
+    tmps = impl_->GetNodesMap();
+  }
+  for (auto &tmp : tmps) {
+    AscendString node(tmp.first.c_str());
+    nodes_map[node] = tmp.second;
+  }
+  return SUCCESS;
 }
 }  // namespace ge
