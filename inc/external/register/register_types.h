@@ -18,12 +18,12 @@
 #define INC_EXTERNAL_REGISTER_REGISTER_TYPES_H_
 
 namespace domi {
-#ifdef HOST_VISIBILITY
+#if (define(HOST_VISIBILITY) && define(__GNUC__))
 #define FMK_FUNC_HOST_VISIBILITY __attribute__((visibility("default")))
 #else
 #define FMK_FUNC_HOST_VISIBILITY
 #endif
-#ifdef DEV_VISIBILITY
+#ifdef (define(DEV_VISIBILITY) && define(__GNUC__))
 #define FMK_FUNC_DEV_VISIBILITY __attribute__((visibility("default")))
 #else
 #define FMK_FUNC_DEV_VISIBILITY
