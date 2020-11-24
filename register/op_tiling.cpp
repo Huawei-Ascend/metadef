@@ -461,14 +461,19 @@ bool DumpRunInfo(const OpRunInfo &run_info, char *run_info_json, size_t run_info
     return true;
 }
 
-extern "C" int TbeOpTilingPyInterface(const char *optype, const char *compile_info,
-                                  const char *inputs, const char *outputs,
-                                  char *run_info_json, size_t run_info_len)
+extern "C" int TbeOpTilingPyInterfaceEx(const char *optype, const char *compile_info,
+                                        const char *inputs, const char *outputs,
+                                        char *run_info_json, size_t run_info_len, uint64_t *elapse)
 {
     if (optype == nullptr || compile_info == nullptr || inputs == nullptr || outputs == nullptr) {
         GE_LOGE("optype/compile_info/inputs/outputs is null, %s, %s, %s, %s",
                 optype, compile_info, inputs, outputs);
         return 0;
+    }
+
+    std::chrono::time_point<std::chrono::steady_clock> now1, now2, now3;
+    if (elapse) {
+        now1 = std::chrono::steady_clock::now();
     }
 
     std::string compile_info_str = compile_info;
@@ -493,6 +498,9 @@ extern "C" int TbeOpTilingPyInterface(const char *optype, const char *compile_in
         iter = interf.find("AutoTiling");
     }
 
+    if (elapse) {
+        now2 = std::chrono::steady_clock::now();
+    }
     OpRunInfo run_info;
     if (iter != interf.end()) {
         GELOGI("Optiling func found, op_type:%s, func:[%s:%p]", optype, iter->first.c_str(),
@@ -510,9 +518,24 @@ extern "C" int TbeOpTilingPyInterface(const char *optype, const char *compile_in
         }
     }
 
+    if (elapse) {
+        now3 = std::chrono::steady_clock::now();
+        *elapse = std::chrono::duration_cast<std::chrono::microseconds>(now3 - now1).count();
+        *(elapse + 1) = std::chrono::duration_cast<std::chrono::microseconds>(now2 - now1).count();
+        *(elapse + 2) = std::chrono::duration_cast<std::chrono::microseconds>(now3 - now2).count();
+    }
+
     GELOGI("Optiling succeed. op_type:%s", optype);
     DumpRunInfo(run_info, run_info_json, run_info_len);
     return 1;
+}
+
+extern "C" int TbeOpTilingPyInterface(const char *optype, const char *compile_info,
+                                  const char *inputs, const char *outputs,
+                                  char *run_info_json, size_t run_info_len)
+{
+    return TbeOpTilingPyInterfaceEx(optype, compile_info, inputs, outputs,
+                                    run_info_json, run_info_len, nullptr);
 }
 
 extern "C" ge::graphStatus OpParaCalculate(const ge::Node &node, OpRunInfo &runInfo)
