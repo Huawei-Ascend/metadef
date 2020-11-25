@@ -44,6 +44,12 @@ static const std::map<ge::DataType, onnx::TensorProto_DataType> kGeDataTypeToOnn
     {DT_DOUBLE, onnx::TensorProto_DataType_DOUBLE}, {DT_BOOL, onnx::TensorProto_DataType_BOOL},
 };
 
+struct AttrNameComp {
+  inline bool operator()(const onnx::AttributeProto &lsh, const onnx::AttributeProto &rsh) {
+    return lsh.name() < rsh.name();
+  }
+};
+
 onnx::TensorProto_DataType OnnxUtils::EncodeDataType(DataType data_type) {
   auto it = kGeDataTypeToOnnxMap.find(data_type);
   if (it != kGeDataTypeToOnnxMap.end()) {
@@ -546,6 +552,9 @@ bool OnnxUtils::EncodeNodeDesc(const NodePtr &node, onnx::NodeProto *node_proto)
   }
   // 3.Encode ge::Node members to AttributeProto
   AddAttrProtoFromNodeMembers(node, node_proto);
+
+  // 4. Sort node attributes by name.
+  std::sort(node_proto->mutable_attribute()->begin(), node_proto->mutable_attribute()->end(), AttrNameComp());
   return true;
 }
 
