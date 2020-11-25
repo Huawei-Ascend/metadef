@@ -121,20 +121,6 @@ void ScopeFusionPassRegistry::RegisterScopeFusionPass(const std::string &pass_na
   impl_->RegisterScopeFusionPass(pass_name, create_fn, is_general);
 }
 
-void ScopeFusionPassRegistry::RegisterScopeFusionPass(const char *pass_name, CreateFn create_fn,
-                                                      bool is_general) {
-  if (impl_ == nullptr) {
-    GELOGE(MEMALLOC_FAILED, "Failed to register %s, ScopeFusionPassRegistry is not properly initialized.",
-           pass_name);
-    return;
-  }
-  std::string str_pass_name;
-  if (pass_name != nullptr) {
-    str_pass_name = pass_name;
-  }
-  impl_->RegisterScopeFusionPass(str_pass_name, create_fn, is_general);
-}
-
 ScopeFusionPassRegistrar::ScopeFusionPassRegistrar(const char *pass_name, ScopeBasePass *(*create_fn)(),
                                                    bool is_general) {
   if (pass_name == nullptr) {
