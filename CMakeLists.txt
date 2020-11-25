@@ -49,7 +49,7 @@ if (ENABLE_OPEN_SRC)
 endif()
 
 add_subdirectory(graph)
-if (NOT ENABLE_D AND NOT ENABLE_ACL)
+if (NOT ENABLE_D AND NOT ENABLE_ACL AND NOT ENABLE_MS_TESTCASES)
     add_subdirectory(register)
 endif ()
 
