@@ -786,6 +786,10 @@ std::map<string, uint32_t> OpDesc::GetAllInputName() const { return input_name_i
 
 std::map<string, uint32_t> OpDesc::GetAllOutputName() { return output_name_idx_; }
 
+std::map<string, uint32_t>& OpDesc::MutableAllInputName() { return input_name_idx_; }
+
+std::map<string, uint32_t>& OpDesc::MutableAllOutputName() { return output_name_idx_; }
+
 bool OpDesc::UpdateInputName(std::map<string, uint32_t> input_name_idx) {
   bool ret = true;
   //  Use inputDesc_.size() to contain the InValid OptionInput.GetInputsSize() will remove default OptionInput name.
