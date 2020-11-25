@@ -94,18 +94,6 @@ void ScopeAttrValue::SetStringValue(std::string value) {
   impl_->SetStringValue(value);
 }
 
-void ScopeAttrValue::SetStringValue(const char *value) {
-  if (impl_ == nullptr) {
-    GELOGE(ge::MEMALLOC_FAILED, "Failed to invoke SetStringValue(), ScopeAttrValue is not properly initialized.");
-    return;
-  }
-  std::string str_value;
-  if (value != nullptr) {
-    str_value = value;
-  }
-  impl_->SetStringValue(str_value);
-}
-
 void ScopeAttrValue::SetBoolValue(bool value) {
   if (impl_ == nullptr) {
     GELOGE(ge::MEMALLOC_FAILED, "Failed to invoke SetBoolValue(), ScopeAttrValue is not properly initialized.");
@@ -140,14 +128,6 @@ bool NodeOpTypeFeature::NodeOpTypeFeatureImpl::Match(const Scope *scope) {
 
 NodeOpTypeFeature::NodeOpTypeFeature(std::string nodeType, int num, int step) {
   impl_ = std::unique_ptr<NodeOpTypeFeatureImpl>(new (std::nothrow) NodeOpTypeFeatureImpl(nodeType, num, step));
-}
-
-NodeOpTypeFeature::NodeOpTypeFeature(const char *node_type, int num, int step) {
-  std::string op_type;
-  if (node_type != nullptr) {
-    op_type = node_type;
-  }
-  impl_ = std::unique_ptr<NodeOpTypeFeatureImpl>(new (std::nothrow) NodeOpTypeFeatureImpl(op_type, num, step));
 }
 
 NodeOpTypeFeature::NodeOpTypeFeature(NodeOpTypeFeature const &feature) {
@@ -211,20 +191,6 @@ NodeAttrFeature::NodeAttrFeature(std::string nodeType, std::string attr_name,
                                  ge::DataType datatype, ScopeAttrValue &attr_value) {
   impl_ = std::unique_ptr<NodeAttrFeatureImpl>(new (std::nothrow) NodeAttrFeatureImpl(nodeType, attr_name,
                                                                                       datatype, attr_value));
-}
-
-NodeAttrFeature::NodeAttrFeature(const char *node_type, const char *attr_name,
-                                 ge::DataType data_type, ScopeAttrValue &attr_value) {
-  std::string str_node_type;
-  if (node_type != nullptr) {
-    str_node_type = node_type;
-  }
-  std::string str_attr_name;
-  if (attr_name != nullptr) {
-    str_attr_name = attr_name;
-  }
-  impl_ = std::unique_ptr<NodeAttrFeatureImpl>(new (std::nothrow) NodeAttrFeatureImpl(str_node_type, str_attr_name,
-                                                                                      data_type, attr_value));
 }
 
 NodeAttrFeature::NodeAttrFeature(NodeAttrFeature const &feature) {
@@ -308,24 +274,6 @@ ScopeFeature::ScopeFeature(std::string sub_type, int32_t num, std::string suffix
                            std::string sub_scope_mask, int step) {
   impl_ = std::unique_ptr<ScopeFeatureImpl>(new (std::nothrow) ScopeFeatureImpl(sub_type, num, suffix,
                                                                                 sub_scope_mask, step));
-}
-
-ScopeFeature::ScopeFeature(const char *sub_type, int32_t num, const char *suffix,
-                           const char *sub_scope_mask, int step) {
-  std::string str_sub_type;
-  if (sub_type != nullptr) {
-    str_sub_type = sub_type;
-  }
-  std::string str_suffix;
-  if (suffix != nullptr) {
-    str_suffix = suffix;
-  }
-  std::string str_sub_scope_mask;
-  if (sub_scope_mask != nullptr) {
-    str_sub_scope_mask = sub_scope_mask;
-  }
-  impl_ = std::unique_ptr<ScopeFeatureImpl>(new (std::nothrow) ScopeFeatureImpl(str_sub_type, num, str_suffix,
-                                                                                str_sub_scope_mask, step));
 }
 
 ScopeFeature::ScopeFeature(ScopeFeature const &feature) {
@@ -419,19 +367,6 @@ ScopePattern &ScopePattern::SetSubType(const std::string &sub_type) {
     return *this;
   }
   impl_->SetSubType(sub_type);
-  return *this;
-}
-
-ScopePattern &ScopePattern::SetSubType(const char *sub_type) {
-  if (impl_ == nullptr) {
-    GELOGE(ge::MEMALLOC_FAILED, "Failed to invoke SetSubType(), ScopePattern is not properly initialized.");
-    return *this;
-  }
-  std::string str_sub_type;
-  if (sub_type != nullptr) {
-    str_sub_type = sub_type;
-  }
-  impl_->SetSubType(str_sub_type);
   return *this;
 }
 
