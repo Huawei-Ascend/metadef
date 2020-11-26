@@ -35,6 +35,9 @@
 #define REGISTER_OP_TILING_FUNC_UNIQ(optype, opfunc, counter)    \
     static OpTilingInterf g_##optype##TilingInterf##counter(#optype, opfunc)
 
+#define REGISTER_OP_TILING_FUNC_NEW(optype, opfunc)                     \
+    REGISTER_OP_TILING_UNIQ_HELPER(optype, opfunc, __COUNTER__)
+
 #define REGISTER_OP_TILING(optype, opfunc)                     \
     REGISTER_OP_TILING_UNIQ_HELPER(optype, opfunc, __COUNTER__)
 
