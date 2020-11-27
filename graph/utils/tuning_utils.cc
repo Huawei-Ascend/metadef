@@ -649,13 +649,7 @@ graphStatus TuningUtils::RemoveDataNetoutputEdge(ComputeGraphPtr &graph) {
       return FAILED;
     }
     // 3. relink
-    if (GraphUtils::RemoveEdge(src_out_anchor, net_output_in_anchor) != GRAPH_SUCCESS) {
-      GELOGE(FAILED, "TUU:remove edge from %s(%d) to %s(%d) failed. node_name:(data:%s;netoutput:%s), graph_name:%s",
-             GetNodeNameByAnchor(src_out_anchor.get()).c_str(), src_out_anchor->GetIdx(),
-             GetNodeNameByAnchor(net_output_in_anchor.get()).c_str(), net_output_in_anchor->GetIdx(),
-             data_node->GetName().c_str(), netoutput_node->GetName().c_str(), graph->GetName().c_str());
-      return FAILED;
-    }
+    // unlink netoutput_node with it's input in stage 4
     GE_CHECK_NOTNULL(data_out_anchor);
     for (const auto &peer_in_anchor : data_out_anchor->GetPeerAnchors()) {
       if (GraphUtils::RemoveEdge(data_out_anchor, peer_in_anchor) != GRAPH_SUCCESS) {
