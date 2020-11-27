@@ -61,6 +61,7 @@ add_library(graph SHARED ${SRC_LIST} ${PROTO_SRCS})
 target_compile_options(graph PRIVATE
     -O2
     $<$<OR:$<STREQUAL:${PRODUCT_SIDE},host>,$<STREQUAL:${ENABLE_OPEN_SRC},True>>:-fexceptions>
+    -Wno-deprecated-declarations
 )
 
 target_compile_definitions(graph PRIVATE
@@ -135,6 +136,7 @@ target_compile_options(graph_static PRIVATE
     -O2
     -fPIC
     $<$<OR:$<STREQUAL:${PRODUCT_SIDE},host>,$<STREQUAL:${ENABLE_OPEN_SRC},True>>:-fexceptions>
+    -Wno-deprecated-declarations
 )
 
 target_compile_definitions(graph_static PRIVATE
@@ -347,6 +349,7 @@ add_library(graph SHARED ${SRC_LIST} ${PROTO_SRCS})
 target_compile_options(graph PRIVATE
         -O2
         $<$<STREQUAL:${PRODUCT_SIDE},host>:-fexceptions>
+        -Wno-deprecated-declarations
         )
 
 target_compile_definitions(graph PRIVATE

@@ -61,7 +61,7 @@ tiling_src_files := op_tiling.cpp \
 include $(CLEAR_VARS)
 LOCAL_MODULE := libop_tiling_o2
 
-LOCAL_CFLAGS += -std=c++11 -O2
+LOCAL_CFLAGS += -std=c++11 -O2 -Wno-deprecated-declarations
 LOCAL_LDFLAGS :=
 
 LOCAL_STATIC_LIBRARIES :=
@@ -79,7 +79,7 @@ include ${BUILD_HOST_STATIC_LIBRARY}
 include $(CLEAR_VARS)
 LOCAL_MODULE := libregister
 
-LOCAL_CFLAGS += -std=c++11 -Dgoogle=ascend_private
+LOCAL_CFLAGS += -std=c++11 -Dgoogle=ascend_private -Wno-deprecated-declarations
 LOCAL_LDFLAGS :=
 
 LOCAL_WHOLE_STATIC_LIBRARIES := libop_tiling_o2 \
@@ -103,7 +103,7 @@ include ${BUILD_HOST_SHARED_LIBRARY}
 include $(CLEAR_VARS)
 LOCAL_MODULE := libop_tiling_o2
 
-LOCAL_CFLAGS += -std=c++11 -O2
+LOCAL_CFLAGS += -std=c++11 -O2 -Wno-deprecated-declarations
 LOCAL_LDFLAGS :=
 
 LOCAL_STATIC_LIBRARIES :=
@@ -119,7 +119,7 @@ include ${BUILD_STATIC_LIBRARY}
 include $(CLEAR_VARS)
 LOCAL_MODULE := libregister
 
-LOCAL_CFLAGS += -std=c++11 -Dgoogle=ascend_private
+LOCAL_CFLAGS += -std=c++11 -Dgoogle=ascend_private -Wno-deprecated-declarations
 LOCAL_LDFLAGS :=
 
 LOCAL_WHOLE_STATIC_LIBRARIES := libop_tiling_o2
@@ -143,7 +143,7 @@ include ${BUILD_SHARED_LIBRARY}
 include $(CLEAR_VARS)
 LOCAL_MODULE := libregister
 
-LOCAL_CFLAGS += -std=c++11 -Dgoogle=ascend_private
+LOCAL_CFLAGS += -std=c++11 -Dgoogle=ascend_private -Wno-deprecated-declarations
 LOCAL_LDFLAGS :=
 
 LOCAL_STATIC_LIBRARIES := \
@@ -169,7 +169,7 @@ include ${BUILD_HOST_STATIC_LIBRARY}
 include $(CLEAR_VARS)
 LOCAL_MODULE := libregister
 
-LOCAL_CFLAGS += -std=c++11 -Dgoogle=ascend_private
+LOCAL_CFLAGS += -std=c++11 -Dgoogle=ascend_private -Wno-deprecated-declarations
 LOCAL_LDFLAGS :=
 
 LOCAL_STATIC_LIBRARIES := \
@@ -194,7 +194,7 @@ include ${BUILD_STATIC_LIBRARY}
 include $(CLEAR_VARS)
 LOCAL_MODULE := libregister
 
-LOCAL_CFLAGS += -std=c++11 -Dgoogle=ascend_private
+LOCAL_CFLAGS += -std=c++11 -Dgoogle=ascend_private -Wno-deprecated-declarations
 LOCAL_LDFLAGS :=
 
 LOCAL_STATIC_LIBRARIES :=
