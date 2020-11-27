@@ -433,9 +433,8 @@ FMK_FUNC_HOST_VISIBILITY FMK_FUNC_DEV_VISIBILITY Status AutoMappingByOpFn(const 
   for (const auto &subgraph_name_index : subgraph_name_indexs) {
     auto ret = op_desc_dst->AddSubgraphName(subgraph_name_index.first);
     if (ret != ge::GRAPH_SUCCESS) {
-      GELOGE(FAILED, "Failed to add subgraph name %s for node %s type %s", subgraph_name_index.first.c_str(),
-             op_desc_dst->GetName().c_str(), op_desc_dst->GetType().c_str());
-      return FAILED;
+      GELOGW("Subgraph with name %s for node %s type %s has already added.",
+             subgraph_name_index.first.c_str(), op_desc_dst->GetName().c_str(), op_desc_dst->GetType().c_str());
     }
   }
 

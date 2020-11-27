@@ -291,8 +291,13 @@ graphStatus TuningUtils::HandlePld(NodePtr &node) {
   GE_CHECK_NOTNULL(node);
   auto graph = node->GetOwnerComputeGraph();
   GE_CHECK_NOTNULL(graph);
-  NodePtr data_node = nullptr;
+  if (HandleContinuousInputNodeNextData(node) != GRAPH_SUCCESS) {
+    GELOGE(GRAPH_FAILED, "TUU:Failed to handle continuous node next to data node:%s",
+           node->GetName().c_str());
+    return GRAPH_FAILED;
+  }
 
+  NodePtr data_node = nullptr;
   // 1. create data node
   if (CreateDataNode(node, data_node) != SUCCESS) {
     GELOGE(FAILED,
@@ -722,4 +727,38 @@ graphStatus TuningUtils::GetInAndOutAnchorPair(NodePtr &data_node,
   return SUCCESS;
 }
 
+graphStatus TuningUtils::HandleContinuousInputNodeNextData(NodePtr &node) {
+  GE_CHECK_NOTNULL(node);
+  for (const auto &out_anchor : node->GetAllOutAnchors()) {
+    for (const auto &peer_in_anchor : out_anchor->GetPeerAnchors()) {
+      auto next_node = peer_in_anchor->GetOwnerNode();
+      bool is_no_padding_continuous_input = false;
+      bool is_continuous_input = false;
+      (void) ge::AttrUtils::GetBool(next_node->GetOpDesc(), ATTR_NAME_CONTINUOUS_INPUT, is_continuous_input);
+      (void) ge::AttrUtils::GetBool(next_node->GetOpDesc(),
+                                    ATTR_NAME_NOPADDING_CONTINUOUS_INPUT,
+                                    is_no_padding_continuous_input);
+      if (is_continuous_input || is_no_padding_continuous_input) {
+        if (!ge::AttrUtils::SetBool(next_node->GetOpDesc(), ATTR_NAME_CONTINUOUS_INPUT, false)) {
+          GELOGE(GRAPH_FAILED, "Remove attr ATTR_NAME_CONTINUOUS_INPUT for node:%s failed.",
+                 next_node->GetName().c_str());
+          return GRAPH_FAILED;
+        }
+        if (!ge::AttrUtils::SetBool(next_node->GetOpDesc(), ATTR_NAME_NOPADDING_CONTINUOUS_INPUT, false)) {
+          GELOGE(GRAPH_FAILED, "Remove attr ATTR_NAME_NOPADDING_CONTINUOUS_INPUT for node:%s failed.",
+                 next_node->GetName().c_str());
+          return GRAPH_FAILED;
+        }
+        if (!ge::AttrUtils::SetBool(next_node->GetOpDesc(), ATTR_NAME_NOTASK, false)) {
+          GELOGE(GRAPH_FAILED, "Remove attr ATTR_NAME_NOTASK for node:%s failed.",
+                 next_node->GetName().c_str());
+          return GRAPH_FAILED;
+        }
+        GELOGI("Remove attr continuous input and no task for node:%s, because of data linking to it.",
+               next_node->GetName().c_str());
+      }
+    }
+  }
+  return GRAPH_SUCCESS;
+}
 }

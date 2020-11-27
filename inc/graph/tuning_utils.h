@@ -119,6 +119,7 @@ class TuningUtils {
                                            NodePtr &out_node,
                                            AnchorPtr &dest_in_anchor,
                                            AnchorPtr &src_out_anchor);
+  static graphStatus HandleContinuousInputNodeNextData(NodePtr &node);
   static NodeNametoNodeNameMap data_2_netoutput_;
   static NodetoNodeNameMap data_node_2_netoutput_;
   static NodetoNodeMap data_node_2_netoutput_node_;
