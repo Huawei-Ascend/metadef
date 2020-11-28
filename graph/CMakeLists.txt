@@ -125,7 +125,7 @@ target_link_libraries(graph PRIVATE
     slog
     error_manager
     -Wl,--as-needed
-    -lrt
+    $<$<NOT:$<STREQUAL:${TARGET_SYSTEM_NAME},Android>>:-lrt>
     -ldl
 )
 

@@ -100,6 +100,10 @@ LOCAL_STATIC_LIBRARIES := \
 
 LOCAL_LDFLAGS := -lrt -ldl
 
+ifeq ($(device_os),android)
+LOCAL_LDFLAGS := -ldl
+endif
+
 LOCAL_MULTILIB := 64
 LOCAL_PROPRIETARY_MODULE := true
 
