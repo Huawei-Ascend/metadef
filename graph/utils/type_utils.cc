@@ -15,6 +15,9 @@
  */
 
 #include "graph/utils/type_utils.h"
+
+#include <algorithm>
+
 #include "debug/ge_util.h"
 #include "common/util/error_manager/error_manager.h"
 
@@ -305,6 +308,25 @@ DataType TypeUtils::SerialStringToDataType(const std::string &str) {
 bool TypeUtils::IsFormatValid(Format format) {
   uint32_t num = static_cast<uint32_t>(format);
   GE_CHK_BOOL_EXEC((num <= FORMAT_RESERVED), return false, "The Format is invalid");
+  return true;
+}
+
+bool TypeUtils::IsDataTypeValid(std::string dt) {
+  transform(dt.begin(), dt.end(), dt.begin(),::toupper);
+  std::string key = "DT_" + dt;
+  auto it = kStringTodataTypeMap.find(key);
+  if (it == kStringTodataTypeMap.end()) {
+    return false;
+  }
+  return true;
+}
+
+bool TypeUtils::IsFormatValid(std::string format) {
+  transform(format.begin(), format.end(), format.begin(),::toupper);
+  auto it = kStringToFormatMap.find(format);
+  if (it == kStringToFormatMap.end()) {
+    return false;
+  }
   return true;
 }
 
