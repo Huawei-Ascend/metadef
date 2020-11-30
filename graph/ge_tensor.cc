@@ -703,7 +703,9 @@ graphStatus GeTensor::SetData(const vector<uint8_t> &data) {
 }
 
 graphStatus GeTensor::SetData(const uint8_t *data, size_t size) {
-  GE_CHECK_NOTNULL(data);
+  if (size > 0) {
+    GE_CHECK_NOTNULL(data);
+  }
   auto proto_msg = tensor_def_.GetProtoMsg();
   GE_CHECK_NOTNULL(proto_msg);
   proto_msg->set_data(data, size);
