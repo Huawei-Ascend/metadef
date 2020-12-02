@@ -154,7 +154,7 @@ void ParseShapeDesc(const nlohmann::json &shape, std::vector<TeOpTensor> &tensor
   tensors.emplace_back(tensor);
 }
 
-void ParseShapeDescList(const nlohmann::json &shape_list, std::vector<TeOpTensorArg> &op_args) {
+void ParseShapeDescList(const nlohgitmann::json &shape_list, std::vector<TeOpTensorArg> &op_args) {
   for (const auto &elem : shape_list) {
     TeOpTensorArg tensor_arg;
     tensor_arg.arg_type = TA_NONE;
@@ -313,10 +313,7 @@ extern "C" int TbeOpTilingPyInterfaceEx(const char *optype, const char *compile_
     return 0;
   }
 
-  std::chrono::time_point<std::chrono::steady_clock> now1, now2, now3;
-  if (elapse) {
-    now1 = std::chrono::steady_clock::now();
-  }
+  std::chrono::time_point<std::chrono::steady_clock> before_tiling, after_tiling;
 
   std::string compile_info_str = compile_info;
   TeOpParas op_params;
@@ -338,10 +335,6 @@ extern "C" int TbeOpTilingPyInterfaceEx(const char *optype, const char *compile_
     iter = interf.find("AutoTiling");
   }
 
-  if (elapse) {
-    now2 = std::chrono::steady_clock::now();
-  }
-
   if (iter == interf.end()) {
     GE_LOGE("Optiling func not found. op_type:%s", optype);
     return 0;
@@ -349,19 +342,27 @@ extern "C" int TbeOpTilingPyInterfaceEx(const char *optype, const char *compile_
 
   GELOGI("Optiling func found, op_type:%s, func:[%s:%p]", optype, iter->first.c_str(),
          iter->second.target<OpTilingFuncPtr>());
+
   OpCompileInfo op_compile_info{compile_info};
   OpRunInfo run_info;
+  if (elapse) {
+    before_tiling = std::chrono::steady_clock::now();
+  }
+
   bool rc = (iter->second)(op_params, op_compile_info, run_info);
+
+  if (elapse) {
+    after_tiling = std::chrono::steady_clock::now();
+  }
   if (!rc) {
     GE_LOGE("Optiling failed. op_type:%s", optype);
     return 0;
   }
 
   if (elapse) {
-    now3 = std::chrono::steady_clock::now();
-    *elapse = std::chrono::duration_cast<std::chrono::microseconds>(now3 - now1).count();
-    *(elapse + 1) = std::chrono::duration_cast<std::chrono::microseconds>(now2 - now1).count();
-    *(elapse + 2) = std::chrono::duration_cast<std::chrono::microseconds>(now3 - now2).count();
+    *elapse = std::chrono::duration_cast<std::chrono::microseconds>(after_tiling - before_tiling).count();
+    *(elapse + 1) = last_op_tiling_perf;
+    last_op_tiling_perf = -1;
   }
 
   GELOGI("Optiling succeed. op_type:%s", optype);
