@@ -21,6 +21,8 @@
 #include "debug/ge_util.h"
 #include "framework/common/debug/ge_log.h"
 
+using namespace std;
+
 #define TAB "    "
 #define STR_FMT(str) (" \"" + std::string(str) + "\" ")
 #define INPUT_ANCHOR_PORT(name) ("__input__" + (name))

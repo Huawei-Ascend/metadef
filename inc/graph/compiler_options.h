@@ -22,10 +22,25 @@ namespace ge {
 #define METADEF_ATTRIBUTE_UNUSED __attribute__((unused))
 #define METADEF_FUNCTION_IDENTIFIER __PRETTY_FUNCTION__
 #define METADEF_BUILTIN_PREFETCH(args_addr) __builtin_prefetch(args_addr)
+
+#ifdef HOST_VISIBILITY
+#define GE_FUNC_HOST_VISIBILITY __attribute__((visibility("default")))
 #else
+#define GE_FUNC_HOST_VISIBILITY
+#endif
+
+#ifdef DEV_VISIBILITY
+#define GE_FUNC_DEV_VISIBILITY __attribute__((visibility("default")))
+#else
+#define GE_FUNC_DEV_VISIBILITY
+#endif
+
+#else // WINDOWS
 #define METADEF_ATTRIBUTE_UNUSED
 #define METADEF_FUNCTION_IDENTIFIER __FUNCSIG__
 #define METADEF_BUILTIN_PREFETCH(args_addr)
+#define GE_FUNC_HOST_VISIBILITY
+#define GE_FUNC_DEV_VISIBILITY
 #endif
 }  // namespace ge
 

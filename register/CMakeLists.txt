@@ -45,7 +45,7 @@ set(SRC_LIST
 add_library(register SHARED ${SRC_LIST} ${PROTO_SRCS})
 
 target_compile_options(register PRIVATE
-    -Wno-deprecated-declarations
+    $<$<OR:$<STREQUAL:${TARGET_SYSTEM_NAME},Linux>,$<STREQUAL:${TARGET_SYSTEM_NAME},Android>>: -Wno-deprecated-declarations>
 )
 
 target_compile_definitions(register PRIVATE
@@ -112,12 +112,17 @@ add_library(register_static STATIC ${SRC_LIST} ${PROTO_SRCS}
 )
 
 target_compile_options(register_static PRIVATE
-    -Wno-deprecated-declarations
+    $<$<OR:$<STREQUAL:${TARGET_SYSTEM_NAME},Linux>,$<STREQUAL:${TARGET_SYSTEM_NAME},Android>>: -Wno-deprecated-declarations>
+    $<$<STREQUAL:${TARGET_SYSTEM_NAME},Windows>:/utf-8>
+    $<$<AND:$<STREQUAL:${TARGET_SYSTEM_NAME},Windows>,$<STREQUAL:${CMAKE_CONFIGURATION_TYPES},Debug>>:/MTd>
+    $<$<AND:$<STREQUAL:${TARGET_SYSTEM_NAME},Windows>,$<STREQUAL:${CMAKE_CONFIGURATION_TYPES},Release>>:/MT>
 )
 
 target_compile_definitions(register_static PRIVATE
     google=ascend_private
     $<$<STREQUAL:${ENABLE_OPEN_SRC},True>:ONLY_COMPILE_OPEN_SRC>
+    $<IF:$<STREQUAL:${TARGET_SYSTEM_NAME},Windows>,OS_TYPE=WIN,OS_TYPE=0>
+    $<$<STREQUAL:${TARGET_SYSTEM_NAME},Windows>:SECUREC_USING_STD_SECURE_LIB=0 NOMINMAX>
 )
 target_include_directories(register_static PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}
@@ -164,7 +169,8 @@ target_link_libraries(register_static PRIVATE
 )
 
 set_target_properties(register_static PROPERTIES
-    OUTPUT_NAME register
+    WINDOWS_EXPORT_ALL_SYMBOLS TRUE
+    OUTPUT_NAME $<IF:$<STREQUAL:${TARGET_SYSTEM_NAME},Windows>,libregister,register>
 )
 
 ############ libop_tiling_o2.a ############
@@ -211,7 +217,7 @@ target_include_directories(op_tiling_o2 PRIVATE
 
 target_compile_options(op_tiling_o2 PRIVATE
     -O2
-    -Wno-deprecated-declarations
+    $<$<OR:$<STREQUAL:${TARGET_SYSTEM_NAME},Linux>,$<STREQUAL:${TARGET_SYSTEM_NAME},Android>>: -Wno-deprecated-declarations>
 )
 
 target_link_libraries(op_tiling_o2 PRIVATE

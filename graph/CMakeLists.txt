@@ -61,7 +61,7 @@ add_library(graph SHARED ${SRC_LIST} ${PROTO_SRCS})
 target_compile_options(graph PRIVATE
     -O2
     $<$<OR:$<STREQUAL:${PRODUCT_SIDE},host>,$<STREQUAL:${ENABLE_OPEN_SRC},True>>:-fexceptions>
-    -Wno-deprecated-declarations
+    $<$<OR:$<STREQUAL:${TARGET_SYSTEM_NAME},Linux>,$<STREQUAL:${TARGET_SYSTEM_NAME},Android>>: -Wno-deprecated-declarations>
 )
 
 target_compile_definitions(graph PRIVATE
@@ -133,16 +133,19 @@ target_link_libraries(graph PRIVATE
 add_library(graph_static STATIC ${SRC_LIST} ${PROTO_SRCS})
 
 target_compile_options(graph_static PRIVATE
-    -O2
-    -fPIC
+    $<$<STREQUAL:${TARGET_SYSTEM_NAME},Linux>:-O2 -fPIC>
     $<$<OR:$<STREQUAL:${PRODUCT_SIDE},host>,$<STREQUAL:${ENABLE_OPEN_SRC},True>>:-fexceptions>
-    -Wno-deprecated-declarations
+    $<$<OR:$<STREQUAL:${TARGET_SYSTEM_NAME},Linux>,$<STREQUAL:${TARGET_SYSTEM_NAME},Android>>: -Wno-deprecated-declarations>
+    $<$<AND:$<STREQUAL:${TARGET_SYSTEM_NAME},Windows>,$<STREQUAL:${CMAKE_CONFIGURATION_TYPES},Debug>>:/MTd>
+    $<$<AND:$<STREQUAL:${TARGET_SYSTEM_NAME},Windows>,$<STREQUAL:${CMAKE_CONFIGURATION_TYPES},Release>>:/MT>
 )
 
 target_compile_definitions(graph_static PRIVATE
     $<$<OR:$<STREQUAL:${PRODUCT_SIDE},host>,$<STREQUAL:${ENABLE_OPEN_SRC},True>>:FMK_SUPPORT_DUMP>
     google=ascend_private
     $<$<STREQUAL:${ENABLE_OPEN_SRC},True>:ONLY_COMPILE_OPEN_SRC>
+    $<IF:$<STREQUAL:${TARGET_SYSTEM_NAME},Windows>,OS_TYPE=WIN,OS_TYPE=0>
+    $<$<STREQUAL:${TARGET_SYSTEM_NAME},Windows>:SECUREC_USING_STD_SECURE_LIB=0 NOMINMAX>
 )
 
 target_include_directories(graph_static PRIVATE
@@ -198,6 +201,12 @@ target_link_libraries(graph_static PRIVATE
     $<$<NOT:$<STREQUAL:${TARGET_SYSTEM_NAME},Android>>:-lrt>
     -ldl
 )
+
+set_target_properties(graph_static PROPERTIES
+    WINDOWS_EXPORT_ALL_SYMBOLS TRUE
+    OUTPUT_NAME $<IF:$<STREQUAL:${TARGET_SYSTEM_NAME},Windows>,libgraph,graph>
+)
+
 
 ##############################################################
 add_custom_command(
@@ -349,7 +358,7 @@ add_library(graph SHARED ${SRC_LIST} ${PROTO_SRCS})
 target_compile_options(graph PRIVATE
         -O2
         $<$<STREQUAL:${PRODUCT_SIDE},host>:-fexceptions>
-        -Wno-deprecated-declarations
+        $<$<OR:$<STREQUAL:${TARGET_SYSTEM_NAME},Linux>,$<STREQUAL:${TARGET_SYSTEM_NAME},Android>>: -Wno-deprecated-declarations>
         )
 
 target_compile_definitions(graph PRIVATE
