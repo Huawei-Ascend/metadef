@@ -20,18 +20,9 @@
 
 #include <string>
 #include "graph/types.h"
+#include "graph/compiler_options.h"
 
 namespace ge {
-#ifdef HOST_VISIBILITY
-#define GE_FUNC_HOST_VISIBILITY __attribute__((visibility("default")))
-#else
-#define GE_FUNC_HOST_VISIBILITY
-#endif
-#ifdef DEV_VISIBILITY
-#define GE_FUNC_DEV_VISIBILITY __attribute__((visibility("default")))
-#else
-#define GE_FUNC_DEV_VISIBILITY
-#endif
 // Public attribute
 GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY extern const std::string ATTR_NAME_FORCE_UNKNOWN_SHAPE;
 

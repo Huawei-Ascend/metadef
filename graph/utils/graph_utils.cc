@@ -667,9 +667,9 @@ GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY void GraphUtils::DumpGEGrph(const
       GELOGE(GRAPH_FAILED, "parse from string failed.");
       return;
     }
-    char real_path[PATH_MAX] = {0x00};
-    GE_CHK_BOOL_TRUE_EXEC_WITH_LOG(strlen(proto_file.c_str()) >= PATH_MAX, return, "file path is too longer!");
-    GE_IF_BOOL_EXEC(realpath(proto_file.c_str(), real_path) == nullptr,
+    char real_path[MMPA_MAX_PATH] = {0x00};
+    GE_CHK_BOOL_TRUE_EXEC_WITH_LOG(strlen(proto_file.c_str()) >= MMPA_MAX_PATH, return, "file path is too longer!");
+    GE_IF_BOOL_EXEC(mmRealPath(proto_file.c_str(), real_path, MMPA_MAX_PATH) != EN_OK,
                     GELOGI("file %s does not exist, it will be created.", proto_file.c_str()));
 
     GraphUtils::WriteProtoToTextFile(ge_proto, real_path);
@@ -920,11 +920,11 @@ GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY void GraphUtils::DumpGrphToOnnx(c
   stream_file_name << "_graph_" << compute_graph.GetGraphID();
   stream_file_name << "_" << suffix << ".pbtxt";
   std::string proto_file = stream_file_name.str();
-  if ((proto_file.length()) >= NAME_MAX) {
+  if ((proto_file.length()) >= kNameMax) {
     GELOGE(GRAPH_FAILED, "File name is too longer!");
     return;
   }
-  std::unique_ptr<char[]> real_path(new (std::nothrow) char[PATH_MAX]{0});
+  std::unique_ptr<char[]> real_path(new (std::nothrow) char[MMPA_MAX_PATH]{0});
   if (real_path == nullptr) {
     GELOGE(GRAPH_FAILED, "New real_path failed.");
     return;
@@ -934,7 +934,7 @@ GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY void GraphUtils::DumpGrphToOnnx(c
   /// b.the file does not exist
   /// c.the path has no permissions
   /// Distinguish between last the two cases in the function WriteProtoToTextFile call open()
-  if (realpath(proto_file.c_str(), real_path.get()) == nullptr) {
+  if (mmRealPath(proto_file.c_str(), real_path.get(), MMPA_MAX_PATH) != EN_OK) {
     // For case a
     if (errno == ENAMETOOLONG) {
       GELOGE(GRAPH_FAILED, "Call realpath failed: path is PATH_MAX chars or more.");

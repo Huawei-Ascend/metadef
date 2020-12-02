@@ -18,12 +18,12 @@
 #define INC_EXTERNAL_GRAPH_GE_ERROR_CODES_H_
 
 namespace ge {
-#ifdef HOST_VISIBILITY
+#if(defined(HOST_VISIBILITY)) && (defined(__GNUC__))
 #define GE_FUNC_HOST_VISIBILITY __attribute__((visibility("default")))
 #else
 #define GE_FUNC_HOST_VISIBILITY
 #endif
-#ifdef DEV_VISIBILITY
+#if(defined(DEV_VISIBILITY)) && (defined(__GNUC__))
 #define GE_FUNC_DEV_VISIBILITY __attribute__((visibility("default")))
 #else
 #define GE_FUNC_DEV_VISIBILITY

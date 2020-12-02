@@ -27,12 +27,12 @@ static const int64_t UNKNOWN_DIM_NUM = -2;
 static const std::vector<int64_t> UNKNOWN_SHAPE = {-1};
 static const std::vector<int64_t> UNKNOWN_RANK = {-2};
 
-#ifdef HOST_VISIBILITY
+#if(defined(HOST_VISIBILITY)) && (defined(__GNUC__))
 #define GE_FUNC_HOST_VISIBILITY __attribute__((visibility("default")))
 #else
 #define GE_FUNC_HOST_VISIBILITY
 #endif
-#ifdef DEV_VISIBILITY
+#if(defined(DEV_VISIBILITY)) && (defined(__GNUC__))
 #define GE_FUNC_DEV_VISIBILITY __attribute__((visibility("default")))
 #else
 #define GE_FUNC_DEV_VISIBILITY

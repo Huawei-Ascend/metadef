@@ -553,8 +553,7 @@ OpDescUtils::SetWeights(ge::Node &node, const vector<ge::GeTensorPtr> &weights) 
       return GRAPH_PARAM_INVALID;
     }
     auto const_node = owner_graph->AddNodeFront(const_opdesc);
-    GE_CHK_BOOL_EXEC(node.AddLinkFrom(const_node) == GRAPH_SUCCESS,
-                     return GRAPH_FAILED, "graph add link failed！");
+    GE_CHK_BOOL_EXEC(node.AddLinkFrom(const_node) == GRAPH_SUCCESS, GELOGE(GRAPH_FAILED, "graph add link failed!");return GRAPH_FAILED);
     std::vector<ge::NodePtr> original_nodes;
     ge::GraphUtils::RecordOriginalNames(original_nodes, const_node);
   }
