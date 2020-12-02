@@ -730,9 +730,10 @@ Operator &Operator::AddControlInput(const Operator &src_oprt) {
 
 graphStatus Operator::GetInputConstData(const string &dst_name, Tensor &data) const {
   GE_CHECK_NOTNULL(operator_impl_);
-  if (operator_impl_->GetInputConstData(dst_name, data) != GRAPH_SUCCESS) {
-    GELOGE(GRAPH_FAILED, "%s get input const data failed", dst_name.c_str());
-    return GRAPH_FAILED;
+  graphStatus ret = operator_impl_->GetInputConstData(dst_name, data);
+  if (ret != GRAPH_SUCCESS) {
+    GELOGW("%s get input const data failed", dst_name.c_str());
+    return ret;
   }
   return GRAPH_SUCCESS;
 }
@@ -741,9 +742,10 @@ graphStatus Operator::GetInputConstData(const char *dst_name, Tensor &data) cons
   GE_CHECK_NOTNULL(dst_name);
   GE_CHECK_NOTNULL(operator_impl_);
   std::string op_dst_name = dst_name;
-  if (operator_impl_->GetInputConstData(op_dst_name, data) != GRAPH_SUCCESS) {
-    GELOGE(GRAPH_FAILED, "%s get input const data failed", op_dst_name.c_str());
-    return GRAPH_FAILED;
+  graphStatus ret = operator_impl_->GetInputConstData(op_dst_name, data);
+  if (ret != GRAPH_SUCCESS) {
+    GELOGW("%s get input const data failed", op_dst_name.c_str());
+    return ret;
   }
   return GRAPH_SUCCESS;
 }
