@@ -154,7 +154,7 @@ void ParseShapeDesc(const nlohmann::json &shape, std::vector<TeOpTensor> &tensor
   tensors.emplace_back(tensor);
 }
 
-void ParseShapeDescList(const nlohgitmann::json &shape_list, std::vector<TeOpTensorArg> &op_args) {
+void ParseShapeDescList(const nlohmann::json &shape_list, std::vector<TeOpTensorArg> &op_args) {
   for (const auto &elem : shape_list) {
     TeOpTensorArg tensor_arg;
     tensor_arg.arg_type = TA_NONE;
