@@ -394,6 +394,7 @@ const std::set<std::string> global_options = {CORE_TYPE,
                                               ENABLE_SMALL_CHANNEL,
                                               OP_SELECT_IMPL_MODE,
                                               OPTYPELIST_FOR_IMPLMODE,
+                                              OP_DEBUG_LEVEL,
                                               DEBUG_DIR,
                                               OP_COMPILER_CACHE_DIR,
                                               OP_COMPILER_CACHE_MODE};
