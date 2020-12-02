@@ -36,6 +36,8 @@
 
 namespace optiling {
 
+extern thread_local int64_t last_op_tiling_perf;
+
 enum TensorArgType {
   TA_NONE,
   TA_SINGLE,
