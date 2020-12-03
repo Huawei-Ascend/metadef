@@ -27,8 +27,6 @@
 
 #define REGISTER_OP_TILING(optype, opfunc) REGISTER_OP_TILING_UNIQ_HELPER(optype, opfunc, __COUNTER__)
 
-#define REGISTER_OP_TILING_FUNC_NEW(optype, opfunc) REGISTER_OP_TILING_UNIQ_HELPER(optype, opfunc, __COUNTER__)
-
 #define REGISTER_OP_TILING_UNIQ_HELPER(optype, opfunc, counter) REGISTER_OP_TILING_UNIQ(optype, opfunc, counter)
 
 #define REGISTER_OP_TILING_UNIQ(optype, opfunc, counter) \
