@@ -252,13 +252,9 @@ class GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY Operator {
   Operator &SetAttr(const string &name, AttrValue &&attr_value);
   ATTRIBUTED_DEPRECATED(graphStatus GetAttr(const char *, AttrValue &) const)
   graphStatus GetAttr(const string &name, AttrValue &attr_value) const;
-  ATTRIBUTED_DEPRECATED(Operator &SetAttr(const char *, const AscendString &))
   Operator &SetAttr(const string &name, const string &attr_value);
-  ATTRIBUTED_DEPRECATED(Operator &SetAttr(const char *, const string &))
   graphStatus GetAttr(const string &name, string &attr_value) const;
-  ATTRIBUTED_DEPRECATED(Operator &SetAttr(const char *, const std::vector<AscendString> &))
   Operator &SetAttr(const string &name, const std::vector<string> &attr_value);
-  ATTRIBUTED_DEPRECATED(graphStatus GetAttr(const string &, std::vector<AscendString> &) const)
   graphStatus GetAttr(const string &name, std::vector<string> &attr_value) const;
   ATTRIBUTED_DEPRECATED(Operator &SetAttr(const char *, bool))
   Operator &SetAttr(const string &name, bool attr_value);
@@ -399,6 +395,8 @@ class GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY Operator {
   void AttrRegister(const string &name, const ge::DataType &attr_value);
   void AttrRegister(const string &name, const ge::NamedAttrs &attr_value);
   void AttrRegister(const string &name, const std::vector<ge::NamedAttrs> &attr_value);
+  void AttrRegister(const string &name, const AscendString &attr_value);
+  void AttrRegister(const string &name, const std::vector<AscendString> &attr_value);
 
   explicit Operator(OperatorImplPtr &&op_impl);
 

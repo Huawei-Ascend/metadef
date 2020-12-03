@@ -33,6 +33,132 @@ using std::function;
 using std::string;
 using std::vector;
 
+#define ATTR_String(x, ...)                                                 \
+  graphStatus get_attr_##x(AscendString &ret) const {                       \
+    string ret_str = __VA_ARGS__;                                           \
+    if (Operator::GetAttr(#x, ret) == GRAPH_FAILED) {                       \
+      ret = AscendString(ret_str.c_str());                                  \
+    }                                                                       \
+    return GRAPH_SUCCESS;                                                   \
+  }                                                                         \
+  _THIS_TYPE &set_attr_##x(const char *v) {                                 \
+    Operator::SetAttr(#x, v);                                               \
+    return *this;                                                           \
+  }                                                                         \
+  _THIS_TYPE &set_attr_##x(const function<AscendString()> &v) { return *this; }
+
+#define ATTR_ListString(x, ...)                                             \
+  graphStatus get_attr_##x(vector<AscendString> &ret) const {               \
+    vector<string> ret_strs = __VA_ARGS__;                                  \
+    if (Operator::GetAttr(#x, ret) == GRAPH_FAILED) {                       \
+      for (auto &ret_str : ret_strs) {                                      \
+        ret.emplace_back(ret_str.c_str());                                  \
+      }                                                                     \
+    }                                                                       \
+    return GRAPH_SUCCESS;                                                   \
+  }                                                                         \
+  _THIS_TYPE &set_attr_##x(const vector<AscendString> &v) {                 \
+    Operator::SetAttr(#x, v);                                               \
+    return *this;                                                           \
+  }                                                                         \
+  _THIS_TYPE &set_attr_##x(const function<vector<AscendString>()> &v) {     \
+    return *this; }
+
+#define ATTR_AscendString(x, ...)                                           \
+  graphStatus get_attr_##x(AscendString &ret) const {                       \
+    AscendString ret_str = __VA_ARGS__;                                     \
+    if (Operator::GetAttr(#x, ret) == GRAPH_FAILED) {                       \
+      ret = AscendString(ret_str.c_str());                                  \
+    }                                                                       \
+    return GRAPH_SUCCESS;                                                   \
+  }
+
+#define ATTR_ListAscendString(x, ...)                                       \
+  graphStatus get_attr_##x(vector<AscendString> &ret) const {               \
+    vector<AscendString> ret_strs = __VA_ARGS__;                            \
+    if (Operator::GetAttr(#x, ret) == GRAPH_FAILED) {                       \
+      for (auto &ret_str : ret_strs) {                                      \
+        if (ret_str.GetString() != nullptr) {                               \
+          ret.emplace_back(ret_str.GetString());                            \
+        }                                                                   \
+      }                                                                     \
+    }                                                                       \
+    return GRAPH_SUCCESS;                                                   \
+  }
+
+#define ATTR_Int(x, ...)
+#define ATTR_Float(x, ...)
+#define ATTR_Bool(x, ...)
+#define ATTR_Tensor(x, ...)
+#define ATTR_Type(x, ...)
+#define ATTR_NamedAttrs(x, ...)
+#define ATTR_ListInt(x, ...)
+#define ATTR_ListFloat(x, ...)
+#define ATTR_ListBool(x, ...)
+#define ATTR_ListTensor(x, ...)
+#define ATTR_Bytes(x, ...)
+#define ATTR_ListListInt(x, ...)
+#define ATTR_ListType(x, ...)
+#define ATTR_ListNamedAttrs(x, ...)
+
+#define REQUIRED_ATTR_String(x)                                             \
+  graphStatus get_attr_##x(AscendString &ret) const {                       \
+    if (Operator::GetAttr(#x, ret) == GRAPH_FAILED) {                       \
+      return GRAPH_FAILED;                                                  \
+    }                                                                       \
+    return GRAPH_SUCCESS;                                                   \
+  }                                                                         \
+  _THIS_TYPE &set_attr_##x(const char *v) {                                 \
+    Operator::SetAttr(#x, v);                                               \
+    return *this;                                                           \
+  }                                                                         \
+  _THIS_TYPE &set_attr_##x(const function<AscendString()> &v) { return *this; }
+
+#define REQUIRED_ATTR_ListString(x)                                         \
+  graphStatus get_attr_##x(vector<AscendString> &ret) const {               \
+    if (Operator::GetAttr(#x, ret) == GRAPH_FAILED) {                       \
+      return GRAPH_FAILED;                                                  \
+    }                                                                       \
+    return GRAPH_SUCCESS;                                                   \
+  }                                                                         \
+  _THIS_TYPE &set_attr_##x(const vector<AscendString> &v) {                 \
+    Operator::SetAttr(#x, v);                                               \
+    return *this;                                                           \
+  }                                                                         \
+  _THIS_TYPE &set_attr_##x(const function<vector<AscendString>()> &v) {     \
+    return *this; }
+
+#define REQUIRED_ATTR_AscendString(x)                                       \
+  graphStatus get_attr_##x(AscendString &ret) const {                       \
+    if (Operator::GetAttr(#x, ret) == GRAPH_FAILED) {                       \
+      return GRAPH_FAILED                                                   \
+    }                                                                       \
+    return GRAPH_SUCCESS;                                                   \
+  }
+
+#define REQUIRED_ATTR_ListAscendString(x)                                   \
+  graphStatus get_attr_##x(vector<AscendString> &ret) const {               \
+    if (Operator::GetAttr(#x, ret) == GRAPH_FAILED) {                       \
+      return GRAPH_FAILED;                                                  \
+    }                                                                       \
+    return GRAPH_SUCCESS;                                                   \
+  }
+
+#define REQUIRED_ATTR_Int(x)
+#define REQUIRED_ATTR_Float(x)
+#define REQUIRED_ATTR_Bool(x)
+#define REQUIRED_ATTR_Tensor(x)
+#define REQUIRED_ATTR_Type(x)
+#define REQUIRED_ATTR_NamedAttrs(x)
+#define REQUIRED_ATTR_ListInt(x)
+#define REQUIRED_ATTR_ListFloat(x)
+#define REQUIRED_ATTR_ListBool(x)
+#define REQUIRED_ATTR_ListTensor(x)
+#define REQUIRED_ATTR_Bytes(x)
+#define REQUIRED_ATTR_ListListInt(x)
+#define REQUIRED_ATTR_ListType(x)
+#define REQUIRED_ATTR_ListNamedAttrs(x)
+
 class OpReg {
  public:
   OpReg &N() { return *this; }
@@ -60,10 +186,10 @@ class OpReg {
     typedef x _THIS_TYPE;                                            \
                                                                      \
    public:                                                           \
-   ATTRIBUTED_DEPRECATED(x(const AscendString &))                \
-    explicit x(const string &name) : Operator(name, #x) { __##x(); } \
+   ATTRIBUTED_DEPRECATED(x(const AscendString &))                    \
+    explicit x(const string &name) : Operator(name.c_str(), #x) { __##x(); } \
     explicit x(const char *name) : Operator(name, #x) { __##x(); }   \
-    explicit x(const AscendString &name) : Operator(name, #x) {  \
+    explicit x(const AscendString &name) : Operator(name, #x) {      \
       __##x(); }                                                     \
     x() : Operator(#x) { __##x(); }                                  \
                                                                      \
@@ -77,11 +203,12 @@ class OpReg {
   }                                                                         \
                                                                             \
  public:                                                                    \
-  ATTRIBUTED_DEPRECATED(static const void name_attr_##x(AscendString &))\
+  ATTRIBUTED_DEPRECATED(static const void name_attr_##x(AscendString &))    \
   static const string name_attr_##x() { return #x; }                        \
-  static const void name_attr_##x(AscendString &attr) {                 \
-    attr = AscendString(#x);                                            \
+  static const void name_attr_##x(AscendString &attr) {                     \
+    attr = AscendString(#x);                                                \
   }                                                                         \
+  ATTR_##Type(x, __VA_ARGS__)                                               \
   Op##Type get_attr_##x() const {                                           \
     Op##Type ret = __VA_ARGS__;                                             \
     if (Operator::GetAttr(#x, ret) == GRAPH_FAILED) {                       \
@@ -107,11 +234,12 @@ class OpReg {
   }                                                                         \
                                                                             \
  public:                                                                    \
-  ATTRIBUTED_DEPRECATED(static const void name_attr_##x(AscendString &))\
+  ATTRIBUTED_DEPRECATED(static const void name_attr_##x(AscendString &))    \
   static const string name_attr_##x() { return #x; }                        \
-  static const void name_attr_##x(AscendString &attr_name) {            \
-    attr_name = AscendString(#x);                                       \
+  static const void name_attr_##x(AscendString &attr_name) {                \
+    attr_name = AscendString(#x);                                           \
   }                                                                         \
+  REQUIRED_ATTR_##Type(x)                                                   \
   Op##Type get_attr_##x() const {                                           \
     Op##Type ret;                                                           \
     if (Operator::GetAttr(#x, ret) == GRAPH_FAILED) {                       \
@@ -137,14 +265,14 @@ class OpReg {
   }                                                                            \
                                                                                \
  public:                                                                       \
-  ATTRIBUTED_DEPRECATED(static const void name_in_##x(AscendString &))     \
+  ATTRIBUTED_DEPRECATED(static const void name_in_##x(AscendString &))         \
   static const string name_in_##x() { return #x; }                             \
-  static const void name_in_##x(AscendString &name) {                      \
-    name = AscendString(#x);                                               \
+  static const void name_in_##x(AscendString &name) {                          \
+    name = AscendString(#x);                                                   \
   }                                                                            \
   ATTRIBUTED_DEPRECATED(_THIS_TYPE &set_input_##x(Operator &, const char *))   \
   _THIS_TYPE &set_input_##x(Operator &v, const string &srcName) {              \
-    Operator::SetInput(#x, v, srcName);                                        \
+    Operator::SetInput(#x, v, srcName.c_str());                                \
     return *this;                                                              \
   }                                                                            \
   _THIS_TYPE &set_input_##x(Operator &v, const char *srcName) {                \
@@ -175,10 +303,10 @@ class OpReg {
   }                                                                            \
                                                                                \
  public:                                                                       \
- ATTRIBUTED_DEPRECATED(static const void name_in_##x(AscendString &))      \
+ ATTRIBUTED_DEPRECATED(static const void name_in_##x(AscendString &))          \
   static const string name_in_##x() { return #x; }                             \
-  static const void name_in_##x(AscendString &name) {                      \
-    name = AscendString(#x);                                               \
+  static const void name_in_##x(AscendString &name) {                          \
+    name = AscendString(#x);                                                   \
   }                                                                            \
   _THIS_TYPE &set_input_##x(Operator &v) {                                     \
     Operator::SetInput(#x, v);                                                 \
@@ -186,7 +314,7 @@ class OpReg {
   }                                                                            \
   ATTRIBUTED_DEPRECATED(_THIS_TYPE &set_input_##x(Operator &, const char *))   \
   _THIS_TYPE &set_input_##x(Operator &v, const string &srcName) {              \
-    Operator::SetInput(#x, v, srcName);                                        \
+    Operator::SetInput(#x, v, srcName.c_str());                                \
     return *this;                                                              \
   }                                                                            \
   _THIS_TYPE &set_input_##x(Operator &v, const char *srcName) {                \
@@ -213,10 +341,10 @@ class OpReg {
   }                                                                              \
                                                                                  \
  public:                                                                         \
-  ATTRIBUTED_DEPRECATED(static const void name_out_##x(AscendString &))      \
+  ATTRIBUTED_DEPRECATED(static const void name_out_##x(AscendString &))          \
   static const string name_out_##x() { return #x; }                              \
-  static const void name_out_##x(AscendString &name) {                       \
-    name = AscendString(#x);                                                 \
+  static const void name_out_##x(AscendString &name) {                           \
+    name = AscendString(#x);                                                     \
   }                                                                              \
   TensorDesc get_output_desc_##x() const { return Operator::GetOutputDesc(#x, 0); } \
   graphStatus update_output_desc_##x(const TensorDesc &tensorDesc) {             \
@@ -254,7 +382,7 @@ class OpReg {
   }                                                                                           \
   ATTRIBUTED_DEPRECATED(_THIS_TYPE &set_dynamic_input_##x(uint32_t, Operator &, const char *))\
   _THIS_TYPE &set_dynamic_input_##x(uint32_t dstIndex, Operator &v, const string &srcName) {  \
-    Operator::SetInput(#x, dstIndex, v, srcName);                                             \
+    Operator::SetInput(#x, dstIndex, v, srcName.c_str());                                     \
     return *this;                                                                             \
   }                                                                                           \
   _THIS_TYPE &set_dynamic_input_##x(uint32_t dstIndex, Operator &v, const char *srcName) {    \
@@ -295,10 +423,10 @@ class OpReg {
   }                                                                                           \
                                                                                               \
  public:                                                                                      \
-  ATTRIBUTED_DEPRECATED(static const void name_graph_##x(AscendString &))                 \
+  ATTRIBUTED_DEPRECATED(static const void name_graph_##x(AscendString &))                     \
   static const string name_graph_##x() { return #x; }                                         \
-  static const void name_graph_##x(AscendString &name) {                                  \
-    name = AscendString(#x);                                                              \
+  static const void name_graph_##x(AscendString &name) {                                      \
+    name = AscendString(#x);                                                                  \
   }                                                                                           \
   SubgraphBuilder get_subgraph_builder_##x() const {                                          \
     return Operator::GetSubgraphBuilder(#x);                                                  \
@@ -323,10 +451,10 @@ class OpReg {
   }                                                                                           \
                                                                                               \
  public:                                                                                      \
-  ATTRIBUTED_DEPRECATED(static const void name_graph_##x(AscendString &))                 \
+  ATTRIBUTED_DEPRECATED(static const void name_graph_##x(AscendString &))                     \
   static const string name_graph_##x() { return #x; }                                         \
-  static const void name_graph_##x(AscendString &name) {                                  \
-    name = AscendString(#x);                                                              \
+  static const void name_graph_##x(AscendString &name) {                                      \
+    name = AscendString(#x);                                                                  \
   }                                                                                           \
   _THIS_TYPE &create_dynamic_subgraph_##x(uint32_t num) {                                     \
     Operator::SubgraphCountRegister(#x, num);                                                 \
