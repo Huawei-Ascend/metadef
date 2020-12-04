@@ -463,7 +463,6 @@ graphStatus FormatRefiner::InferOrigineFormat(const ge::ComputeGraphPtr &graph) 
   std::unordered_map<ge::NodePtr, bool> node_status;
   std::vector<ge::NodePtr> anchor_points;
   std::vector<ge::NodePtr> data_nodes;
-  // global net format
 
   if (graph == nullptr) {
     GELOGE(GRAPH_FAILED, "input graph is null");

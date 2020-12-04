@@ -33,7 +33,6 @@ namespace domi {
 #else
 #define ATTRIBUTED_DEPRECATED(replacement) __declspec(deprecated("Please use " #replacement " instead."))
 #endif
-/// CCE defined constant
 
 ///
 /// @ingroup domi

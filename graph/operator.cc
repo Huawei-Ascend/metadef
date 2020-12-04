@@ -58,9 +58,9 @@ using std::to_string;
 using std::vector;
 
 /*lint -save -e529 -e728*/
+namespace ge {
 /*lint -e446 -e732*/
 /*lint -e665*/
-namespace ge {
 class OpIO {
  public:
   OpIO(const string &name, int index, const OperatorImplPtr &owner) : name_(name), index_(index), owner_(owner) {}
@@ -2248,6 +2248,6 @@ void GraphUtils::BreakConnect(const std::map<OperatorImplPtr, NodePtr> &all_node
     OperatorKeeper::GetInstance().CheckOutOperator(op_impl);
   }
 }
-} // namespace ge
 /*lint +e446 +e732*/
 /*lint +e665*/
+} // namespace ge
