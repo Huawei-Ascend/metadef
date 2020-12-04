@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-/*lint -e618*/
 #ifndef INC_GRAPH_DEBUG_GE_ATTR_DEFINE_H_
 #define INC_GRAPH_DEBUG_GE_ATTR_DEFINE_H_
 
+/*lint -e618*/
 #include <string>
 #include "graph/types.h"
 #include "graph/compiler_options.h"
@@ -1148,5 +1148,5 @@ GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY extern const std::string ATTR_GET
 GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY extern const std::string ATTR_ALL_GEARS_INFO;
 }  // namespace ge
 
-#endif  // INC_GRAPH_DEBUG_GE_ATTR_DEFINE_H_
 /*lint +e618*/
+#endif  // INC_GRAPH_DEBUG_GE_ATTR_DEFINE_H_
