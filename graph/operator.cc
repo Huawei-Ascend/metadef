@@ -1295,6 +1295,39 @@ OP_ATTR_REG_IMP(const vector<GeAttrValue::NAMED_ATTRS> &, ListNamedAttrs)
 #undef OP_ATTR_GET_IMP
 #undef OP_ATTR_REG_IMP
 
+void Operator::AttrRegister(const string &name, const AscendString &attr_value) {
+  if (attr_value.GetString() == nullptr) {
+    GELOGE(GRAPH_FAILED, "Attr %s register param is invalid.", name.c_str());
+    return;
+  }
+  if (operator_impl_ == nullptr || operator_impl_->GetOpDescImpl() == nullptr) {
+    GELOGE(GRAPH_FAILED, "Operator impl is nullptr, name %s.", name.c_str());
+    return;
+  }
+  std::string str_attr_value = attr_value.GetString();
+  if (!AttrUtils::SetStr(operator_impl_->GetOpDescImpl(), name, str_attr_value)) {
+    GELOGW("Reg attr name %s failed.", name.c_str());
+  }
+}
+
+void Operator::AttrRegister(const string &name, const std::vector<AscendString> &attr_value) {
+  std::vector<std::string> str_attr_values;
+  for (auto &val : attr_value) {
+    if (val.GetString() == nullptr) {
+      GELOGE(GRAPH_FAILED, "Attr %s register value is invalid.", name.c_str());
+      return;
+    }
+    str_attr_values.emplace_back(val.GetString());
+  }
+  if (operator_impl_ == nullptr || operator_impl_->GetOpDescImpl() == nullptr) {
+    GELOGE(GRAPH_FAILED, "Operator impl is nullptr, name %s.", name.c_str());
+    return;
+  }
+  if (!AttrUtils::SetListStr(operator_impl_->GetOpDescImpl(), name, str_attr_values)) {
+    GELOGW("Reg attr name %s failed.", name.c_str());
+  }
+}
+
 Operator &Operator::SetAttr(const string &name, const string &attr_value) {
   if (operator_impl_ == nullptr || operator_impl_->GetOpDescImpl() == nullptr) {
       GELOGE(GRAPH_FAILED, "Operator impl is nullptr, name %s.", name.c_str());
