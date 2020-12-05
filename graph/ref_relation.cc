@@ -102,7 +102,7 @@ private:
                   const vector<NodePtr> &netoutput_nodes,
                   vector<vector<std::pair<NodePtr, size_t>>> &classed_netoutput_nodes);
 
-  std::unordered_map<string,vector<RefCell>> look_up_table_;
+  std::unordered_map<string, vector<RefCell>> look_up_table_;
   std::vector<vector<vector<RefCell>>> values_;
 };
 
@@ -268,8 +268,8 @@ graphStatus RefRelations::Impl::BuildRefRelationsForWhile(
     (void)AttrUtils::GetInt(peer_out_data_node->GetOpDesc(), kRefIndex, ref_d);
     (void)AttrUtils::GetInt(net_in_desc, kRefIndex, ref_n);
 
-    node_refs[ref_d].insert(node_refs[ref_d].end(), node_refs[ref_n].begin(),node_refs[ref_n].end());
-    node_refs[ref_n].insert(node_refs[ref_n].end(), node_refs[ref_d].begin(),node_refs[ref_d].end());
+    node_refs[ref_d].insert(node_refs[ref_d].end(), node_refs[ref_n].begin(), node_refs[ref_n].end());
+    node_refs[ref_n].insert(node_refs[ref_n].end(), node_refs[ref_d].begin(), node_refs[ref_d].end());
   }
 
 
@@ -351,13 +351,13 @@ graphStatus RefRelations::Impl::ProcessSubgraphDataNodes(
     is_exist = AttrUtils::GetInt(e->GetOpDesc(), kRefIndex, i);
     if (!is_exist) {
       GELOGE(GRAPH_FAILED, "Invalid SubGraph NetOutput node[%s].no attr %s",
-        e->GetName().c_str(), kRefIndex);
+             e->GetName().c_str(), kRefIndex);
       return GRAPH_FAILED;
     }
     max_ref_idx = (i > max_ref_idx) ? i : max_ref_idx;
   }
 
-  while(!data_nodes.empty()) {
+  while (!data_nodes.empty()) {
     auto data = data_nodes.back();
     data_nodes.pop_back();
     int ref_idx = 0;
@@ -382,7 +382,7 @@ graphStatus RefRelations::Impl::ProcessSubgraphNetoutput(
       auto in_desc = op_desc->MutableInputDesc(in_data_anchor->GetIdx());
       if (in_desc == nullptr) {
         GELOGE(GRAPH_FAILED, "Invalid NetOutput node [%s] idx [%lu], no tensor on it",
-          sub_netoutput_node->GetName().c_str(), in_data_anchor->GetIdx());
+               sub_netoutput_node->GetName().c_str(), in_data_anchor->GetIdx());
         return GRAPH_FAILED;
       }
       int ref_o;
@@ -413,7 +413,7 @@ graphStatus RefRelations::Impl::BuildRefRelations(ge::ComputeGraph &graph) {
     std::vector<NodePtr> ref_nodes;
     auto op_desc = node->GetOpDesc();
     auto sub_graph_names = op_desc->GetSubgraphInstanceNames();
-    if(sub_graph_names.empty()) {
+    if (sub_graph_names.empty()) {
       continue;
     }
     vector<NodePtr> data_nodes;

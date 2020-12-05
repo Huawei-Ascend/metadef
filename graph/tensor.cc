@@ -66,7 +66,7 @@ class TensorDescImpl {
   TensorDescImpl(const Shape &shape, Format format, DataType dt) : shape_(shape), format_(format), data_type_(dt) {}
 
   Shape shape_;
-  std::vector<std::pair<int64_t,int64_t>> range_;
+  std::vector<std::pair<int64_t, int64_t>> range_;
   Format format_ = FORMAT_ND;
   Format origin_format_ = FORMAT_ND;
   DataType data_type_ = DT_FLOAT;
@@ -175,7 +175,7 @@ Shape::Shape(const std::vector<int64_t> &dims) { impl_ = ComGraphMakeShared<Shap
 size_t Shape::GetDimNum() const {
   if (impl_ != nullptr) {
     for (auto i : impl_->dims_) {
-      if ( i == UNKNOWN_DIM_NUM ) {
+      if (i == UNKNOWN_DIM_NUM) {
         return 0;
       }
     }
@@ -220,7 +220,7 @@ int64_t Shape::GetShapeSize() const {
     }
     int64_t size = 1;
     for (auto i : impl_->dims_) {
-      if ( i == UNKNOWN_DIM_NUM || i == UNKNOWN_DIM) {
+      if (i == UNKNOWN_DIM_NUM || i == UNKNOWN_DIM) {
         return UNKNOWN_DIM_SIZE;
       }
 
@@ -308,7 +308,7 @@ graphStatus TensorDesc::SetUnknownDimNumShape() {
 }
 
 // for unknown shape
-graphStatus TensorDesc::SetShapeRange(const std::vector<std::pair<int64_t,int64_t>> &range) {
+graphStatus TensorDesc::SetShapeRange(const std::vector<std::pair<int64_t, int64_t>> &range) {
   if (impl != nullptr) {
     impl->range_ = range;
     return GRAPH_SUCCESS;
@@ -316,7 +316,7 @@ graphStatus TensorDesc::SetShapeRange(const std::vector<std::pair<int64_t,int64_
   GELOGE(GRAPH_FAILED, "SetShapeRange failed!impl is nullptr!");
   return GRAPH_FAILED;
 }
-graphStatus TensorDesc::GetShapeRange(std::vector<std::pair<int64_t,int64_t>> &range) const {
+graphStatus TensorDesc::GetShapeRange(std::vector<std::pair<int64_t, int64_t>> &range) const {
   if (impl != nullptr) {
     range = impl->range_;
     return GRAPH_SUCCESS;
@@ -659,7 +659,7 @@ GeTensorDesc TensorAdapter::TensorDesc2GeTensorDesc(const TensorDesc &tensor_des
   ge_tensor_desc.SetOriginShape(GeShape(tensor_desc.GetOriginShape().GetDims()));
   ge_tensor_desc.SetOriginFormat(tensor_desc.GetOriginFormat());
   ge_tensor_desc.SetName(tensor_desc.GetName());
-  std::vector<std::pair<int64_t,int64_t>> shape_range;
+  std::vector<std::pair<int64_t, int64_t>> shape_range;
   auto status = tensor_desc.GetShapeRange(shape_range);
   if (status != GRAPH_SUCCESS) {
     GELOGE(GRAPH_FAILED, "Get shape range failed!");
@@ -684,7 +684,7 @@ TensorDesc TensorAdapter::GeTensorDesc2TensorDesc(const GeTensorDesc &ge_tensor_
   tensor_desc.SetOriginShape(Shape(ge_tensor_desc.GetOriginShape().GetDims()));
   tensor_desc.SetOriginFormat(ge_tensor_desc.GetOriginFormat());
   tensor_desc.SetName(ge_tensor_desc.GetName());
-  std::vector<std::pair<int64_t,int64_t>> shape_range;
+  std::vector<std::pair<int64_t, int64_t>> shape_range;
   auto status = ge_tensor_desc.GetShapeRange(shape_range);
   if (status != GRAPH_SUCCESS) {
     GELOGE(GRAPH_FAILED, "Get shape range failed!");

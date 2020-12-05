@@ -34,8 +34,8 @@ bool NodeShapeTransUtils::CatchFormatAndShape() {
     auto ori_format = tensor_desc_input->GetOriginFormat();
     if (format == ori_format) {
       GELOGD("Node is %s, input tensor name is %s. ori format: %s, format: %s is same! No need to catch format&shape!",
-        op_desc_->GetName().c_str(), ele.first.c_str(), TypeUtils::FormatToSerialString(ori_format).c_str(),
-        TypeUtils::FormatToSerialString(format).c_str());
+             op_desc_->GetName().c_str(), ele.first.c_str(), TypeUtils::FormatToSerialString(ori_format).c_str(),
+             TypeUtils::FormatToSerialString(format).c_str());
       continue;
     }
     map_format_in_.insert(std::pair<std::string, Format>(ele.first, format));
@@ -54,8 +54,8 @@ bool NodeShapeTransUtils::CatchFormatAndShape() {
     auto ori_format = tensor_desc_output->GetOriginFormat();
     if (format == ori_format) {
       GELOGD("Node is %s, output tensor name is %s. ori format: %s, format: %s is same! No need to catch format&shape!",
-        op_desc_->GetName().c_str(), ele.first.c_str(), TypeUtils::FormatToSerialString(ori_format).c_str(),
-        TypeUtils::FormatToSerialString(format).c_str());
+             op_desc_->GetName().c_str(), ele.first.c_str(), TypeUtils::FormatToSerialString(ori_format).c_str(),
+             TypeUtils::FormatToSerialString(format).c_str());
       continue;
     }
     map_format_out_.insert(std::pair<std::string, Format>(ele.first, format));
@@ -83,7 +83,7 @@ bool NodeShapeTransUtils::UpdateFormatAndShape() {
     // if can not find saved info, it says format and origin format is same when catched
     if (map_format_in_.find(ele.first) == map_format_in_.end()) {
       GELOGD("Node is [%s], input tensor name [%s] is not been catched.Skip update action for it!",
-        op_desc_->GetName().c_str(), ele.first.c_str());
+             op_desc_->GetName().c_str(), ele.first.c_str());
       tensor_desc_input->SetOriginFormat(tensor_desc_input->GetFormat());
       tensor_desc_input->SetOriginShape(tensor_desc_input->GetShape());
       continue;
@@ -118,7 +118,7 @@ bool NodeShapeTransUtils::UpdateFormatAndShape() {
     // if can not find saved info, it says format and origin format is same when catched
     if (map_ori_format_out_.find(ele.first) == map_ori_format_out_.end()) {
       GELOGD("Node is [%s], input tensor name [%s] is not been catched.Skip update action for it!",
-        op_desc_->GetName().c_str(), ele.first.c_str());
+             op_desc_->GetName().c_str(), ele.first.c_str());
       tensor_desc_output->SetOriginFormat(tensor_desc_output->GetFormat());
       tensor_desc_output->SetOriginShape(tensor_desc_output->GetShape());
       continue;
@@ -127,16 +127,16 @@ bool NodeShapeTransUtils::UpdateFormatAndShape() {
     auto curr_format = tensor_desc_output->GetFormat();
     if (curr_format != map_ori_format_out_[ele.first]) {
       GELOGE(GRAPH_FAILED, "Node is %s, out tensor name is %s. format: %s, recorded origin format: %s is not same",
-        op_desc_->GetName().c_str(), ele.first.c_str(), TypeUtils::FormatToSerialString(curr_format).c_str(),
-        TypeUtils::FormatToSerialString(map_ori_format_out_[ele.first]).c_str());
+             op_desc_->GetName().c_str(), ele.first.c_str(), TypeUtils::FormatToSerialString(curr_format).c_str(),
+             TypeUtils::FormatToSerialString(map_ori_format_out_[ele.first]).c_str());
       return GRAPH_FAILED;
     }
     tensor_desc_output->SetOriginShape(ori_shape);
     auto saved_format = map_format_out_[ele.first];
     if (curr_format == saved_format) {
       GELOGD("Nodeis %s, out tensor name is %s. ori format: %s, recorded format: %s is same! No need to transfer",
-        op_desc_->GetName().c_str(), ele.first.c_str(), TypeUtils::FormatToSerialString(curr_format).c_str(),
-        TypeUtils::FormatToSerialString(saved_format).c_str());
+             op_desc_->GetName().c_str(), ele.first.c_str(), TypeUtils::FormatToSerialString(curr_format).c_str(),
+             TypeUtils::FormatToSerialString(saved_format).c_str());
       continue;
     }
     tensor_desc_output->SetFormat(saved_format);

@@ -402,7 +402,7 @@ void OnnxUtils::AddAttrProtoForOpInAndOutDesc(onnx::NodeProto *node_proto, const
 }
 
 void OnnxUtils::AddAttrProtoForAttrsFromAttrMap(const ::google::protobuf::Map<std::string,
-                                                                              ::ge::proto::AttrDef> &attr_map,
+                                                ::ge::proto::AttrDef> &attr_map,
                                                 onnx::NodeProto *node_proto,
                                                 const std::string& prefix,
                                                 const std::string& suffix) {
@@ -943,8 +943,8 @@ void OnnxUtils::DecodeNodeAttributeForOpInDesc(const onnx::AttributeProto &attr_
 }
 
 void OnnxUtils::DecodeNodeAttributeForOpOutDesc(const onnx::AttributeProto &attr_proto,
-                                               const std::string &attr_name_for_output_desc, int32_t index,
-                                               OpDescPtr &op_desc) {
+                                                const std::string &attr_name_for_output_desc, int32_t index,
+                                                OpDescPtr &op_desc) {
   if (op_desc->MutableOutputDesc(static_cast<uint32_t>(index)) == nullptr) {
     GELOGE(GRAPH_FAILED, "[op name %s,attr name %s]op_desc->MutableOutputDesc(static_cast<uint32_t>(index)) is nullptr",
            op_desc->GetName().c_str(), attr_name_for_output_desc.c_str());

@@ -222,7 +222,8 @@ GraphUtils::RemoveSubgraphRecursively(const ComputeGraphPtr &compute_graph,
   const auto &all_nodes_in_graph = compute_graph->GetDirectNode();
   if (std::find(all_nodes_in_graph.begin(), all_nodes_in_graph.end(), remove_node) == all_nodes_in_graph.end()) {
     GELOGE(GRAPH_FAILED, "Can not find node %s in graph %s.",
-      remove_node->GetName().c_str(), compute_graph->GetName().c_str());
+           remove_node->GetName().c_str(),
+           compute_graph->GetName().c_str());
     return GRAPH_FAILED;
   }
   // Find all subgraph of this node
@@ -2981,7 +2982,7 @@ GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY graphStatus GraphUtils::Topologic
   }
   const size_t non_user_input_index = stack_input.size() - compute_graph->inputs_order_.size() - 1;
   std::sort(stack_input.begin(), stack_input.begin() + non_user_input_index,
-          [](const NodePtr &a, const NodePtr &b) -> bool { return (a->GetName() > b->GetName()); });
+            [](const NodePtr &a, const NodePtr &b) -> bool { return (a->GetName() > b->GetName()); });
 
   std::queue<NodePtr> stack;
   NodePtr cur_node = nullptr;

@@ -160,7 +160,7 @@ static graphStatus CalcElementCntOfNc1hwc0(const std::vector<int64_t> &dims, Dat
     return CalcElementCntByDims(dims, element_cnt);
   } else if (dims.size() != kDimSize4d) {
     GELOGE(GRAPH_FAILED, "CalcElementCntOfNc1hwc0 failed as dims.size=%zu is not %u or %u.", dims.size(), kDimSize4d,
-            kNc1hwc0CalcByDimsSize);
+           kNc1hwc0CalcByDimsSize);
     return GRAPH_FAILED;
   }
 
@@ -309,7 +309,7 @@ static graphStatus CalcTensorElementCnt(const std::vector<int64_t> &dims, Format
         format, format_str.c_str(), data_type, type_str.c_str(), element_cnt);
   } else {
     GELOGE(GRAPH_FAILED, "CalcTensorElementCnt failed, format=%d(%s), data_type=%d(%s).",
-            format, format_str.c_str(), data_type, type_str.c_str());
+           format, format_str.c_str(), data_type, type_str.c_str());
   }
   return graph_status;
 }
