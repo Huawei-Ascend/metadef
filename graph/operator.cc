@@ -1909,7 +1909,7 @@ std::vector<std::string> Operator::GetSubgraphNames() const {
 
 graphStatus Operator::GetSubgraphNames(std::vector<AscendString> &names) const {
   std::vector<std::string> subgraph_names = operator_impl_->GetSubgraphNames();
-  for (auto & subgraph_name : subgraph_names) {
+  for (auto &subgraph_name : subgraph_names) {
     names.emplace_back(subgraph_name.c_str());
   }
   return GRAPH_SUCCESS;
