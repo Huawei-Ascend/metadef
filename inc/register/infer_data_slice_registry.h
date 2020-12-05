@@ -21,7 +21,7 @@
 #include "external/graph/operator.h"
 
 namespace ge {
-using InferDataSliceFunc = std::function<graphStatus(Operator & )>;
+using InferDataSliceFunc = std::function<graphStatus(Operator &)>;
 
 class GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY InferDataSliceFuncRegister {
  public:

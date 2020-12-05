@@ -312,7 +312,7 @@ bool TypeUtils::IsFormatValid(Format format) {
 }
 
 bool TypeUtils::IsDataTypeValid(std::string dt) {
-  transform(dt.begin(), dt.end(), dt.begin(),::toupper);
+  transform(dt.begin(), dt.end(), dt.begin(), ::toupper);
   std::string key = "DT_" + dt;
   auto it = kStringTodataTypeMap.find(key);
   if (it == kStringTodataTypeMap.end()) {
@@ -322,7 +322,7 @@ bool TypeUtils::IsDataTypeValid(std::string dt) {
 }
 
 bool TypeUtils::IsFormatValid(std::string format) {
-  transform(format.begin(), format.end(), format.begin(),::toupper);
+  transform(format.begin(), format.end(), format.begin(), ::toupper);
   auto it = kStringToFormatMap.find(format);
   if (it == kStringToFormatMap.end()) {
     return false;

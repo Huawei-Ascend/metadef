@@ -62,7 +62,7 @@ class GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY Graph {
 
   graphStatus AddOp(const ge::Operator &op);
 
-  ATTRIBUTED_DEPRECATED( graphStatus FindOpByName(const char *, ge::Operator &))
+  ATTRIBUTED_DEPRECATED(graphStatus FindOpByName(const char *, ge::Operator &))
   graphStatus FindOpByName(const std::string &name, ge::Operator &op) const;
 
   graphStatus FindOpByName(const char *name, ge::Operator &op) const;

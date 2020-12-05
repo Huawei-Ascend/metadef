@@ -48,10 +48,7 @@ struct DynamicInfo {
   uint32_t inset_index;
   uint32_t tensor_num;
   DynamicInfo() : type(kInvalid), inset_index(0), tensor_num(0) {}
-  DynamicInfo(DynamicType type, uint32_t index, uint32_t num) :
-    type(type),
-    inset_index(index),
-    tensor_num(num) {}
+  DynamicInfo(DynamicType type, uint32_t index, uint32_t num) : type(type), inset_index(index), tensor_num(num) {}
 };
 
 std::set<std::string> GetSubgraphAttrNames(const ge::Operator &op) {

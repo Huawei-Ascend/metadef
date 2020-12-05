@@ -93,8 +93,8 @@ graphStatus BiasAddFormatFixProcess(ge::NodePtr &node_ptr) {
     in_desc->SetOriginFormat(fixed_format);
     in_desc->SetFormat(fixed_format);
     GELOGD("fix the %zu'th input of node[%s]. Origin format is %s , after fixed it is %s",
-      i, node_ptr->GetName().c_str(), TypeUtils::FormatToSerialString(format).c_str(),
-      TypeUtils::FormatToSerialString(fixed_format).c_str());
+           i, node_ptr->GetName().c_str(), TypeUtils::FormatToSerialString(format).c_str(),
+           TypeUtils::FormatToSerialString(fixed_format).c_str());
   }
   for (size_t i = 0; i < node_ptr->GetOpDesc()->GetOutputsSize(); i++) {
     auto out_desc = node_ptr->GetOpDesc()->MutableOutputDesc(i);
@@ -108,8 +108,8 @@ graphStatus BiasAddFormatFixProcess(ge::NodePtr &node_ptr) {
     out_desc->SetOriginFormat(fixed_format);
     out_desc->SetFormat(fixed_format);
     GELOGD("fix the %zu'th output of node[%s]. Origin format is %s , after fixed it is %s",
-      i, node_ptr->GetName().c_str(), TypeUtils::FormatToSerialString(format).c_str(),
-      TypeUtils::FormatToSerialString(fixed_format).c_str());
+           i, node_ptr->GetName().c_str(), TypeUtils::FormatToSerialString(format).c_str(),
+           TypeUtils::FormatToSerialString(fixed_format).c_str());
   }
   return GRAPH_SUCCESS;
 }
@@ -254,7 +254,7 @@ graphStatus FormatRefiner::BackInferProcess(std::deque<ge::NodePtr> &nodes, ge::
     auto status = reflection_builder.LookUpRefRelations(key, reflection);
     if (status != GRAPH_SUCCESS) {
       GELOGE(GRAPH_FAILED, "LookUpRefRelations failed!Node is [%s],the %d out edge",
-        (peer_out_data_node->GetName()).c_str(), idx);
+             (peer_out_data_node->GetName()).c_str(), idx);
       return GRAPH_FAILED;
     }
 
@@ -330,7 +330,7 @@ graphStatus FormatRefiner::ForwardInferProcess(std::deque<ge::NodePtr> &nodes, g
       auto status = reflection_builder.LookUpRefRelations(key, reflection);
       if (status != GRAPH_SUCCESS) {
         GELOGE(GRAPH_FAILED, "LookUpRefRelations failed!Node is [%s],the %d input edge",
-          (peer_in_data_node->GetName()).c_str(), idx);
+               (peer_in_data_node->GetName()).c_str(), idx);
         return GRAPH_FAILED;
       }
       auto ge_tensor_desc = peer_in_data_node->GetOpDesc()->GetInputDesc(static_cast<uint32_t>(idx));

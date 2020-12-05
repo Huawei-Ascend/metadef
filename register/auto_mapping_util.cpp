@@ -52,11 +52,11 @@ graphStatus AutoMappingUtil::ConvertTensor(const domi::tensorflow::TensorProto &
   }
   domi::tensorflow::DataType tf_data_type = tensor.dtype();
   ge::DataType ge_data_type = domi::TensorAssign::ConvertTensorflowDataType(tf_data_type);
-  if(domi::TensorAssign::SetGeTensorDataType(ge_data_type, weight) != domi::SUCCESS) {
+  if (domi::TensorAssign::SetGeTensorDataType(ge_data_type, weight) != domi::SUCCESS) {
     GE_LOGE("Set Ge tensor data type failed.");
     return GRAPH_FAILED;
   }
-  if(domi::TensorAssign::SetGeTensor(tensor, weight) != domi::SUCCESS) {
+  if (domi::TensorAssign::SetGeTensor(tensor, weight) != domi::SUCCESS) {
     GE_LOGE("Set Ge tensor failed.");
     return GRAPH_FAILED;
   }

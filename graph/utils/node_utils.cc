@@ -159,7 +159,7 @@ graphStatus NodeUtils::ClearInDataAnchor(const NodePtr &node_ptr, const InDataAn
     }
     index++;
   }
-  for ( ; it != node_ptr->in_data_anchors_.end(); ++it) {
+  for (; it != node_ptr->in_data_anchors_.end(); ++it) {
     (*it)->SetIdx(index);
     index++;
   }

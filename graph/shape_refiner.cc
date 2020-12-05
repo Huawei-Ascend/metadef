@@ -44,7 +44,7 @@ const uint32_t kWhileBodySubGraphIdx = 1;
 graphStatus ReverseBrushWhileBodySubGraph(const ConstNodePtr &node) {
   GELOGD("Enter reverse brush while body subgraph process!");
   auto sub_graph_body = NodeUtils::GetSubgraph(*node, kWhileBodySubGraphIdx);
-  if(sub_graph_body == nullptr) {
+  if (sub_graph_body == nullptr) {
     GELOGE(GRAPH_FAILED, "Get while body graph failed!");
     return GRAPH_FAILED;
   }
@@ -108,7 +108,7 @@ graphStatus UpdataOutputForMultiBatcch(const ConstNodePtr &node,
 }
 
 graphStatus UpdateParentNodeForBranch(const ConstNodePtr &node,
-                       std::vector<std::vector<GeTensorDesc>> &ref_out_tensors) {
+                                      std::vector<std::vector<GeTensorDesc>> &ref_out_tensors) {
   GELOGD("Enter update parent node shape for class branch op process");
   if (node->GetOpDesc()->HasAttr(ATTR_NAME_BATCH_NUM)) {
     return UpdataOutputForMultiBatcch(node, ref_out_tensors);
@@ -138,7 +138,7 @@ graphStatus UpdateParentNodeForBranch(const ConstNodePtr &node,
           continue;
         }
         GELOGD("node is %s, i : %d, j: %d ,shape size: %lu, ref_out_tensor_shape size: %lu",
-          node->GetName().c_str(), i, j, shape.GetShapeSize(), ref_out_tensor_shape.GetShapeSize());
+               node->GetName().c_str(), i, j, shape.GetShapeSize(), ref_out_tensor_shape.GetShapeSize());
         (void)ref_out_tensor_shape.SetDim(j, UNKNOWN_DIM);
       }
     }
@@ -148,16 +148,16 @@ graphStatus UpdateParentNodeForBranch(const ConstNodePtr &node,
 }
 
 graphStatus UpdateParentNodeForWhile(const ConstNodePtr &node,
-                      std::vector<std::vector<GeTensorDesc>> &ref_data_tensors,
-                      std::vector<std::vector<GeTensorDesc>> &ref_out_tensors) {
+                                     std::vector<std::vector<GeTensorDesc>> &ref_data_tensors,
+                                     std::vector<std::vector<GeTensorDesc>> &ref_out_tensors) {
   GELOGD("Enter update parent node shape for class while op process");
   if (ref_data_tensors.size() != ref_out_tensors.size()) {
     GELOGE(GRAPH_FAILED, "while op [%s] input number[%zu] and output number[%zu] is not same!",
-      node->GetName().c_str(), ref_data_tensors.size(), ref_out_tensors.size());
+           node->GetName().c_str(), ref_data_tensors.size(), ref_out_tensors.size());
     return GRAPH_FAILED;
   }
   for (size_t i = 0; i < ref_data_tensors.size(); i++) {
-    if(ref_out_tensors[i].size() != 1) {
+    if (ref_out_tensors[i].size() != 1) {
       GELOGE(GRAPH_FAILED, "while op, every output should only find one output tensor in all graph!");
       return GRAPH_FAILED;
     }
@@ -238,7 +238,7 @@ graphStatus UpdateSubGraphDataNodes(const ConstNodePtr &node) {
         return GRAPH_FAILED;
       }
       GELOGI("Ref index is %d, input_desc dtype is %d, node name is %s", ref_i, input_desc->GetDataType(),
-        node->GetName().c_str());
+             node->GetName().c_str());
       auto ret = data_opdesc->UpdateInputDesc(0, *input_desc);
 
       if (ret != GRAPH_SUCCESS) {
@@ -258,8 +258,8 @@ graphStatus UpdateSubGraphDataNodes(const ConstNodePtr &node) {
 }
 
 graphStatus FindSubgraphDataAndNetoutput(std::shared_ptr<ComputeGraph> &sub_graph,
-                                    NodePtr &netoutput, const ConstNodePtr &node,
-                                    std::vector<std::vector<GeTensorDesc>> &ref_data_tensors) {
+                                         NodePtr &netoutput, const ConstNodePtr &node,
+                                         std::vector<std::vector<GeTensorDesc>> &ref_data_tensors) {
   auto sub_nodes = sub_graph->GetDirectNode();
   for (size_t i = sub_nodes.size(); i > 0; --i) {
     auto sub_node = sub_nodes.at(i - 1);
@@ -278,7 +278,7 @@ graphStatus FindSubgraphDataAndNetoutput(std::shared_ptr<ComputeGraph> &sub_grap
       }
       if (ref_i < 0 || static_cast<uint32_t>(ref_i) >= node->GetAllInDataAnchorsSize()) {
         GELOGE(GRAPH_FAILED, "data node[%s]'s ref index[%d] is not in range [0, %zu)!",
-          sub_node->GetName().c_str(), ref_i, node->GetAllInDataAnchorsSize());
+               sub_node->GetName().c_str(), ref_i, node->GetAllInDataAnchorsSize());
         return GRAPH_FAILED;
       }
       ref_data_tensors[ref_i].emplace_back(sub_node->GetOpDesc()->GetOutputDesc(0));
@@ -331,7 +331,7 @@ graphStatus UpdateParentNodeOutTensor(const ConstNodePtr &node) {
         return GRAPH_FAILED;
       }
       GELOGI("Netoutput in anchor index is %zu, input tensor dim is %zu",
-        edge_anchor->GetIdx(), edge_desc->GetShape().GetDimNum());
+             edge_anchor->GetIdx(), edge_desc->GetShape().GetDimNum());
       int ref_i;
       if (!AttrUtils::GetInt(edge_desc, ATTR_NAME_PARENT_NODE_INDEX, ref_i)) {
         // if there is no ref index on the TensorDesc, it means the output data will be ignored outer.
@@ -363,7 +363,7 @@ string Serial(const vector<int64_t> &dims) {
 
 void SerialShapeRange(const GeTensorDescPtr &desc, std::string &desc_str) {
   desc_str += "[";
-  std::vector<std::pair<int64_t,int64_t>> shape_range;
+  std::vector<std::pair<int64_t, int64_t>> shape_range;
   (void)desc->GetShapeRange(shape_range);
   for (const auto &pair : shape_range) {
     desc_str += "{";

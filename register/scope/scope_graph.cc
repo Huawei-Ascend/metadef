@@ -572,7 +572,7 @@ ge::graphStatus FusionScopesResult::InnerNodeInfo::GetInputs(
     tmps = impl_->GetInputs();
   }
   for (auto &tmp : tmps) {
-    inputs.emplace_back(std::pair<AscendString, int32_t>(AscendString(tmp.first.c_str()),tmp.second));
+    inputs.emplace_back(std::pair<AscendString, int32_t>(AscendString(tmp.first.c_str()), tmp.second));
   }
   return GRAPH_SUCCESS;
 }

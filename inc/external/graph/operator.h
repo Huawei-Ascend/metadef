@@ -228,7 +228,7 @@ class GE_FUNC_DEV_VISIBILITY GE_FUNC_HOST_VISIBILITY Operator {
   graphStatus GetAttr(const string &name, uint32_t &attr_value) const;
   ATTRIBUTED_DEPRECATED(Operator &SetAttr(const char *, const std::vector<int64_t> &))
   Operator &SetAttr(const string &name, const std::vector<int64_t> &attr_value);
-  ATTRIBUTED_DEPRECATED( Operator &SetAttr(const char *, const std::vector<int32_t> &))
+  ATTRIBUTED_DEPRECATED(Operator &SetAttr(const char *, const std::vector<int32_t> &))
   Operator &SetAttr(const string &name, const std::vector<int32_t> &attr_value);
   ATTRIBUTED_DEPRECATED(Operator &SetAttr(const char *, const std::vector<uint32_t> &))
   Operator &SetAttr(const string &name, const std::vector<uint32_t> &attr_value);

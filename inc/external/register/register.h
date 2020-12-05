@@ -69,15 +69,14 @@ struct DynamicInputOutputInfo {
   const char *attr_name;
   int64_t attr_name_len;
   DynamicInputOutputInfo() :
-    type(kInvalid), port_name(nullptr), port_name_len(0),
-    attr_name(nullptr), attr_name_len(0) {}
+      type(kInvalid), port_name(nullptr), port_name_len(0), attr_name(nullptr), attr_name_len(0) {}
   DynamicInputOutputInfo(DynamicType type, const char *port_name, int64_t port_name_len,
                          const char *attr_name, int64_t attr_name_len) :
-    type(type),
-    port_name(port_name),
-    port_name_len(port_name_len),
-    attr_name(attr_name),
-    attr_name_len(attr_name_len) {}
+      type(type),
+      port_name(port_name),
+      port_name_len(port_name_len),
+      attr_name(attr_name),
+      attr_name_len(attr_name_len) {}
 };
 Status AutoMappingByOpFn(const ge::Operator &op_src, ge::Operator &op);
 Status AutoMappingByOpFnDynamic(const ge::Operator &op_src, ge::Operator &op,
