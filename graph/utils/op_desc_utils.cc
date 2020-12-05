@@ -28,8 +28,8 @@
 
 using std::vector;
 
-/*lint -e512 -e737 -e752*/
 namespace ge {
+/*lint -e512 -e737 -e752*/
 const char OP_DESC_QUANT_PARAMS[] = "quantize_factor";
 static const int CONST_OP_NORMAL_WEIGHT_SIZE = 1;
 
@@ -823,5 +823,5 @@ graphStatus OpDescUtils::SetSubgraphInstanceName(const std::string &subgraph_nam
 
   return op_desc->SetSubgraphInstanceName(iter->second, subgraph_instance_name);
 }
-}  // namespace ge
 /*lint +e512 +e737 +e752*/
+}  // namespace ge

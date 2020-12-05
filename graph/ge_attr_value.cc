@@ -976,7 +976,6 @@ ATTR_UTILS_SET_GET_IMP(Graph, ComputeGraphPtr)
 /*lint -e665*/
 ATTR_UTILS_SET_GET_IMP(ListListInt, vector<vector<int64_t>>)
 /*lint +e665*/
-
 ATTR_UTILS_SET_GET_IMP(ListInt, vector<int64_t>)
 ATTR_UTILS_SET_IMP(ListInt, vector<int32_t>)
 ATTR_UTILS_SET_IMP(ListInt, vector<uint32_t>)

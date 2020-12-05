@@ -1799,13 +1799,18 @@ graphStatus GraphUtils::HandleOutAnchorMapping(const NodePtr &node,
     }
 
     int32_t reuse_in_index = -1;
-    if (IsRefFromInput(out_data_anchor, reuse_in_index)) {
+    bool reuse_input_flag = IsRefFromInput(out_data_anchor, reuse_in_index);
+    if (reuse_input_flag && (node->GetInDataAnchor(reuse_in_index) != nullptr)) {
       NodeIndexIO exist_node_info(node, reuse_in_index, kIn);
       if (UpdateRefMapping(cur_node_info, exist_node_info, symbol_to_anchors, anchor_to_symbol) != GRAPH_SUCCESS) {
         GE_LOGE("Update symbol mapping failed.");
         return GRAPH_FAILED;
       }
     } else {
+      if (reuse_input_flag) {
+        GELOGW("Invalid reuse_input attr on output %d of node %s, please check attr reuse_input and reuse_input_index",
+               out_data_anchor->GetIdx(), node->GetName().c_str());
+      }
       const std::string &symbol = cur_node_info.ToString();
       GELOGD("Add anchor %s, symbol %s.", cur_node_info.ToString().c_str(), symbol.c_str());
       symbol_to_anchors.emplace(std::make_pair(symbol, std::list<NodeIndexIO>{ cur_node_info }));
