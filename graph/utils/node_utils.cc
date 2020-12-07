@@ -565,7 +565,7 @@ graphStatus NodeUtils::GetNodeUnknownShapeStatus(const Node &node, bool &is_unkn
       GE_LOGE("Node %s gets null root graph", node.GetName().c_str());
       return GRAPH_PARAM_INVALID;
     }
-    for (auto & sub_graph_name : sub_graph_names) {
+    for (auto &sub_graph_name : sub_graph_names) {
       auto sub_graph = root_graph->GetSubgraph(sub_graph_name);
       GE_CHECK_NOTNULL(sub_graph);
       for (const auto &node_ptr : sub_graph->GetDirectNode()) {
