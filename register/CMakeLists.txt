@@ -42,6 +42,10 @@ set(SRC_LIST
 ############ libregister.so ############
 add_library(register SHARED ${SRC_LIST} ${PROTO_SRCS})
 
+target_compile_definitions(register PRIVATE
+    $<$<STREQUAL:${ENABLE_OPEN_SRC},True>:ONLY_COMPILE_OPEN_SRC>
+)
+
 target_include_directories(register PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}
     ${METADEF_DIR}
@@ -97,6 +101,10 @@ target_link_libraries(register PRIVATE
 ############ libregister.a ############
 add_library(register_static STATIC ${SRC_LIST} ${PROTO_SRCS}
     "op_tiling.cpp"
+)
+
+target_compile_definitions(register_static PRIVATE
+    $<$<STREQUAL:${ENABLE_OPEN_SRC},True>:ONLY_COMPILE_OPEN_SRC>
 )
 
 target_include_directories(register_static PRIVATE
