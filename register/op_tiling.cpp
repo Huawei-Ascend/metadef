@@ -104,7 +104,7 @@ void FeedTeOpConstTensor(const ge::Node &node, const ge::OpDescPtr &op_desc,
 
   for (auto &depend : inferDepends) {
     ge::Tensor data;
-    ge::graphStatus rc = op.GetInputConstData(depend, data);
+    ge::graphStatus rc = op.GetInputConstData(depend.c_str(), data);
     GELOGI("GetInputConstData: %s, %d", depend.c_str(), rc);
     if (rc != ge::GRAPH_SUCCESS) {
       continue;
@@ -305,9 +305,9 @@ bool DumpRunInfo(const OpRunInfo &run_info, char *run_info_json, size_t run_info
   return true;
 }
 
-extern "C" int TbeOpTilingPyInterfaceEx(const char *optype, const char *compile_info, const char *inputs,
-                                        const char *outputs, char *run_info_json, size_t run_info_len,
-                                        uint64_t *elapse) {
+extern "C" int TbeOpTilingPyInterfaceEx2(const char *optype, const char *compile_info, const char *inputs,
+                                         const char *outputs, char *run_info_json, size_t run_info_len,
+                                         const char *compile_info_hash, uint64_t *elapse) {
   if (optype == nullptr || compile_info == nullptr || inputs == nullptr || outputs == nullptr) {
     GE_LOGE("optype/compile_info/inputs/outputs is null, %s, %s, %s, %s", optype, compile_info, inputs, outputs);
     return 0;
@@ -344,6 +344,10 @@ extern "C" int TbeOpTilingPyInterfaceEx(const char *optype, const char *compile_
          iter->second.target<OpTilingFuncPtr>());
 
   OpCompileInfo op_compile_info{compile_info};
+  if (compile_info_hash) {
+    op_compile_info.key = compile_info_hash;
+  }
+
   OpRunInfo run_info;
   if (elapse) {
     before_tiling = std::chrono::steady_clock::now();
@@ -368,6 +372,13 @@ extern "C" int TbeOpTilingPyInterfaceEx(const char *optype, const char *compile_
   GELOGI("Optiling succeed. op_type:%s", optype);
   DumpRunInfo(run_info, run_info_json, run_info_len);
   return 1;
+}
+
+extern "C" int TbeOpTilingPyInterfaceEx(const char *optype, const char *compile_info, const char *inputs,
+                                        const char *outputs, char *run_info_json, size_t run_info_len,
+                                        uint64_t *elapse) {
+  return TbeOpTilingPyInterfaceEx2(optype, compile_info, inputs, outputs, run_info_json, run_info_len,
+                                   nullptr, elapse);
 }
 
 extern "C" int TbeOpTilingPyInterface(const char *optype, const char *compile_info, const char *inputs,
